@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayGround.Core", "RayGround.Core\RayGround.Core.csproj", "{436C81CA-6BFE-48D2-82EA-A0A2C8E59ECC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayGround.Tests", "RayGround.Tests\RayGround.Tests.csproj", "{1D7FC1FA-DE9B-4A24-9ACD-411BAB700CCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayGround.Cli", "RayGround.Cli\RayGround.Cli.csproj", "{95B8AEBD-48E9-48A1-97F0-A732BBF24492}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{436C81CA-6BFE-48D2-82EA-A0A2C8E59ECC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{436C81CA-6BFE-48D2-82EA-A0A2C8E59ECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{436C81CA-6BFE-48D2-82EA-A0A2C8E59ECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{436C81CA-6BFE-48D2-82EA-A0A2C8E59ECC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D7FC1FA-DE9B-4A24-9ACD-411BAB700CCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D7FC1FA-DE9B-4A24-9ACD-411BAB700CCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D7FC1FA-DE9B-4A24-9ACD-411BAB700CCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D7FC1FA-DE9B-4A24-9ACD-411BAB700CCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95B8AEBD-48E9-48A1-97F0-A732BBF24492}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95B8AEBD-48E9-48A1-97F0-A732BBF24492}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95B8AEBD-48E9-48A1-97F0-A732BBF24492}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95B8AEBD-48E9-48A1-97F0-A732BBF24492}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
