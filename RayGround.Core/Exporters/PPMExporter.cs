@@ -10,8 +10,8 @@ public class PPMExporter : IExportCanvas
 {
     const short MAX_LINE_LENGTH = 70;
     const short SPACE_LENGTH    = 1;
-    
-    string PPMHeader(float width, float height) =>
+
+    static string Header(float width, float height) =>
 $"""
 P3
 {width} {height}
@@ -57,7 +57,7 @@ P3
         Console.WriteLine($"Building PPM Export for PixelData row {currentRow+1}...");
         for (var width = 0; width < canvas.Width; width++)
         {
-            var pixel     = canvas.GetPixel(width, currentRow);
+            var pixel = canvas.GetPixel(width, currentRow);
             
             var redTask   = FormatColorAsync(pixel.Color.Red);
             var greenTask = FormatColorAsync(pixel.Color.Green);
@@ -92,7 +92,7 @@ P3
             rowTasks.Add(ProcessDataRowAsync(canvas, height));
 
         await Task.WhenAll(rowTasks);
-        var rowStrings =rowTasks
+        var rowStrings = rowTasks
             .Select(t => t.Result)
             .ToImmutableSortedDictionary(kvp => kvp.Key, kvp => kvp.Value)
             .Select(kvp => kvp.Value.ToString().TrimEnd());
@@ -106,16 +106,19 @@ P3
         var exportTimer = Stopwatch.StartNew();
         var ppmBuilder  = new StringBuilder();
         
-        ppmBuilder.Append(PPMHeader(canvas.Width, canvas.Height));
+        ppmBuilder.Append(Header(canvas.Width, canvas.Height));
         ppmBuilder.AppendLine();
 
-        var data = await PixelDataAsync(canvas);
+        var data = await PixelDataAsync(canvas).ContinueWith(dataTask => 
+        {
+            exportTimer.Stop();
+            Console.WriteLine($"Finished exporting in {exportTimer.ElapsedMilliseconds/1000:000}s.");
+
+            return dataTask.Result;
+        });
         ppmBuilder.Append(data);
         ppmBuilder.AppendLine();
         
-        exportTimer.Stop();
-        Console.WriteLine($"Finished exporting in {exportTimer.Elapsed.Hours}:{exportTimer.Elapsed.Minutes}:{exportTimer.Elapsed.Milliseconds}.");
-
         return ppmBuilder.ToString();
     }
 }
