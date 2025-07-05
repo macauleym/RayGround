@@ -33,20 +33,20 @@ public class RayTupleTests
     }
     
     [Fact]
-    public void NewPointSetsWTo1()
+    public void NewPointSetsWToOne()
     {
         // Arrange
         var expected = new RayTuple(4f, -4f, 3f, 1f);
 
         // Act
-        var target   = RayTuple.NewPoint(4f, -4f, 3f);
+        var target = RayTuple.NewPoint(4f, -4f, 3f);
         
         // Assert
         target.Should().Be(expected);
     }
 
     [Fact]
-    public void NewVectorSetsWTo0()
+    public void NewVectorSetsWToZero()
     {
         // Arrange
         var expected = new RayTuple(4f, -4f, 3f, 0f);
@@ -152,7 +152,7 @@ public class RayTupleTests
     public void SubtractingZeroVectorReturnsNegated()
     {
         // Arrange
-        var vector = RayTuple.NewVector(1, -2, 3);
+        var vector   = RayTuple.NewVector(1, -2, 3);
         var expected = RayTuple.NewVector(-1, 2, -3);
 
         // Act
@@ -166,8 +166,8 @@ public class RayTupleTests
     public void MultiplyByNumberReturnsScaledUp()
     {
         // Arrange
-        var tuple = new RayTuple(1, -2, 3, -4);
-        var scaler = 3.5f;
+        var tuple    = new RayTuple(1, -2, 3, -4);
+        var scaler   = 3.5f;
         var expected = new RayTuple(3.5f, -7, 10.5f, -14);
         
         // Act
@@ -181,8 +181,8 @@ public class RayTupleTests
     public void MultiplyByFractionReturnsScaledDown()
     {
         // Arrange
-        var tuple = new RayTuple(1, -2, 3, -4);
-        var scaler = 0.5f;
+        var tuple    = new RayTuple(1, -2, 3, -4);
+        var scaler   = 0.5f;
         var expected = new RayTuple(0.5f, -1, 1.5f, -2);
 
         // Act
@@ -196,8 +196,8 @@ public class RayTupleTests
     public void DivideByNumberReturnsScaledDown()
     {
         // Arrange
-        var tuple = new RayTuple(1, -2, 3, -4);
-        var scaler = 2;
+        var tuple    = new RayTuple(1, -2, 3, -4);
+        var scaler   = 2;
         var expected = new RayTuple(0.5f, -1, 1.5f, -2);
         
         // Act
@@ -256,8 +256,8 @@ public class RayTupleTests
     public void ComputeDotProductReturnsFloat()
     {
         // Arrange
-        var a = RayTuple.NewVector(1, 2, 3);
-        var b = RayTuple.NewVector(2, 3, 4);
+        var a        = RayTuple.NewVector(1, 2, 3);
+        var b        = RayTuple.NewVector(2, 3, 4);
         var expected = 20;
 
         // Act

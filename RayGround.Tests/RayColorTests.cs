@@ -26,8 +26,8 @@ public class RayColorTests
     public void AddingColorsReturnsCombinedColor()
     {
         // Arrange
-        var a = new RayColor(0.9f, 0.6f, 0.75f);
-        var b = new RayColor(0.7f, 0.1f, 0.25f);
+        var a        = new RayColor(0.9f, 0.6f, 0.75f);
+        var b        = new RayColor(0.7f, 0.1f, 0.25f);
         var expected = new RayColor(1.6f, 0.7f, 1.0f);
 
         // Act
@@ -41,8 +41,8 @@ public class RayColorTests
     public void SubtractingColorsReturnsReducedColor()
     {
         // Arrange
-        var a = new RayColor(0.9f, 0.6f, 0.75f);
-        var b = new RayColor(0.7f, 0.1f, 0.25f);
+        var a        = new RayColor(0.9f, 0.6f, 0.75f);
+        var b        = new RayColor(0.7f, 0.1f, 0.25f);
         var expected = new RayColor(0.2f, 0.5f, 0.5f);
         
         // Act
@@ -56,8 +56,8 @@ public class RayColorTests
     public void MultiplyingColorByScalerReturnsAmplifiedColor()
     {
         // Arrange
-        var color = new RayColor(0.2f, 0.3f, 0.4f);
-        var scaler = 2;
+        var color    = new RayColor(0.2f, 0.3f, 0.4f);
+        var scaler   = 2;
         var expected = new RayColor(0.4f, 0.6f, 0.8f);
         
         // Act
@@ -71,8 +71,8 @@ public class RayColorTests
     public void MultiplyingColorsTogetherReturnsBlendedColor()
     {
         // Arrange
-        var a = new RayColor(1, 0.2f, 0.4f);
-        var b = new RayColor(0.9f, 1f, 0.1f);
+        var a        = new RayColor(1, 0.2f, 0.4f);
+        var b        = new RayColor(0.9f, 1f, 0.1f);
         var expected = new RayColor(0.9f, 0.2f, 0.04f);
         
         // Act

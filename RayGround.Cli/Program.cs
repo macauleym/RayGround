@@ -12,15 +12,15 @@ var velocity   = RayTuple.NewVector(1, 1.8f, 0).Normalize() * 11.25f;
 var projectile = new Projectile(start, velocity);
 
 Console.WriteLine("Get the environment...");
-var gravity = RayTuple.NewVector(0, -0.1f, 0);
-var wind = RayTuple.NewVector(-0.01f, 0, 0);
+var gravity     = RayTuple.NewVector(0, -0.1f, 0);
+var wind        = RayTuple.NewVector(-0.01f, 0, 0);
 var environment = new RayEnvironment(gravity, wind);
-var calculator = new EnvironmentCalculator();
+var calculator  = new EnvironmentCalculator();
 
 Console.WriteLine("Build the canvas...");
-var canvas = new RayCanvas(900, 550);
+var canvas          = new RayCanvas(900, 550);
 var projectileColor = new RayColor(0.8f, 0.8f, 0.8f);
-var ppm = new PPMExporter();
+var ppm             = new PPMExporter();
 
 Console.WriteLine(SEPARATOR);
 
