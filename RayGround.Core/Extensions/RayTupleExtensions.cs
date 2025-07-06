@@ -34,4 +34,12 @@ public static class RayTupleExtensions
             , left.Z * right.X - left.X * right.Z
             , left.X * right.Y - left.Y * right.X
             );
+
+    public static RayMatrix ToMatrix(this RayTuple source) =>
+        new(4, 1)
+        { [0, 0] = source.X
+        , [1, 0] = source.Y
+        , [2, 0] = source.Z
+        , [3, 0] = source.W
+        };
 }
