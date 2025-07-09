@@ -1,10 +1,9 @@
-using System.Data;
-using System.Runtime.InteropServices.JavaScript;
 using System.Text;
+using RayGround.Core.Extensions;
 
 namespace RayGround.Core;
 
-public class RayMatrix(int rows, int columns) : IEquatable<RayMatrix>
+public class RayMatrix(int rows, int columns) : ICloneable, IEquatable<RayMatrix>
 {
     public const float EPSILON                = 0.00001f;
     public const short SIGNIFICANT_DIGITS     = 5;
@@ -17,9 +16,10 @@ public class RayMatrix(int rows, int columns) : IEquatable<RayMatrix>
 
     public int Rows    = rows;
     public int Columns = columns;
-    
+
     readonly float[,] matrix = new float[rows, columns];
 
+    #region Indexers
     public float this[int r, int c]
     {
         get => matrix[r, c];
@@ -42,34 +42,9 @@ public class RayMatrix(int rows, int columns) : IEquatable<RayMatrix>
                 matrix[r, col] = value[col];
         }
     }
+    #endregion Indexers
 
-    public T Traverse<T>(T seed, Func<T, int, int, T> traverser)
-    {
-        var acc = seed;
-        for (var r = 0; r < Rows; r++)
-        for (var c = 0; c < Columns; c++)
-            acc = traverser(acc, r, c);
-
-        return acc;
-    }
-    
-    public bool Equals(RayMatrix? other)
-    {
-        if (other is null) return false;
-        if (ReferenceEquals(this, other)) return true;
-        
-        return matrix.Equals(other.matrix);
-    }
-
-    public override bool Equals(object? obj)
-    {
-        if (obj is null) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != GetType()) return false;
-        
-        return Equals((RayMatrix)obj);
-    }
-
+    #region Custom Methods
     bool ValueEquals(RayMatrix? other)
     {
         if (other is null)
@@ -82,31 +57,53 @@ public class RayMatrix(int rows, int columns) : IEquatable<RayMatrix>
 
         return true;
     }
+    #endregion
     
-    public static bool operator ==(RayMatrix left, RayMatrix right) =>
-        left.Equals(right) || left.ValueEquals(right);
-
-    public static bool operator !=(RayMatrix left, RayMatrix right) =>
-        !left.Equals(right) || !left.ValueEquals(right);
-    
-    public static RayMatrix operator *(RayMatrix left, RayMatrix right)
+    #region Implementations
+    public object Clone()
     {
-        var result = new RayMatrix(left.Rows, right.Columns);
-        for (var r = 0; r < left.Rows; r++)
-        for (var c = 0; c < right.Columns; c++)
-            result[r, c] =
-                  left[r, 0] * right[0, c]
-                + left[r, 1] * right[1, c]
-                + left[r, 2] * right[2, c]
-                + left[r, 3] * right[3, c];
+        var clone = new RayMatrix(Rows, Columns);
+        for (var r = 0; r < Rows; r++)
+        for (var c = 0; c < Columns; c++)
+            clone[r, c] = matrix[r, c];
 
-        return result;
+        return clone;
     }
+
+    public RayMatrix CloneMatrix() =>
+        (RayMatrix)Clone();
     
-    public override int GetHashCode()
+    public bool Equals(RayMatrix? other)
     {
-        return matrix.GetHashCode();
+        if (other is null) 
+            return false;
+
+        return ReferenceEquals(this, other) 
+               || ValueEquals(other);
     }
+    #endregion Implementations
+    
+    #region Overrides
+    public override bool Equals(object? obj)
+    {
+        switch (obj)
+        {
+            case null:
+                return false;
+            case RayTuple tuple:
+                obj = tuple.ToMatrix();
+                break;
+        }
+
+        if (obj.GetType() != GetType()) 
+            return false;
+        
+        return ReferenceEquals(this, obj)
+               || Equals((RayMatrix)obj);
+    }
+
+    public override int GetHashCode() =>
+        matrix.GetHashCode();
 
     public override string ToString()
     {
@@ -124,4 +121,50 @@ public class RayMatrix(int rows, int columns) : IEquatable<RayMatrix>
         
         return matrixBuilder.ToString();
     }
+    #endregion Overrides
+    
+    #region Operators
+    public static bool operator ==(RayMatrix left, RayMatrix right) =>
+        left.Equals(right);
+
+    public static bool operator ==(RayMatrix left, RayTuple right) =>
+        // ReSharper disable once SuspiciousTypeConversion.Global
+        // There is type checking within the Equals method for the RayTuple type.
+        left.Equals(right);
+
+    public static bool operator !=(RayMatrix left, RayMatrix right) =>
+        !left.Equals(right);
+
+    public static bool operator !=(RayMatrix left, RayTuple right) =>
+        // ReSharper disable once SuspiciousTypeConversion.Global
+        // There is type checking within the Equals method for the RayTuple type.
+        !left.Equals(right);
+    
+    public static RayMatrix operator *(RayMatrix left, RayMatrix right)
+    {
+        var result = new RayMatrix(left.Rows, right.Columns);
+        for (var r = 0; r < left.Rows; r++)
+        for (var c = 0; c < right.Columns; c++)
+            result[r, c] =
+                  left[r, 0] * right[0, c]
+                + left[r, 1] * right[1, c]
+                + left[r, 2] * right[2, c]
+                + left[r, 3] * right[3, c];
+
+        return result;
+    }
+
+    public static RayMatrix operator *(RayMatrix left, RayTuple right) =>
+        left * right.ToMatrix();
+
+    public static RayMatrix operator *(RayMatrix left, float scaler)
+    {
+        var result = new RayMatrix(left.Rows, left.Columns);
+        for (var r = 0; r < left.Rows; r++)
+        for (var c = 0; c < left.Columns; c++)
+            result[r, c] = left[r, c] *= scaler;
+
+        return result;
+    }
+    #endregion Operators
 }

@@ -1,6 +1,6 @@
 ﻿namespace RayGround.Core;
 
-public struct RayTuple(float x, float y, float z, float w)
+public readonly struct RayTuple(float x, float y, float z, float w)
 {
     public const float EPSILON = 0.00001f;
     
@@ -22,6 +22,12 @@ public struct RayTuple(float x, float y, float z, float w)
         && MathF.Abs(Z - other.Z) < EPSILON
         && MathF.Abs(W - other.W) < EPSILON;
 
+    public static bool operator ==(RayTuple left, RayTuple right)=>
+        left.Equals(right);
+
+    public static bool operator !=(RayTuple left, RayTuple right) =>
+        !(left == right);
+    
     public static RayTuple operator +(RayTuple left, RayTuple right) =>
         new(  left.X + right.X
             , left.Y + right.Y
@@ -37,7 +43,11 @@ public struct RayTuple(float x, float y, float z, float w)
             );
 
     public static RayTuple operator -(RayTuple source) =>
-        new(-source.X, -source.Y, -source.Z, -source.W);
+        new(  -source.X
+            , -source.Y
+            , -source.Z
+            , -source.W
+            );
 
     public static RayTuple operator *(RayTuple source, float scaler) =>
         new(  source.X * scaler

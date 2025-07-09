@@ -1,6 +1,7 @@
 using FluentAssertions;
 using RayGround.Core;
 using RayGround.Core.Extensions;
+using RayGround.Core.Operations;
 
 namespace RayGround.Tests;
 
@@ -190,7 +191,7 @@ public class RayMatrixTests
         var expected = new RayTuple(18, 24, 33, 1);
 
         // Act
-        var actual = m1 * t1.ToMatrix();
+        var actual = m1 * t1;
 
         // Assert
         actual.ToTuple().Should().Be(expected);
@@ -213,7 +214,7 @@ public class RayMatrixTests
         var actual = m1 * m2;
 
         // Assert
-        Assert.True(actual == expected);
+        actual.Should().BeEquivalentTo(expected);
     }
 
     [Fact]
@@ -234,7 +235,7 @@ public class RayMatrixTests
         };
         
         // Act
-        var actual = m1.Transpose();
+        var actual = Calculate.Transpose(m1);
         
         // Act
         Assert.True(actual == expected);
@@ -246,10 +247,10 @@ public class RayMatrixTests
         // Arrange
         
         // Act
-        var actual = RayMatrix.Identity.Transpose();
+        var actual = Calculate.Transpose(RayMatrix.Identity);
         
         // Act
-        Assert.True(actual == RayMatrix.Identity);
+        actual.Should().BeEquivalentTo(RayMatrix.Identity);
     }
 
     [Fact]
@@ -263,7 +264,7 @@ public class RayMatrixTests
         var expected = 17;
 
         // Act
-        var actual = m.Determinant();
+        var actual = Calculate.Determinant(m);
 
         // Assert
         actual.Should().Be(expected);
@@ -306,7 +307,7 @@ public class RayMatrixTests
         // Arrange
         
         // Act
-        var actual = m.Submatrix(row, column);
+        var actual = Calculate.Submatrix(m, row, column);
         
         // Assert
         Assert.True(actual == expected);
@@ -336,11 +337,11 @@ public class RayMatrixTests
         , [1] = [ 2 , -1 , -7 ]
         , [2] = [ 6 , -1 ,  5 ]
         };
-        var sub = m.Submatrix(row, column);
+        var sub = Calculate.Submatrix(m, row, column);
 
         // Act
-        var actual = m.Minor(row, column);
-        var subDet = sub.Determinant();
+        var actual = Calculate.Minor(m, row, column);
+        var subDet = Calculate.Determinant(sub);
 
         // Assert
         actual.Should().Be(subDet);
@@ -373,7 +374,7 @@ public class RayMatrixTests
         };
 
         // Act
-        var actual = m.Cofactor(row, column);
+        var actual = Calculate.Cofactor(m, row, column);
 
         // Assert
         actual.Should().Be(expected);
@@ -394,10 +395,10 @@ public class RayMatrixTests
         var expected          = -196;
         
         // Act
-        var cofactor1 = m.Cofactor(0, 0);
-        var cofactor2 = m.Cofactor(0, 1);
-        var cofactor3 = m.Cofactor(0, 2);
-        var actual    = m.Determinant();
+        var cofactor1 = Calculate.Cofactor(m, 0, 0);
+        var cofactor2 = Calculate.Cofactor(m, 0, 1);
+        var cofactor3 = Calculate.Cofactor(m, 0, 2);
+        var actual    = Calculate.Determinant(m);
 
         // Assert
         cofactor1.Should().Be(expectedCofactor1);
@@ -423,11 +424,11 @@ public class RayMatrixTests
         var expected          = -4071;
         
         // Act
-        var cofactor1 = m.Cofactor(0, 0);
-        var cofactor2 = m.Cofactor(0, 1);
-        var cofactor3 = m.Cofactor(0, 2);
-        var cofactor4 = m.Cofactor(0, 3);
-        var actual    = m.Determinant();
+        var cofactor1 = Calculate.Cofactor(m, 0, 0);
+        var cofactor2 = Calculate.Cofactor(m, 0, 1);
+        var cofactor3 = Calculate.Cofactor(m, 0, 2);
+        var cofactor4 = Calculate.Cofactor(m, 0, 3);
+        var actual    = Calculate.Determinant(m);
 
         // Assert
         cofactor1.Should().Be(expectedCofactor1);
@@ -450,8 +451,8 @@ public class RayMatrixTests
         var expected = -2120;
 
         // Act
-        var det    = m.Determinant();
-        var actual = m.IsInvertible();
+        var det    = Calculate.Determinant(m);
+        var actual = Calculate.IsInvertible(m);
 
         // Assert
         det.Should().NotBe(0);
@@ -471,8 +472,8 @@ public class RayMatrixTests
         };
 
         // Act
-        var det    = m.Determinant();
-        var actual = m.IsInvertible();
+        var det    = Calculate.Determinant(m);
+        var actual = Calculate.IsInvertible(m);
         
         // Assert
         det.Should().Be(0);
@@ -532,10 +533,10 @@ public class RayMatrixTests
         // Arrange
 
         // Act
-        var cofactor1 = matrix.Cofactor(2, 3);
-        var cofactor2 = matrix.Cofactor(3, 2);
-        var det       = matrix.Determinant();
-        var actual    = matrix.Inverse();
+        var cofactor1 = Calculate.Cofactor(matrix, 2, 3);
+        var cofactor2 = Calculate.Cofactor(matrix, 3, 2);
+        var det       = Calculate.Determinant(matrix);
+        var actual    = Calculate.Inverse(matrix);
 
         // Assert
         expected[3, 2].Should().Be(MathF.Round(cofactor1 / det, 5));
@@ -562,7 +563,7 @@ public class RayMatrixTests
         var m3 = m1 * m2;
 
         // Act
-        var actual = m3 * m2.Inverse();
+        var actual = m3 * Calculate.Inverse(m2);
 
         // Assert
         Assert.True(actual == m1);
