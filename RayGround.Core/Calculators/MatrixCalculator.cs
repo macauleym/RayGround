@@ -1,6 +1,6 @@
-namespace RayGround.Core.Operations;
+namespace RayGround.Core.Calculators;
 
-public static class Calculate
+public static class MatrixCalculator
 {
     public static RayMatrix Transpose(RayMatrix of)
     {

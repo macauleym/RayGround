@@ -2,7 +2,7 @@ namespace RayGround.Core.Extensions;
 
 public static class RayCanvasExtensions
 {
-    public static void WritePixel(this RayCanvas source, int x, int y, RayColor color)
+    public static void WritePixel(this RayCanvas source, int x, int y, RayColor? color)
     {
         var toWrite     = new RayPixel(RayTuple.NewPoint(x, y, 0), color);
         var targetIndex = source.Pixels.FindIndex(p =>
@@ -11,6 +11,9 @@ public static class RayCanvasExtensions
             );
         try
         {
+            if (targetIndex < 0)
+                return;
+            
             source.Pixels[targetIndex] = toWrite;
         }
         catch (Exception e)

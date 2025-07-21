@@ -1,23 +1,32 @@
-﻿using RayGround.Core;
+﻿using System.Diagnostics;
+using RayGround.Core;
+using RayGround.Core.Calculators;
 using RayGround.Core.Exporters;
 using RayGround.Core.Extensions;
-using RayGround.Core.Handlers;
 using RayGround.Core.Operations;
 using RayEnvironment = RayGround.Core.Environment;
 
 const string SEPARATOR = "========================================";
+
+var stopwatch = Stopwatch.StartNew();
 
 //var projectileCanvas = await LaunchProjectile();
 //await ExportCanvas(projectileCanvas, "projectile.ppm");
 
 //await MatrixManipulation();
 
-var clockCanvas = await HoursOnAClock();
-await ExportCanvas(clockCanvas, "clock.ppm");
+//var clockCanvas = await HoursOnAClock();
+//await ExportCanvas(clockCanvas, "clock.ppm");
+
+var raySphereCanvas = await RaysAtASphereAsync();
+await ExportCanvasAsync(raySphereCanvas, "rays-to-sphere.ppm");
+
+stopwatch.Stop();
+Console.WriteLine($"Processing finished!\n\t{stopwatch.ElapsedMilliseconds}ms.\n\t{GC.GetTotalMemory(forceFullCollection:true)}mb.");
 
 return;
 
-void Draw(RayCanvas canvas, RayTuple position, RayColor color)
+void Draw(RayCanvas canvas, RayTuple position, RayColor? color)
 {
     var x = position.X;
     if (x > canvas.Width)
@@ -34,7 +43,17 @@ void Draw(RayCanvas canvas, RayTuple position, RayColor color)
     canvas.WritePixel((int)x, (int)canvas.Height - (int)y, color);
 }
 
-async Task<RayCanvas> LaunchProjectile()
+async Task ExportCanvasAsync(RayCanvas canvas, string fileName)
+{
+    var ppm = new PPMExporter();
+    Console.WriteLine("Exporting canvas to file...");
+    await File.WriteAllTextAsync(fileName, await ppm.ExportAsync(canvas));
+
+    Console.WriteLine("All done!");
+    Console.WriteLine(SEPARATOR);
+}
+
+async Task<RayCanvas> LaunchProjectileAsync()
 {
     Console.WriteLine("Prep the projectile...");
     var start      = RayTuple.NewPoint(0, 1, 0);
@@ -68,23 +87,13 @@ async Task<RayCanvas> LaunchProjectile()
     return canvas;
 }
 
-async Task ExportCanvas(RayCanvas canvas, string fileName)
-{
-    var ppm = new PPMExporter();
-    Console.WriteLine("Exporting canvas to file...");
-    await File.WriteAllTextAsync(fileName, await ppm.ExportAsync(canvas));
-
-    Console.WriteLine("All done!");
-    Console.WriteLine(SEPARATOR);
-}
-
-async Task MatrixManipulation()
+async Task MatrixManipulationAsync()
 {
     Console.WriteLine("Now for some matrix manipulation...");
     Console.WriteLine(SEPARATOR);
     
     Console.WriteLine("Taking the inverse of the identity matrix.");
-    Console.WriteLine(Calculate.Inverse(RayMatrix.Identity));
+    Console.WriteLine(RayMatrix.Identity.Inverse());
     Console.WriteLine(SEPARATOR);
     
     Console.WriteLine("Multiply matrix by its own inverse.");
@@ -94,15 +103,15 @@ async Task MatrixManipulation()
     , [2] = [-2 , 1 ,  1 ,  3 ]
     , [3] = [ 4 , 3 ,  2 , -1 ]
     };
-    var m2 = Calculate.Inverse(m1);
+    var m2 = m1.Inverse();
     Console.WriteLine(m1);
     Console.WriteLine(m2);
     Console.WriteLine(m1 * m2);
     Console.WriteLine(SEPARATOR);
 
     Console.WriteLine("Inverse Transpose and Transpose Inverse");
-    Console.WriteLine(Calculate.Transpose(Calculate.Inverse(m1)));
-    Console.WriteLine(Calculate.Inverse(Calculate.Transpose(m1)));
+    Console.WriteLine(m1.Inverse().Transpose());
+    Console.WriteLine(m1.Transpose().Inverse());
     Console.WriteLine(SEPARATOR);
     
     Console.WriteLine("Showing identity with tuple, but with single identity value changed.");
@@ -118,10 +127,10 @@ async Task MatrixManipulation()
     Console.WriteLine(SEPARATOR);
 }
 
-async Task<RayCanvas> HoursOnAClock()
+async Task<RayCanvas> HoursOnAClockAsync()
 {
     // First create the canvas that we'll be working with.
-    var clock = new RayCanvas(80, 80);
+    var clock = new RayCanvas(100, 100);
     
     // Create the 12 points that we'll ultimately need to plot.
     var points = Enumerable.Range(0, 12)
@@ -165,4 +174,62 @@ async Task<RayCanvas> HoursOnAClock()
     
     // Return the canvas so we can export it, and see the pretty picture!
     return clock;
+}
+
+async Task<RayCanvas> RaysAtASphereAsync()
+{
+    // Book recommends 100, but I want to flex.
+    // Setting this to 500 took a bit over a minute (~72 seconds)
+    // but like 30TB of total memory.
+    // Need to look into better memory efficiency.
+    var canvasSize = 500;
+    var canvas     = new RayCanvas(canvasSize, canvasSize);
+    var rayOrigin  = RayTuple.NewPoint(0, 0, -5);
+    
+    var sphere = Sphere.Create();
+    
+    // Transforming the sphere.
+    var scaleY        = Transform.Scaling(1, .5f, 1);
+    var sphereShrinkY = sphere.UpdateTransform(scaleY);
+    
+    var scaleX        = Transform.Scaling(.5f, 1, 1);
+    var sphereShrinkX = sphere.UpdateTransform(scaleX);
+    
+    var shrinkAndRotate       = Transform.RotationZ(float.Pi / 4) * scaleX;
+    var sphereShrinkAndRotate = sphere.UpdateTransform(shrinkAndRotate);
+    
+    var shrinkAndSkew       = Transform.Shearing(1, 0, 0, 0, 0, 0) * scaleX;
+    var sphereShrinkAndSkew = sphere.UpdateTransform(shrinkAndSkew);
+                    
+    /********
+     * Since the sphere is a unit sphere at the origin, tangent rays will
+     * be approx. 1 unit from the origin. Every 5 units will increase the
+     * height by another 1 unit. Since the wall is at 10, the ray will be
+     * 3 units away from the origin. The wall must be double this (accounting
+     * for halves) to ensure the sphere shadow will be printed on the
+     * whole wall. This must be accounted for if changing the wall's, or
+     * ray's position.
+     ********/
+    var wallZ     = 10;
+    var wallSize  = 7f;
+    
+    var pixelSize = wallSize / canvasSize; // .07f
+    var halfWall  = wallSize / 2;          // 3.5f
+
+    for (var y = 0; y < canvasSize; y++)
+    for (var x = 0; x < canvasSize; x++)
+    {
+        var worldY        = halfWall - pixelSize * y;
+        var worldX        = -halfWall + pixelSize * x;
+        var worldPosition = RayTuple.NewPoint(worldX, worldY, wallZ);
+
+        var normalDir     = worldPosition - rayOrigin;
+        var ray           = Ray.Create(rayOrigin, normalDir); 
+        var intersections = ray.Intersect(sphere);
+        
+        if (intersections.Hit().HasValue)
+            canvas.WritePixel(x, y, new RayColor(255, 0, 0));
+    }
+
+    return canvas;
 }

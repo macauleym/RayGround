@@ -27,7 +27,7 @@ public class TransformTests
     {
         // Arrange
         var transform = Transform.Translation(5, -3, 2);
-        var inverse   = Calculate.Inverse(transform);
+        var inverse   = transform.Inverse();
         var point     = RayTuple.NewPoint(-3, 4, 5);
         var expected  = RayTuple.NewPoint(-8, 7, 3);
 
@@ -86,9 +86,7 @@ public class TransformTests
     public void MultiplyingByInverseScaleReduces()
     {
         // Arrange
-        var transform = 
-            Calculate.Inverse(
-                Transform.Scaling(2, 3, 4));
+        var transform = Transform.Scaling(2, 3, 4).Inverse();
         var point     = RayTuple.NewVector(-4, 6, 8);
         var expected  = RayTuple.NewVector(-2, 2, 2);
 
@@ -138,7 +136,7 @@ public class TransformTests
     {
         // Arrange
         var halfQuarter = Transform.RotationX(float.Pi / 4);
-        var inverseHalf = Calculate.Inverse(halfQuarter);
+        var inverseHalf = halfQuarter.Inverse();
         var point       = RayTuple.NewPoint(0, 1, 0);
         var expected    = RayTuple.NewPoint(0, float.Sqrt(2) / 2, -(float.Sqrt(2) / 2));
         

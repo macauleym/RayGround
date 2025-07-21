@@ -13,7 +13,7 @@ public class RayCanvasTests
         // Arrange
         var width  = 10;
         var height = 20;
-        var black  = new RayColor();
+        var black  = new RayColor(0,0,0);
         
         // Act
         var actual = new RayCanvas(width, height);
@@ -39,6 +39,6 @@ public class RayCanvasTests
         target.WritePixel(x, y, color);
         
         // Assert
-        target.GetPixel(x, y).Should().Be(expected);
+        target.GetPixel(x, y).Should().BeEquivalentTo(expected);
     }
 }

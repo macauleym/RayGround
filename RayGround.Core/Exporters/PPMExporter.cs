@@ -87,7 +87,7 @@ P3
     static async Task<string> PixelDataAsync(RayCanvas canvas)
     {
         var dataBuilder = new StringBuilder();
-        var rowTasks = new List<Task<KeyValuePair<int, StringBuilder>>>();
+        var rowTasks    = new List<Task<KeyValuePair<int, StringBuilder>>>();
         for (var height = 0; height < canvas.Height; height++)
             rowTasks.Add(ProcessDataRowAsync(canvas, height));
 

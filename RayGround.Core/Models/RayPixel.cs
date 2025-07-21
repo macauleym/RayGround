@@ -1,7 +1,7 @@
 namespace RayGround.Core;
 
-public struct RayPixel(RayTuple position, RayColor color)
+public class RayPixel(RayTuple position, RayColor? color)
 {
     public readonly RayTuple Position = position;
-    public readonly RayColor Color    = color;
+    public readonly RayColor? Color   = color ?? new RayColor(0,0,0);
 }

@@ -1,6 +1,6 @@
 ﻿namespace RayGround.Core;
 
-public readonly struct RayTuple(float x, float y, float z, float w)
+public class RayTuple(float x, float y, float z, float w)
 {
     public const float EPSILON = 0.00001f;
     

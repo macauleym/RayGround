@@ -1,6 +1,6 @@
 namespace RayGround.Core;
 
-public struct RayColor(float red, float green, float blue)
+public class RayColor(float red, float green, float blue)
 {
     public const float EPSILON = 0.00001f;
 

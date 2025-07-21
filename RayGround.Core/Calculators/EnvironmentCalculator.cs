@@ -1,4 +1,4 @@
-namespace RayGround.Core.Handlers;
+namespace RayGround.Core.Calculators;
 
 public class EnvironmentCalculator
 {
