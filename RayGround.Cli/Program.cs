@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using RayGround.Core;
 using RayGround.Core.Calculators;
 using RayGround.Core.Exporters;
@@ -18,8 +19,11 @@ var stopwatch = Stopwatch.StartNew();
 //var clockCanvas = await HoursOnAClock();
 //await ExportCanvas(clockCanvas, "clock.ppm");
 
-var raySphereCanvas = await RaysAtASphereAsync();
-await ExportCanvasAsync(raySphereCanvas, "rays-to-sphere.ppm");
+//var raySphereCanvas = await RaysAtASphereAsync();
+//await ExportCanvasAsync(raySphereCanvas, "rays-to-sphere.ppm");
+
+var shadedSphereCanvas = await ShadedSphereAsync();
+await ExportCanvasAsync(shadedSphereCanvas, "shaded-sphere.ppm");
 
 stopwatch.Stop();
 Console.WriteLine($"Processing finished!\n\t{stopwatch.ElapsedMilliseconds}ms.\n\t{GC.GetTotalMemory(forceFullCollection:true)}mb.");
@@ -68,7 +72,7 @@ async Task<RayCanvas> LaunchProjectileAsync()
 
     Console.WriteLine("Build the canvas...");
     var canvas          = new RayCanvas(900, 550);
-    var projectileColor = new RayColor(0.8f, 0.8f, 0.8f);
+    var projectileColor = RayColor.Create(0.8f, 0.8f, 0.8f);
 
     Console.WriteLine($"Projectile starting at {projectile.Position}.");
     Draw(canvas, projectile.Position, projectileColor);
@@ -115,7 +119,7 @@ async Task MatrixManipulationAsync()
     Console.WriteLine(SEPARATOR);
     
     Console.WriteLine("Showing identity with tuple, but with single identity value changed.");
-    var tup = new RayTuple(4, 2, 1, 3);
+    var tup = RayTuple.Create(4, 2, 1, 3);
     var strangeIdentity = new RayMatrix(4, 4)
     { [0] = [ 1 , 0 , 0 , 0 ]
     , [1] = [ 0 , 9 , 0 , 0 ]
@@ -168,7 +172,7 @@ async Task<RayCanvas> HoursOnAClockAsync()
     
     // Paint the pixels onto the canvas.
     foreach (var point in points)
-        Draw(clock, point, new RayColor(225, 225, 0));
+        Draw(clock, point, RayColor.Create(225, 225, 0));
     
     Console.WriteLine(SEPARATOR);
     
@@ -228,7 +232,80 @@ async Task<RayCanvas> RaysAtASphereAsync()
         var intersections = ray.Intersect(sphere);
         
         if (intersections.Hit().HasValue)
-            canvas.WritePixel(x, y, new RayColor(255, 0, 0));
+            canvas.WritePixel(x, y, RayColor.Create(255, 0, 0));
+    }
+
+    return canvas;
+}
+
+async Task<RayCanvas> ShadedSphereAsync()
+{
+    // Book recommends 100, but I want to flex.
+    // Setting this to 500 took a bit over a minute (~72 seconds)
+    // but like 30TB of total memory.
+    // Need to look into better memory efficiency.
+    var canvasSize = 500;
+    var canvas     = new RayCanvas(canvasSize, canvasSize);
+    var rayOrigin  = RayTuple.NewPoint(0, 0, -5);
+
+    var sphere = Sphere.Create()
+        .UpdateMaterial(Material.Create(color: RayColor.Create(1, 0.2f, 1)));
+
+    var light = Light.AsPoint(
+          RayTuple.NewPoint(10, 5, -10)
+        , RayColor.Create(1, 1, 1)
+        );
+
+    // Transforming the sphere.
+    var scaleY        = Transform.Scaling(1, .5f, 1);
+    var sphereShrinkY = sphere.UpdateTransform(scaleY);
+    
+    var scaleX        = Transform.Scaling(.5f, 1, 1);
+    var sphereShrinkX = sphere.UpdateTransform(scaleX);
+    
+    var shrinkAndRotate       = Transform.RotationZ(float.Pi / 4) * scaleX;
+    var sphereShrinkAndRotate = sphere.UpdateTransform(shrinkAndRotate);
+    
+    var shrinkAndSkew       = Transform.Shearing(1, 0, 0, 0, 0, 0) * scaleX;
+    var sphereShrinkAndSkew = sphere.UpdateTransform(shrinkAndSkew);
+
+    /********
+     * Since the sphere is a unit sphere at the origin, tangent rays will
+     * be approx. 1 unit from the origin. Every 5 units will increase the
+     * height by another 1 unit. Since the wall is at 10, the ray will be
+     * 3 units away from the origin. The wall must be double this (accounting
+     * for halves) to ensure the sphere shadow will be printed on the
+     * whole wall. This must be accounted for if changing the wall's, or
+     * ray's position.
+     ********/
+    var wallZ    = 10;
+    var wallSize = 7f;
+    
+    var pixelSize = wallSize / canvasSize; // .07f
+    var halfWall  = wallSize / 2;          // 3.5f
+
+    for (var y = 0; y < canvasSize; y++)
+    for (var x = 0; x < canvasSize; x++)
+    {
+        var worldY        = halfWall - pixelSize * y;
+        var worldX        = -halfWall + pixelSize * x;
+        var worldPosition = RayTuple.NewPoint(worldX, worldY, wallZ);
+
+        var normalDir     = worldPosition - rayOrigin;
+        var ray           = Ray.Create(rayOrigin, normalDir.Normalize()); 
+        var intersections = ray.Intersect(sphere);
+
+        if (!intersections.Hit().HasValue)
+            continue;
+        
+        var hit       = intersections.Hit()!.Value;
+        var point     = ray.Position(hit.RayPoint);
+        var hitSphere = (Sphere)hit.Collided;
+        var normal    = hitSphere.NormalAt(point);
+        var eye       = -ray.Direction;
+        var color     = Illuminate.Lighting(hitSphere.Material, light, point, eye, normal);
+            
+        canvas.WritePixel(x, y, color);
     }
 
     return canvas;

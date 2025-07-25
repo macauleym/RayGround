@@ -54,7 +54,7 @@ public static class RayMatrixExtensions
         MatrixCalculator.Inverse(of);
     
     public static RayTuple ToTuple(this RayMatrix source) =>
-        new(
+        RayTuple.Create(
           source[0, 0]
         , source[1, 0]
         , source[2, 0]

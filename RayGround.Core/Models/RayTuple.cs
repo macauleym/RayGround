@@ -1,19 +1,30 @@
 ﻿namespace RayGround.Core;
 
-public class RayTuple(float x, float y, float z, float w)
+public class RayTuple
 {
     public const float EPSILON = 0.00001f;
     
-    public readonly float X = x;
-    public readonly float Y = y;
-    public readonly float Z = z;
-    public readonly float W = w;
+    public readonly float X;
+    public readonly float Y;
+    public readonly float Z;
+    public readonly float W;
+
+    RayTuple(float x, float y, float z, float w)
+    {
+        X = x;
+        Y = y;
+        Z = z;
+        W = w;
+    }
 
     public static RayTuple NewPoint(float x, float y, float z) =>
         new(x, y, z, 1);
 
     public static RayTuple NewVector(float x, float y, float z) =>
         new(x, y, z, 0);
+
+    public static RayTuple Create(float x, float y, float z, float w) =>
+        new(x, y, z, w);
 
     public override bool Equals(object? obj) =>
         obj is RayTuple other

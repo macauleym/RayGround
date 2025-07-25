@@ -14,7 +14,7 @@ public static class RayTupleExtensions
     {
         var magnitude = Magnitude(source);
         
-        return new RayTuple(
+        return RayTuple.Create(
               source.X / magnitude
             , source.Y / magnitude
             , source.Z / magnitude
@@ -35,6 +35,9 @@ public static class RayTupleExtensions
             , left.X * right.Y - left.Y * right.X
             );
 
+    public static RayTuple Reflect(this RayTuple source, RayTuple normal) =>
+        source - normal * 2 * source.Dot(normal);
+    
     public static RayMatrix ToMatrix(this RayTuple source) =>
         new(4, 1)
         { [0, 0] = source.X

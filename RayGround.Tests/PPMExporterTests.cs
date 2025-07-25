@@ -32,9 +32,9 @@ P3
     public async Task ExportsCorrectPixelData()
     {
         // Arrange
-        var color1 = new RayColor(1.5f, 0, 0);
-        var color2 = new RayColor(0, 0.5f, 0);
-        var color3 = new RayColor(-0.5f, 0, 1);
+        var color1 = RayColor.Create(1.5f, 0, 0);
+        var color2 = RayColor.Create(0, 0.5f, 0);
+        var color3 = RayColor.Create(-0.5f, 0, 1);
         
         var canvas = new RayCanvas(5, 3);
         canvas.WritePixel(0, 0, color1);
@@ -59,7 +59,7 @@ P3
     public async Task ExportsWrappedPixelDataLines()
     {
         // Arrange
-        var canvas   = new RayCanvas(10, 2, new RayColor(1f, 0.8f, 0.6f));
+        var canvas   = new RayCanvas(10, 2, RayColor.Create(1f, 0.8f, 0.6f));
         var expected = 
 """
 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204

@@ -9,12 +9,12 @@ public class RayColorTests
     public void ColorsAreTuples()
     {
         // Arrange
-        var red   = -.5f;
-        var green = .4f;
+        var red   = -0.5f;
+        var green = 0.4f;
         var blue  = 1.7f;
         
         // Act
-        var actual = new RayColor(red, green, blue);
+        var actual = RayColor.Create(red, green, blue);
         
         // Assert
         actual.Red.Should().Be(red);
@@ -26,9 +26,9 @@ public class RayColorTests
     public void AddingColorsReturnsCombinedColor()
     {
         // Arrange
-        var a        = new RayColor(0.9f, 0.6f, 0.75f);
-        var b        = new RayColor(0.7f, 0.1f, 0.25f);
-        var expected = new RayColor(1.6f, 0.7f, 1.0f);
+        var a        = RayColor.Create(0.9f, 0.6f, 0.75f);
+        var b        = RayColor.Create(0.7f, 0.1f, 0.25f);
+        var expected = RayColor.Create(1.6f, 0.7f, 1.0f);
 
         // Act
         var actual = a + b;
@@ -41,9 +41,9 @@ public class RayColorTests
     public void SubtractingColorsReturnsReducedColor()
     {
         // Arrange
-        var a        = new RayColor(0.9f, 0.6f, 0.75f);
-        var b        = new RayColor(0.7f, 0.1f, 0.25f);
-        var expected = new RayColor(0.2f, 0.5f, 0.5f);
+        var a        = RayColor.Create(0.9f, 0.6f, 0.75f);
+        var b        = RayColor.Create(0.7f, 0.1f, 0.25f);
+        var expected = RayColor.Create(0.2f, 0.5f, 0.5f);
         
         // Act
         var actual = a - b;
@@ -56,9 +56,9 @@ public class RayColorTests
     public void MultiplyingColorByScalerReturnsAmplifiedColor()
     {
         // Arrange
-        var color    = new RayColor(0.2f, 0.3f, 0.4f);
+        var color    = RayColor.Create(0.2f, 0.3f, 0.4f);
         var scaler   = 2;
-        var expected = new RayColor(0.4f, 0.6f, 0.8f);
+        var expected = RayColor.Create(0.4f, 0.6f, 0.8f);
         
         // Act
         var actual = color * scaler;
@@ -71,9 +71,9 @@ public class RayColorTests
     public void MultiplyingColorsTogetherReturnsBlendedColor()
     {
         // Arrange
-        var a        = new RayColor(1, 0.2f, 0.4f);
-        var b        = new RayColor(0.9f, 1f, 0.1f);
-        var expected = new RayColor(0.9f, 0.2f, 0.04f);
+        var a        = RayColor.Create(1, 0.2f, 0.4f);
+        var b        = RayColor.Create(0.9f, 1f, 0.1f);
+        var expected = RayColor.Create(0.9f, 0.2f, 0.04f);
         
         // Act
         var actual = a * b;

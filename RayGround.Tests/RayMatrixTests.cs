@@ -186,8 +186,8 @@ public class RayMatrixTests
         , [2] = [ 8 , 6 , 4 , 1 ]
         , [3] = [ 0 , 0 , 0 , 1 ]
         };
-        var t1 = new RayTuple(1, 2, 3, 1);
-        var expected = new RayTuple(18, 24, 33, 1);
+        var t1 = RayTuple.Create(1, 2, 3, 1);
+        var expected = RayTuple.Create(18, 24, 33, 1);
 
         // Act
         var actual = m1 * t1;

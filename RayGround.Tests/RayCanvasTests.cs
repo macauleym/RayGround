@@ -13,7 +13,7 @@ public class RayCanvasTests
         // Arrange
         var width  = 10;
         var height = 20;
-        var black  = new RayColor(0,0,0);
+        var black  = RayColor.Create(0,0,0);
         
         // Act
         var actual = new RayCanvas(width, height);
@@ -29,7 +29,7 @@ public class RayCanvasTests
     public void WritePixelUpdatesExistingColor()
     {
         // Arrange
-        var color    = new RayColor(1, 0, 0);
+        var color    = RayColor.Create(1, 0, 0);
         var x        = 2;
         var y        = 3;
         var expected = new RayPixel(RayTuple.NewPoint(x, y, 0), color);

@@ -1,13 +1,23 @@
 namespace RayGround.Core;
 
-public class RayColor(float red, float green, float blue)
+public class RayColor
 {
     public const float EPSILON = 0.00001f;
 
-    public readonly float Red   = red;
-    public readonly float Green = green;
-    public readonly float Blue  = blue;
+    public readonly float Red;
+    public readonly float Green;
+    public readonly float Blue;
 
+    RayColor(float red, float green, float blue)
+    {
+        Red   = red;
+        Green = green;
+        Blue  = blue;
+    }
+    
+    public static RayColor Create(float red, float green, float blue) =>
+        new(red, green, blue);
+    
     public override bool Equals(object? obj) =>
         obj is RayColor other
         && MathF.Abs(Red   - other.Red) < EPSILON
