@@ -113,7 +113,7 @@ public class RayMatrix(int rows, int columns) : ICloneable, IEquatable<RayMatrix
         {
             rowBuilder.Append('|');
             for (var c = 0; c < Columns; c++)
-                rowBuilder.Append($" {matrix[r, c]} ");
+                rowBuilder.Append($" {matrix[r, c]:F7} ");
             rowBuilder.Append('|');
             matrixBuilder.AppendLine(rowBuilder.ToString());
             rowBuilder.Clear();

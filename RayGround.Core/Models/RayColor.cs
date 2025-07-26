@@ -64,5 +64,5 @@ public class RayColor
             );
 
     public override string ToString() =>
-        $"(Red:{Red}, Green:{Green}, Blue:{Blue})";
+        $"(Red:{Red:F7}, Green:{Green:F7}, Blue:{Blue:F7})";
 }

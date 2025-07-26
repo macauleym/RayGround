@@ -249,11 +249,17 @@ async Task<RayCanvas> ShadedSphereAsync()
     var rayOrigin  = RayTuple.NewPoint(0, 0, -5);
 
     var sphere = Sphere.Create()
-        .UpdateMaterial(Material.Create(color: RayColor.Create(1, 0.2f, 1)));
+        .UpdateMaterial(Material.Create(
+              ambient: 0.2f
+            , diffuse: 0.5f
+            , specular: 0.1f
+            , shininess: 300.0f
+            , color: RayColor.Create(0.1f, 1f, 0.1f)
+            ));
 
     var light = Light.AsPoint(
           RayTuple.NewPoint(10, 5, -10)
-        , RayColor.Create(1, 1, 1)
+        , RayColor.Create(0.1f, 1, 0.1f)
         );
 
     // Transforming the sphere.
@@ -269,6 +275,11 @@ async Task<RayCanvas> ShadedSphereAsync()
     var shrinkAndSkew       = Transform.Shearing(1, 0, 0, 0, 0, 0) * scaleX;
     var sphereShrinkAndSkew = sphere.UpdateTransform(shrinkAndSkew);
 
+    var shrinkShearRotate = Transform.RotationZ(float.Pi / 12)
+                            * Transform.Shearing(1, 0, 0, 0, 0, 0)
+                            * scaleX;
+   // sphere = sphere.UpdateTransform(shrinkShearRotate);
+    
     /********
      * Since the sphere is a unit sphere at the origin, tangent rays will
      * be approx. 1 unit from the origin. Every 5 units will increase the
@@ -284,6 +295,7 @@ async Task<RayCanvas> ShadedSphereAsync()
     var pixelSize = wallSize / canvasSize; // .07f
     var halfWall  = wallSize / 2;          // 3.5f
 
+    var pixelCount = 0;
     for (var y = 0; y < canvasSize; y++)
     for (var x = 0; x < canvasSize; x++)
     {
@@ -304,7 +316,9 @@ async Task<RayCanvas> ShadedSphereAsync()
         var normal    = hitSphere.NormalAt(point);
         var eye       = -ray.Direction;
         var color     = Illuminate.Lighting(hitSphere.Material, light, point, eye, normal);
-            
+
+        pixelCount++;
+        Console.WriteLine($"Drawing pixel #{pixelCount} at ({x}, {y}) with color ({color}).");
         canvas.WritePixel(x, y, color);
     }
 
