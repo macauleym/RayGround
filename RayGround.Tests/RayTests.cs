@@ -151,7 +151,7 @@ public class RayTests
         var expected  = Ray.Create(RayTuple.NewPoint(4, 6, 8), RayTuple.NewVector(0, 1, 0));
 
         // Act
-        var actual = ray.Transform(translate);
+        var actual = ray.Morph(translate);
 
         // Assert
         actual.Should().NotBe(ray);
@@ -167,12 +167,10 @@ public class RayTests
         var expected = Ray.Create(RayTuple.NewPoint(2, 6, 12), RayTuple.NewVector(0, 3, 0));
 
         // Act
-        var actual = ray.Transform(scale);
+        var actual = ray.Morph(scale);
 
         // Assert
         actual.Should().NotBe(ray);
         actual.Should().BeEquivalentTo(expected);
     }
-    
-    
 }

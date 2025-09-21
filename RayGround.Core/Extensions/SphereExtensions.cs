@@ -2,7 +2,7 @@ namespace RayGround.Core.Extensions;
 
 public static class SphereExtensions
 {
-    public static Sphere UpdateTransform(this Sphere source, RayMatrix with) =>
+    public static Sphere Morph(this Sphere source, RayMatrix with) =>
         Sphere.Create(
               source.Origin
             , source.Radius
@@ -11,7 +11,7 @@ public static class SphereExtensions
             , source.Id
             );
 
-    public static Sphere UpdateMaterial(this Sphere source, Material target) =>
+    public static Sphere Paint(this Sphere source, Material target) =>
         Sphere.Create(
               source.Origin
             , source.Radius

@@ -11,6 +11,6 @@ public class Light
         Intensity = intensity;
     }
 
-    public static Light AsPoint(RayTuple position, RayColor intensity) =>
+    public static Light Create(RayTuple position, RayColor intensity) =>
         new(position, intensity);
 }

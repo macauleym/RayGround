@@ -4,6 +4,7 @@ using RayGround.Core;
 using RayGround.Core.Calculators;
 using RayGround.Core.Exporters;
 using RayGround.Core.Extensions;
+using RayGround.Core.Models;
 using RayGround.Core.Operations;
 using RayEnvironment = RayGround.Core.Environment;
 
@@ -22,8 +23,11 @@ var stopwatch = Stopwatch.StartNew();
 //var raySphereCanvas = await RaysAtASphereAsync();
 //await ExportCanvasAsync(raySphereCanvas, "rays-to-sphere.ppm");
 
-var shadedSphereCanvas = await ShadedSphereAsync();
-await ExportCanvasAsync(shadedSphereCanvas, "shaded-sphere.ppm");
+//var shadedSphereCanvas = await ShadedSphereAsync();
+//await ExportCanvasAsync(shadedSphereCanvas, "shaded-sphere.ppm");
+
+var cameraViewCanvas = await RenderCameraSceneAsync();
+await ExportCanvasAsync(cameraViewCanvas, "camera-view.ppm");
 
 stopwatch.Stop();
 Console.WriteLine($"Processing finished!\n\t{stopwatch.ElapsedMilliseconds}ms.\n\t{GC.GetTotalMemory(forceFullCollection:true)}mb.");
@@ -194,16 +198,16 @@ async Task<RayCanvas> RaysAtASphereAsync()
     
     // Transforming the sphere.
     var scaleY        = Transform.Scaling(1, .5f, 1);
-    var sphereShrinkY = sphere.UpdateTransform(scaleY);
+    var sphereShrinkY = sphere.Morph(scaleY);
     
     var scaleX        = Transform.Scaling(.5f, 1, 1);
-    var sphereShrinkX = sphere.UpdateTransform(scaleX);
+    var sphereShrinkX = sphere.Morph(scaleX);
     
     var shrinkAndRotate       = Transform.RotationZ(float.Pi / 4) * scaleX;
-    var sphereShrinkAndRotate = sphere.UpdateTransform(shrinkAndRotate);
+    var sphereShrinkAndRotate = sphere.Morph(shrinkAndRotate);
     
     var shrinkAndSkew       = Transform.Shearing(1, 0, 0, 0, 0, 0) * scaleX;
-    var sphereShrinkAndSkew = sphere.UpdateTransform(shrinkAndSkew);
+    var sphereShrinkAndSkew = sphere.Morph(shrinkAndSkew);
                     
     /********
      * Since the sphere is a unit sphere at the origin, tangent rays will
@@ -249,7 +253,7 @@ async Task<RayCanvas> ShadedSphereAsync()
     var rayOrigin  = RayTuple.NewPoint(0, 0, -5);
 
     var sphere = Sphere.Create()
-        .UpdateMaterial(Material.Create(
+        .Paint(Material.Create(
               ambient: 0.2f
             , diffuse: 0.5f
             , specular: 0.1f
@@ -257,28 +261,28 @@ async Task<RayCanvas> ShadedSphereAsync()
             , color: RayColor.Create(0.1f, 1f, 0.1f)
             ));
 
-    var light = Light.AsPoint(
+    var light = Light.Create(
           RayTuple.NewPoint(10, 5, -10)
         , RayColor.Create(0.1f, 1, 0.1f)
         );
 
     // Transforming the sphere.
     var scaleY        = Transform.Scaling(1, .5f, 1);
-    var sphereShrinkY = sphere.UpdateTransform(scaleY);
+    var sphereShrinkY = sphere.Morph(scaleY);
     
     var scaleX        = Transform.Scaling(.5f, 1, 1);
-    var sphereShrinkX = sphere.UpdateTransform(scaleX);
+    var sphereShrinkX = sphere.Morph(scaleX);
     
     var shrinkAndRotate       = Transform.RotationZ(float.Pi / 4) * scaleX;
-    var sphereShrinkAndRotate = sphere.UpdateTransform(shrinkAndRotate);
+    var sphereShrinkAndRotate = sphere.Morph(shrinkAndRotate);
     
     var shrinkAndSkew       = Transform.Shearing(1, 0, 0, 0, 0, 0) * scaleX;
-    var sphereShrinkAndSkew = sphere.UpdateTransform(shrinkAndSkew);
+    var sphereShrinkAndSkew = sphere.Morph(shrinkAndSkew);
 
     var shrinkShearRotate = Transform.RotationZ(float.Pi / 12)
                             * Transform.Shearing(1, 0, 0, 0, 0, 0)
                             * scaleX;
-   // sphere = sphere.UpdateTransform(shrinkShearRotate);
+    // sphere = sphere.UpdateTransform(shrinkShearRotate);
     
     /********
      * Since the sphere is a unit sphere at the origin, tangent rays will
@@ -323,4 +327,56 @@ async Task<RayCanvas> ShadedSphereAsync()
     }
 
     return canvas;
+}
+
+async Task<RayCanvas> RenderCameraSceneAsync()
+{
+    // Spheres that will make up the scene.
+    var baseSphere = Sphere.Create(); 
+    
+    var floor = baseSphere
+        .Morph(Transform.Scaling(10 ,0.01f, 10))
+        .Paint(Material.Create(
+          color: RayColor.Create(1,0.9f,0.9f)
+        , specular: 0f)
+        );
+    var leftWall = floor
+        .Morph(Transform.Translation(0, 0, 5)
+               * Transform.RotationY(-float.Pi / 4)
+               * Transform.RotationX(float.Pi / 2));
+    var rightWall = floor
+        .Morph(Transform.Translation(0, 0, 5)
+               * Transform.RotationY(float.Pi / 4)
+               * Transform.RotationX(float.Pi / 2));
+
+    var baseSphereMat = Material.Create(
+      diffuse: 0.7f
+    , specular: 0.3f
+    );
+    var centerSphere = baseSphere
+        .Morph(Transform.Translation(-0.5f, 1, 0.5f))
+        .Paint(baseSphereMat.Recolor(RayColor.Create(0.1f, 1, 0.5f)));
+    var rightSphere = baseSphere
+        .Morph(Transform.Translation(1.5f, 0.5f, 0.5f)
+               * Transform.Scaling(0.5f, 0.5f, 0.5f))
+        .Paint(baseSphereMat.Recolor(RayColor.Create(0.5f, 1, 0.1f)));
+    var leftSphere = baseSphere
+        .Morph(Transform.Translation(-1.5f, 0.33f, -0.75f) * Transform.Scaling(0.33f, 0.33f, 0.33f))
+        .Paint(baseSphereMat.Recolor(RayColor.Create(1, 0.8f, 0.1f)));
+
+    // The world to put things in. 
+    var world = World.Empty();
+    world.Lights.Add(Light.Create(RayTuple.NewPoint(-10, 10, -10), RayColor.Create(1, 1, 1)));
+    world.Shapes.AddRange([floor, rightWall, leftWall, centerSphere, rightSphere, leftSphere]);
+
+    // The camera that will render the scene viewport.
+    var camera = Camera
+        .Create(800, 400, float.Pi / 3)
+        .Morph(View.Transform(
+          RayTuple.NewPoint( 0, 1.5f, -5)
+        , RayTuple.NewPoint( 0,    1,  0)
+        , RayTuple.NewVector(0,    1,  0))
+        );
+
+    return camera.Render(world);
 }

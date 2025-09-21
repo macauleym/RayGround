@@ -1,5 +1,6 @@
 using FluentAssertions;
 using RayGround.Core;
+using RayGround.Core.Calculators;
 using RayGround.Core.Extensions;
 
 namespace RayGround.Tests;
@@ -102,5 +103,58 @@ public class IntersectionTests
 
         // Assert
         actual.Should().Be(fourth);
+    }
+
+    [Fact]
+    public void IntersectionCanBePrecomputed()
+    {
+        // Arrange
+        var ray = Ray.Create(RayTuple.NewPoint(0, 0, -5), RayTuple.NewVector(0, 0, 1));
+        var shape = Sphere.Create();
+        var intersection = Intersection.Create(4, shape);
+        
+        // Act
+        var actual = intersection.Precompute(ray);
+
+        // Assert
+        actual.RayPoint.Should().Be(intersection.RayPoint);
+        actual.Collided.Should().BeEquivalentTo(intersection.Collided);
+        actual.Point.Should().BeEquivalentTo(RayTuple.NewPoint(0, 0, -1));
+        actual.EyeVector.Should().BeEquivalentTo(RayTuple.NewVector(0, 0, -1));
+        actual.NormalVector.Should().BeEquivalentTo(RayTuple.NewVector(0, 0, -1));
+    }
+
+    [Fact]
+    public void PrecomputationSetsInsideFalseWhenHitOccursOutside()
+    {
+        // Arrange
+        var ray          = Ray.Create(RayTuple.NewPoint(0, 0, -5), RayTuple.NewVector(0, 0, 1));
+        var shape        = Sphere.Create();
+        var intersection = Intersection.Create(4, shape);
+
+        // Act
+        var actual = intersection.Precompute(ray);
+
+        // Assert
+        actual.IsInside.Should().BeFalse();
+    }
+
+    [Fact]
+    public void PrecomputationSetsInsideTrueWhenHitOccursInside()
+    {
+        // Arrange
+        var ray          = Ray.Create(RayTuple.NewPoint(0, 0, 0), RayTuple.NewVector(0, 0, 1));
+        var shape        = Sphere.Create();
+        var intersection = Intersection.Create(1, shape);
+
+        // Act
+        var actual = intersection.Precompute(ray);
+
+        // Assert
+        actual.IsInside.Should().BeTrue();
+        actual.Point.Should().BeEquivalentTo(RayTuple.NewPoint(0, 0, 1));
+        actual.EyeVector.Should().BeEquivalentTo(RayTuple.NewVector(0, 0, -1));
+        // Normally would be (0,0,1), but we invert due to being within the shape.
+        actual.NormalVector.Should().BeEquivalentTo(RayTuple.NewVector(0, 0, -1));
     }
 }

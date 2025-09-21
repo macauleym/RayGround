@@ -5,7 +5,7 @@ public class RayCanvas
     public readonly float Width;
     public readonly float Height;
 
-    public readonly List<RayPixel> Pixels = new();
+    public readonly List<RayPixel> Pixels = [];
 
     public RayCanvas(float width, float height, RayColor? defaultColor = null)
     {

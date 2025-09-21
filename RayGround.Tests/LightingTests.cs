@@ -13,7 +13,7 @@ public class LightingTests
         var intensity = RayColor.Create(1, 1, 1);
         
         // Act
-        var pointLight = Light.AsPoint(position, intensity);
+        var pointLight = Light.Create(position, intensity);
         
         // Assert
         pointLight.Position.Should().Be(position);

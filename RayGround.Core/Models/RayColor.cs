@@ -4,6 +4,8 @@ public class RayColor
 {
     public const float EPSILON = 0.00001f;
 
+    public static readonly RayColor Black = new (0, 0, 0);
+
     public readonly float Red;
     public readonly float Green;
     public readonly float Blue;

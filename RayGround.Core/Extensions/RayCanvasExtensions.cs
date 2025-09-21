@@ -22,7 +22,7 @@ public static class RayCanvasExtensions
         }
     }
 
-    public static RayPixel GetPixel(this RayCanvas source, int x, int y) =>
+    public static RayPixel? GetPixel(this RayCanvas source, int x, int y) =>
         source.Pixels.Find(p => 
             Math.Abs(p.Position.X - x) < RayTuple.EPSILON 
             && Math.Abs(p.Position.Y - y) < RayTuple.EPSILON

@@ -139,6 +139,26 @@ public class RayMatrix(int rows, int columns) : ICloneable, IEquatable<RayMatrix
         // ReSharper disable once SuspiciousTypeConversion.Global
         // There is type checking within the Equals method for the RayTuple type.
         !left.Equals(right);
+
+    public static RayMatrix operator +(RayMatrix left, RayMatrix right)
+    {
+        var result = new RayMatrix(left.Rows, right.Columns);
+        for (var r = 0; r < left.Rows; r++)
+        for (var c = 0; c < right.Columns; c++)
+            result[r, c] = left[r, c] + right[r, c];
+
+        return result;
+    }
+    
+    public static RayMatrix operator -(RayMatrix left, RayMatrix right)
+    {
+        var result = new RayMatrix(left.Rows, right.Columns);
+        for (var r = 0; r < left.Rows; r++)
+        for (var c = 0; c < right.Columns; c++)
+            result[r, c] = left[r, c] - right[r, c];
+
+        return result;
+    }
     
     public static RayMatrix operator *(RayMatrix left, RayMatrix right)
     {

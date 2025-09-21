@@ -29,7 +29,7 @@ public class SphereTests
         var translate = Transform.Translation(2, 3, 4);
         
         // Act
-        var actual = sphere.UpdateTransform(translate);
+        var actual = sphere.Morph(translate);
         
         // Assert
         actual.Transform.Should().BeEquivalentTo(translate);
@@ -42,7 +42,7 @@ public class SphereTests
         var ray    = Ray.Create(RayTuple.NewPoint(0, 0, -5), RayTuple.NewVector(0, 0, 1));
         var sphere = Sphere.Create();
         var scale  = Transform.Scaling(2, 2, 2);
-        sphere     = sphere.UpdateTransform(scale);
+        sphere     = sphere.Morph(scale);
         List<Intersection> expected = [
               Intersection.Create(3, sphere)
             , Intersection.Create(7, sphere)
@@ -61,7 +61,7 @@ public class SphereTests
         var ray    = Ray.Create(RayTuple.NewPoint(0, 0, -5), RayTuple.NewVector(0, 0, 1));
         var sphere = Sphere.Create();
         var scale  = Transform.Translation(5, 0, 0);
-        sphere     = sphere.UpdateTransform(scale);
+        sphere     = sphere.Morph(scale);
         
         // Act
         var actual = ray.Intersect(sphere);
@@ -144,7 +144,7 @@ public class SphereTests
     {
         // Arrange
         var sphere   = Sphere.Create()
-            .UpdateTransform(Transform.Translation(0, 1, 0));
+            .Morph(Transform.Translation(0, 1, 0));
         var expected = RayTuple.NewVector(0, 0.70711f, -0.70711f);
 
         // Act
@@ -159,7 +159,7 @@ public class SphereTests
     {
         // Arrange
         var sphere   = Sphere.Create()
-            .UpdateTransform(Transform.Scaling(1, 0.5f, 1) * Transform.RotationZ(float.Pi/5));
+            .Morph(Transform.Scaling(1, 0.5f, 1) * Transform.RotationZ(float.Pi/5));
         var expected = RayTuple.NewVector(0, .97014f, -.24254f);
 
         // Act
@@ -190,7 +190,7 @@ public class SphereTests
         var material = Material.Create(ambient: 1);
 
         // Act
-        var actual = sphere.UpdateMaterial(material);
+        var actual = sphere.Paint(material);
 
         // Assert
         actual.Material.Should().BeEquivalentTo(material);
