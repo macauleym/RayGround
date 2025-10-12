@@ -22,9 +22,9 @@ public static class SphereExtensions
     
     public static RayTuple NormalAt(this Sphere source, RayTuple at)
     {
-        var objPoint    = (source.Transform.Inverse() * at).ToTuple();
+        var objPoint    = source.Transform.Inverse() * at;
         var objNormal   = objPoint - RayTuple.NewPoint(0, 0, 0);
-        var worldNormal = (source.Transform.Inverse().Transpose() * objNormal).ToTuple(); 
+        var worldNormal = source.Transform.Inverse().Transpose() * objNormal; 
 
         return RayTuple
             .NewVector(worldNormal.X, worldNormal.Y, worldNormal.Z)

@@ -6,15 +6,16 @@ namespace RayGround.Core.Calculators;
 public static class WorldCalculator
 {
     public static RayColor ShadeHit(World world, Precomputed computations) =>
-        // TODO: To support multiple lights, call Lighting on each light source
-        // and add all the colors together.
-        Illuminate.Lighting(
+        world.Lights.Aggregate(RayColor.Create(0, 0, 0), (color, light) =>
+            color +
+            Illuminate.Lighting(
               computations.Collided.Material
-            , world.Lights.First()
+            , light
             , computations.Point
             , computations.EyeVector
             , computations.NormalVector
-            );
+            , Illuminate.IsShadowed(light, computations.OverPoint, world.Shapes)
+            ));
 
     public static RayColor ColorAt(World world, Ray ray)
     {

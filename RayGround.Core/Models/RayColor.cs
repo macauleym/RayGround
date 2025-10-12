@@ -19,6 +19,9 @@ public class RayColor
     
     public static RayColor Create(float red, float green, float blue) =>
         new(red, green, blue);
+
+    public static RayColor Uniform(float rgb) =>
+        new(rgb, rgb, rgb);
     
     public override bool Equals(object? obj) =>
         obj is RayColor other

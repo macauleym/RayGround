@@ -46,7 +46,7 @@ public static class MatrixCalculator
 
     public static float Cofactor(RayMatrix of, int targetRow, int targetColumn)
     {
-        var result = 0f;
+        float result = 0;
         var columnSum = targetRow + targetColumn;
         if (columnSum % 2 == 0)
             result = Minor(of, targetRow, targetColumn);

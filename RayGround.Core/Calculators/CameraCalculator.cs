@@ -1,3 +1,4 @@
+using RayGround.Core.Exporters;
 using RayGround.Core.Extensions;
 using RayGround.Core.Models;
 
@@ -23,9 +24,9 @@ public class CameraCalculator
         var inverseCamera = source.Transform.Inverse();
         var pixel = inverseCamera * RayTuple.NewPoint(worldX, worldY, -1);
         var origin = inverseCamera * RayTuple.NewPoint(0, 0, 0);
-        var direction = (pixel - origin).ToTuple().Normalize();
+        var direction = (pixel - origin).Normalize();
         
-        return Ray.Create(origin.ToTuple(), direction);
+        return Ray.Create(origin, direction);
     }
 
     static Task<List<RayPixel>> RenderPixelsChunkAsync(Camera cam, World world, RenderChunk chunk) => Task.Run(() =>
@@ -83,14 +84,16 @@ public class CameraCalculator
 
     public static RayCanvas Render(Camera source, World toRender)
     {
+        Console.WriteLine("Render - Creating canvas...");
         var canvas = new RayCanvas(source.HorizontalSize, source.VerticalSize);
 
+        Console.WriteLine("Render - Coloring pixels on canvas...");
         for (var y = 0; y <= source.VerticalSize - 1; y++)
         for (var x = 0; x <= source.HorizontalSize - 1; x++)
         {
             var ray   = source.RayForPixel(x, y);
             var color = toRender.ColorAt(ray);
-            canvas.WritePixel(x, y, color);
+            canvas.WritePixel(x, y, color);        
         }
 
         return canvas;

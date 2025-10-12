@@ -74,6 +74,14 @@ public class RayTuple
             , source.W / scaler
             );
 
+    public static RayTuple operator *(RayMatrix left, RayTuple right) =>
+        Create(
+              left[0, 0] * right.X + left[0, 1] * right.Y + left[0, 2] * right.Z + left[0, 3] * right.W
+            , left[1, 0] * right.X + left[1, 1] * right.Y + left[1, 2] * right.Z + left[1, 3] * right.W
+            , left[2, 0] * right.X + left[2, 1] * right.Y + left[2, 2] * right.Z + left[2, 3] * right.W
+            , left[3, 0] * right.X + left[3, 1] * right.Y + left[3, 2] * right.Z + left[3, 3] * right.W
+            );
+    
     public override string ToString() =>
         $"(X:{X}, Y:{Y}, Z:{Z}, W:{W})";
 }

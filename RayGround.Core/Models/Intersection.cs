@@ -2,12 +2,12 @@ namespace RayGround.Core;
 
 public struct Intersection
 {
-    public readonly float RayPoint;
+    public readonly float RayTime;
     public readonly object Collided;
 
-    Intersection(float rayPoint, object collided)
+    Intersection(float rayTime, object collided)
     {
-        RayPoint = rayPoint;
+        RayTime  = rayTime;
         Collided = collided;
     }
 

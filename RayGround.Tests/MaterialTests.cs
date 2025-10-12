@@ -34,7 +34,7 @@ public class MaterialTests
         var expected  = RayColor.Create(1.9f, 1.9f, 1.9f);
 
         // Act
-        var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec);
+        var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec, false);
 
         // Assert
         actual.Should().BeEquivalentTo(expected);
@@ -52,7 +52,7 @@ public class MaterialTests
         var expected  = RayColor.Create(1.0f, 1.0f, 1.0f);
 
         // Act
-        var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec);
+        var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec, false);
 
         // Assert
         actual.Should().BeEquivalentTo(expected);
@@ -70,7 +70,7 @@ public class MaterialTests
         var expected  = RayColor.Create(0.7364f, 0.7364f, 0.7364f);
 
         // Act
-        var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec);
+        var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec, false);
 
         // Assert
         actual.Should().BeEquivalentTo(expected);
@@ -88,7 +88,7 @@ public class MaterialTests
         var expected  = RayColor.Create(1.6363853f, 1.6363853f, 1.6363853f);
 
         // Act
-        var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec);
+        var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec, false);
 
         // Assert
         actual.Should().BeEquivalentTo(expected);
@@ -106,9 +106,28 @@ public class MaterialTests
         var expected  = RayColor.Create(0.1f, 0.1f, 0.1f);
 
         // Act
-        var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec);
+        var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec, false);
 
         // Assert
         actual.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void MaterialSurfaceHasShadowWhenObscured()
+    {
+        // Arrange
+        var material = Material.Create();
+        var position = RayTuple.NewPoint(0, 0, 0);
+        var eye      = RayTuple.NewVector(0, 0, -1);
+        var normal   = RayTuple.NewVector(0, 0, -1);
+        var light    = Light.Create(RayTuple.NewPoint(0, 0, -10), RayColor.Create(1, 1, 1));
+        var inShadow = true;
+        var expected = RayColor.Create(0.1f, 0.1f, 0.1f);
+
+        // Act
+        var actual = Illuminate.Lighting(material, light, position, eye, normal, inShadow);
+
+        // Assert
+        actual.Should().Be(expected);
     }
 }

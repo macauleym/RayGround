@@ -1,7 +1,9 @@
 using FluentAssertions;
+using Microsoft.VisualBasic;
 using RayGround.Core;
-using RayGround.Core.Calculators;
+using RayGround.Core.Constants;
 using RayGround.Core.Extensions;
+using RayGround.Core.Operations;
 
 namespace RayGround.Tests;
 
@@ -18,7 +20,7 @@ public class IntersectionTests
         var actual = Intersection.Create(t, sphere);
 
         // Assert
-        actual.RayPoint.Should().Be(t);
+        actual.RayTime.Should().Be(t);
         actual.Collided.Should().Be(sphere);
     }
 
@@ -35,8 +37,8 @@ public class IntersectionTests
         
         // Assert
         actual.Length.Should().Be(2);
-        actual[0].RayPoint.Should().Be(first.RayPoint);
-        actual[1].RayPoint.Should().Be(second.RayPoint);
+        actual[0].RayTime.Should().Be(first.RayTime);
+        actual[1].RayTime.Should().Be(second.RayTime);
     }
 
     [Fact]
@@ -72,7 +74,7 @@ public class IntersectionTests
     }
     
     [Fact]
-    public void HitIsLowestPositiveWhenAllIntersectionsNegative()
+    public void HitIsNothingWhenAllIntersectionsNegative()
     {
         // Arrange
         var sphere = Sphere.Create();
@@ -117,7 +119,7 @@ public class IntersectionTests
         var actual = intersection.Precompute(ray);
 
         // Assert
-        actual.RayPoint.Should().Be(intersection.RayPoint);
+        actual.RayPoint.Should().Be(intersection.RayTime);
         actual.Collided.Should().BeEquivalentTo(intersection.Collided);
         actual.Point.Should().BeEquivalentTo(RayTuple.NewPoint(0, 0, -1));
         actual.EyeVector.Should().BeEquivalentTo(RayTuple.NewVector(0, 0, -1));
@@ -156,5 +158,22 @@ public class IntersectionTests
         actual.EyeVector.Should().BeEquivalentTo(RayTuple.NewVector(0, 0, -1));
         // Normally would be (0,0,1), but we invert due to being within the shape.
         actual.NormalVector.Should().BeEquivalentTo(RayTuple.NewVector(0, 0, -1));
+    }
+
+    [Fact]
+    public void HitShouldOffsetThePoint()
+    {
+        // Arrange
+        var ray = Ray.Create(RayTuple.NewPoint(0, 0, -5), RayTuple.NewVector(0, 0, 1));
+        var shape = Sphere.Create()
+            .Morph(Transform.Translation(0, 0, 1));
+        var intersection = Intersection.Create(5, shape);
+
+        // Act
+        var actual = intersection.Precompute(ray);
+
+        // Assert
+        actual.OverPoint.Z.Should().BeLessThan(FloatingPoint.Epsilon / -2);
+        actual.Point.Z.Should().BeGreaterThan(actual.OverPoint.Z);
     }
 }

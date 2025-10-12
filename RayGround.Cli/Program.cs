@@ -27,7 +27,8 @@ var stopwatch = Stopwatch.StartNew();
 //await ExportCanvasAsync(shadedSphereCanvas, "shaded-sphere.ppm");
 
 var cameraViewCanvas = await RenderCameraSceneAsync();
-await ExportCanvasAsync(cameraViewCanvas, "camera-view.ppm");
+//await ExportCanvasAsync(cameraViewCanvas, "camera-view.ppm");
+await ExportCanvasAsync(cameraViewCanvas, "camera-view-shadows.ppm");
 
 stopwatch.Stop();
 Console.WriteLine($"Processing finished!\n\t{stopwatch.ElapsedMilliseconds}ms.\n\t{GC.GetTotalMemory(forceFullCollection:true)}mb.");
@@ -161,15 +162,15 @@ async Task<RayCanvas> HoursOnAClockAsync()
     // We first rotate the points around the unit sphere.
     for (var p = 1; p < points.Length; p++)
     {
-        points[p] = (rotate30r * points[p - 1]).ToTuple();
+        points[p] = rotate30r * points[p - 1];
         Console.WriteLine($"Setting rotation point: {points[p]}");
     }
     
     // Then we scale and shift them to the "center" of the canvas.
     for (var p = 0; p < points.Length; p++)
     {
-        points[p] = (clockOffset * points[p]).ToTuple();
-        points[p] = (centerBasis * points[p]).ToTuple();
+        points[p] = clockOffset * points[p];
+        points[p] = centerBasis * points[p];
         
         Console.WriteLine($"Setting position: {points[p]}");
     }
@@ -213,7 +214,7 @@ async Task<RayCanvas> RaysAtASphereAsync()
      * Since the sphere is a unit sphere at the origin, tangent rays will
      * be approx. 1 unit from the origin. Every 5 units will increase the
      * height by another 1 unit. Since the wall is at 10, the ray will be
-     * 3 units away from the origin. The wall must be double this (accounting
+     * 3 units away from the origin. The wall must be float this (accounting
      * for halves) to ensure the sphere shadow will be printed on the
      * whole wall. This must be accounted for if changing the wall's, or
      * ray's position.
@@ -288,7 +289,7 @@ async Task<RayCanvas> ShadedSphereAsync()
      * Since the sphere is a unit sphere at the origin, tangent rays will
      * be approx. 1 unit from the origin. Every 5 units will increase the
      * height by another 1 unit. Since the wall is at 10, the ray will be
-     * 3 units away from the origin. The wall must be double this (accounting
+     * 3 units away from the origin. The wall must be float this (accounting
      * for halves) to ensure the sphere shadow will be printed on the
      * whole wall. This must be accounted for if changing the wall's, or
      * ray's position.
@@ -315,11 +316,11 @@ async Task<RayCanvas> ShadedSphereAsync()
             continue;
         
         var hit       = intersections.Hit()!.Value;
-        var point     = ray.Position(hit.RayPoint);
+        var point     = ray.Position(hit.RayTime);
         var hitSphere = (Sphere)hit.Collided;
         var normal    = hitSphere.NormalAt(point);
         var eye       = -ray.Direction;
-        var color     = Illuminate.Lighting(hitSphere.Material, light, point, eye, normal);
+        var color     = Illuminate.Lighting(hitSphere.Material, light, point, eye, normal, false);
 
         pixelCount++;
         Console.WriteLine($"Drawing pixel #{pixelCount} at ({x}, {y}) with color ({color}).");
@@ -367,15 +368,73 @@ async Task<RayCanvas> RenderCameraSceneAsync()
     // The world to put things in. 
     var world = World.Empty();
     world.Lights.Add(Light.Create(RayTuple.NewPoint(-10, 10, -10), RayColor.Create(1, 1, 1)));
-    world.Shapes.AddRange([floor, rightWall, leftWall, centerSphere, rightSphere, leftSphere]);
+    world.Shapes.AddRange([
+          floor
+        , leftWall
+        , rightWall
+        , centerSphere
+        , rightSphere
+        , leftSphere
+        ]);
 
     // The camera that will render the scene viewport.
     var camera = Camera
         .Create(800, 400, float.Pi / 3)
+        //.Create(600, 200, float.Pi / 3)
         .Morph(View.Transform(
           RayTuple.NewPoint( 0, 1.5f, -5)
         , RayTuple.NewPoint( 0,    1,  0)
         , RayTuple.NewVector(0,    1,  0))
+        );
+
+    return camera.Render(world);
+}
+
+async Task<RayCanvas> SimpleShadowTest()
+{
+    // Spheres that will make up the scene.
+    var baseSphere = Sphere.Create(); 
+    
+    var floor = baseSphere
+        .Morph(Transform.Scaling(10 ,0.01f, 10))
+        .Paint(Material.Create(
+            color: RayColor.Create(1,0.9f,0.9f)
+            , specular: 0f)
+        );
+    var leftWall = floor
+        .Morph(Transform.Translation(0, 0, 5)
+               * Transform.RotationY(-float.Pi / 4)
+               * Transform.RotationX(float.Pi / 2));
+    var rightWall = floor
+        .Morph(Transform.Translation(0, 0, 5)
+               * Transform.RotationY(float.Pi / 4)
+               * Transform.RotationX(float.Pi / 2));
+
+    var baseSphereMat = Material.Create(
+          diffuse: 0.7f
+        , specular: 0.3f
+    );
+    var centerSphere = baseSphere
+        .Morph(Transform.Translation(-0.5f, 1, 0.5f))
+        .Paint(baseSphereMat.Recolor(RayColor.Create(0.1f, 1, 0.5f)));
+
+    // The world to put things in. 
+    var world = World.Empty();
+    world.Lights.Add(Light.Create(RayTuple.NewPoint(-10, 10, -10), RayColor.Create(1, 1, 1)));
+    world.Shapes.AddRange([
+          floor
+        , leftWall
+        , rightWall
+        , centerSphere
+    ]);
+
+    // The camera that will render the scene viewport.
+    var camera = Camera
+        .Create(80, 25, float.Pi / 6)
+        .Morph(View.Transform(
+            RayTuple.NewPoint( 0, 1.5f, -5)
+            , RayTuple.NewPoint( 0,    1,  0)
+            , RayTuple.NewVector(0,    1,  0))
         );
 
     return camera.Render(world);

@@ -8,19 +8,20 @@ public static class RayExtensions
         RayCalculator.Position(of, t);
 
     public static Intersection[] Intersect(this Ray of, Sphere withSphere) =>
-        RayCalculator.Intersect(
-              of.Morph(
-                withSphere.Transform.Inverse())
-            , withSphere
-            );
+        RayCalculator.Intersect(of, withSphere);
+
+    public static Intersection[] IntersectWorld(this Ray of, List<Sphere> shapes) =>
+        shapes
+            .SelectMany(of.Intersect)
+            .OrderBy(i => i.RayTime)
+            .ToArray();
 
     public static Intersection[] IntersectWorld(this Ray of, World withWorld) =>
-        withWorld.Shapes
-            .SelectMany(shape => 
-                RayCalculator.Intersect(of.Morph(shape.Transform.Inverse()), shape))
-            .OrderBy(i => i.RayPoint)
-            .ToArray();
+        of.IntersectWorld(withWorld.Shapes);
     
     public static Ray Morph(this Ray of, RayMatrix with) =>
-        Ray.Create((with * of.Origin).ToTuple(), (with * of.Direction).ToTuple());
+        Ray.Create(
+              with * of.Origin
+            , with * of.Direction
+            );
 }

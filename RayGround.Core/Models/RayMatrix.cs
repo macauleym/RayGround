@@ -52,7 +52,7 @@ public class RayMatrix(int rows, int columns) : ICloneable, IEquatable<RayMatrix
         
         for (var r = 0; r < rows; r++)
         for (var c = 0; c < columns; c++)
-            if (Math.Abs(matrix[r, c] - other[r, c]) > EPSILON)
+            if (MathF.Abs(matrix[r, c] - other[r, c]) > EPSILON)
                 return false;
 
         return true;
@@ -173,9 +173,6 @@ public class RayMatrix(int rows, int columns) : ICloneable, IEquatable<RayMatrix
 
         return result;
     }
-
-    public static RayMatrix operator *(RayMatrix left, RayTuple right) =>
-        left * right.ToMatrix();
 
     public static RayMatrix operator *(RayMatrix left, float scaler)
     {

@@ -5,6 +5,7 @@ public class Precomputed
     public readonly float RayPoint;
     public readonly Sphere Collided;
     public readonly RayTuple Point;
+    public readonly RayTuple OverPoint;
     public readonly RayTuple EyeVector;
     public readonly RayTuple NormalVector;
     public readonly bool IsInside;
@@ -13,6 +14,7 @@ public class Precomputed
       float rayPoint
     , Sphere collided
     , RayTuple point
+    , RayTuple overPoint
     , RayTuple eyeVector
     , RayTuple normalVector
     , bool isInside
@@ -20,6 +22,7 @@ public class Precomputed
         RayPoint     = rayPoint;
         Collided     = collided;
         Point        = point;
+        OverPoint    = overPoint;
         EyeVector    = eyeVector;
         NormalVector = normalVector;
         IsInside     = isInside;
@@ -29,8 +32,9 @@ public class Precomputed
       float rayPoint
     , Sphere collided
     , RayTuple point
+    , RayTuple overPoint
     , RayTuple eyeVector
     , RayTuple normalVector
     , bool isInside
-    ) => new(rayPoint, collided, point, eyeVector, normalVector, isInside);
+    ) => new(rayPoint, collided, point, overPoint, eyeVector, normalVector, isInside);
 }

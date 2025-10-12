@@ -10,6 +10,7 @@ public static class Illuminate
         , RayTuple position
         , RayTuple eyeVector
         , RayTuple normalVector
+        , bool inShadow
         ) {
         // Combine surface and light color/intensity.
         var effectiveColor = material.Color * light.Intensity;
@@ -19,6 +20,9 @@ public static class Illuminate
         
         // Compute ambient contribution
         var ambient = effectiveColor * material.Ambient;
+
+        if (inShadow)
+            return ambient;
         
         // lightDotNormal represents the cosine of the angle
         // between the light vector and the normal vector. 
@@ -30,8 +34,8 @@ public static class Illuminate
         var lightDotNormal = lightVec.Dot(normalVector);
         if (lightDotNormal < 0)
         {
-            diffuse  = RayColor.Create(0, 0, 0);
-            specular = RayColor.Create(0, 0, 0);
+            diffuse  = RayColor.Black;
+            specular = RayColor.Black;
         }
         else
         {
@@ -52,5 +56,21 @@ public static class Illuminate
         }
 
         return ambient + diffuse + specular;
+    }
+
+    public static bool IsShadowed(Light light, RayTuple point, List<Sphere> shapes)
+    {
+        var vector    = light.Position - point;
+        var distance  = vector.Magnitude();
+        var direction = vector.Normalize();
+
+        var ray           = Ray.Create(point, direction);
+        var intersections = ray.IntersectWorld(shapes);
+
+        var hit = intersections.Hit();
+
+        return hit.HasValue
+            && hit.Value.RayTime < distance;
+
     }
 }

@@ -6,8 +6,8 @@ public static class RayCanvasExtensions
     {
         var toWrite     = new RayPixel(RayTuple.NewPoint(x, y, 0), color);
         var targetIndex = source.Pixels.FindIndex(p =>
-            Math.Abs(p.Position.X - x) < RayTuple.EPSILON
-            && Math.Abs(p.Position.Y - y) < RayTuple.EPSILON
+            MathF.Abs(p.Position.X - x) < RayTuple.EPSILON
+            && MathF.Abs(p.Position.Y - y) < RayTuple.EPSILON
             );
         try
         {
@@ -24,7 +24,7 @@ public static class RayCanvasExtensions
 
     public static RayPixel? GetPixel(this RayCanvas source, int x, int y) =>
         source.Pixels.Find(p => 
-            Math.Abs(p.Position.X - x) < RayTuple.EPSILON 
-            && Math.Abs(p.Position.Y - y) < RayTuple.EPSILON
+            MathF.Abs(p.Position.X - x) < RayTuple.EPSILON 
+            && MathF.Abs(p.Position.Y - y) < RayTuple.EPSILON
             );
 }

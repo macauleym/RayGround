@@ -193,7 +193,7 @@ public class RayMatrixTests
         var actual = m1 * t1;
 
         // Assert
-        actual.ToTuple().Should().Be(expected);
+        actual.Should().Be(expected);
     }
 
     [Fact]
