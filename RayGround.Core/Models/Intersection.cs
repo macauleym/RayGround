@@ -3,14 +3,14 @@ namespace RayGround.Core;
 public struct Intersection
 {
     public readonly float RayTime;
-    public readonly object Collided;
+    public readonly Entity Collided;
 
-    Intersection(float rayTime, object collided)
+    Intersection(float rayTime, Entity collided)
     {
         RayTime  = rayTime;
         Collided = collided;
     }
 
-    public static Intersection Create(float at, object collided) =>
+    public static Intersection Create(float at, Entity collided) =>
         new(at, collided);
 }

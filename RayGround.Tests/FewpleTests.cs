@@ -1,10 +1,11 @@
 ﻿using FluentAssertions;
 using RayGround.Core;
 using RayGround.Core.Extensions;
+using RayGround.Core.Models;
 
 namespace RayGround.Tests;
 
-public class RayTupleTests
+public class FewpleTests
 {
     [Fact]
     public void IsPointWithW1()
@@ -12,7 +13,7 @@ public class RayTupleTests
         // Arrange
 
         // Act
-        var target = RayTuple.Create(4.3f, -4.2f, 3.1f, 1.0f);
+        var target = Fewple.Create(4.3f, -4.2f, 3.1f, 1.0f);
         
         // Assert
         target.W.Should().Be(1);
@@ -25,7 +26,7 @@ public class RayTupleTests
         // Arrange
 
         // Act
-        var target = RayTuple.Create(4.3f, -4.2f, 3.1f, 0.0f);
+        var target = Fewple.Create(4.3f, -4.2f, 3.1f, 0.0f);
         
         // Assert
         target.W.Should().Be(0);
@@ -36,10 +37,10 @@ public class RayTupleTests
     public void NewPointSetsWToOne()
     {
         // Arrange
-        var expected = RayTuple.Create(4f, -4f, 3f, 1f);
+        var expected = Fewple.Create(4f, -4f, 3f, 1f);
 
         // Act
-        var target = RayTuple.NewPoint(4f, -4f, 3f);
+        var target = Fewple.NewPoint(4f, -4f, 3f);
         
         // Assert
         target.Should().Be(expected);
@@ -49,10 +50,10 @@ public class RayTupleTests
     public void NewVectorSetsWToZero()
     {
         // Arrange
-        var expected = RayTuple.Create(4f, -4f, 3f, 0f);
+        var expected = Fewple.Create(4f, -4f, 3f, 0f);
 
         // Act
-        var target = RayTuple.NewVector(4f, -4f, 3f);
+        var target = Fewple.NewVector(4f, -4f, 3f);
         
         // Assert
         target.Should().Be(expected);
@@ -62,9 +63,9 @@ public class RayTupleTests
     public void AddingPointAndVectorReturnsPoint()
     {
         // Arrange
-        var point    = RayTuple.Create(3, -2, 5, 1);
-        var vector   = RayTuple.Create(-2, 3, 1, 0);
-        var expected = RayTuple.NewPoint(1, 1, 6);
+        var point    = Fewple.Create(3, -2, 5, 1);
+        var vector   = Fewple.Create(-2, 3, 1, 0);
+        var expected = Fewple.NewPoint(1, 1, 6);
         
         // Act
         var actual = point + vector;
@@ -77,9 +78,9 @@ public class RayTupleTests
     public void AddingTwoVectorsReturnsVector()
     {    
         // Arrange
-        var point    = RayTuple.Create(3, -2, 5, 0);
-        var vector   = RayTuple.Create(-2, 3, 1, 0);
-        var expected = RayTuple.NewVector(1, 1, 6);
+        var point    = Fewple.Create(3, -2, 5, 0);
+        var vector   = Fewple.Create(-2, 3, 1, 0);
+        var expected = Fewple.NewVector(1, 1, 6);
     
         // Act
         var actual = point + vector;
@@ -92,9 +93,9 @@ public class RayTupleTests
     public void AddingTwoPointsReturnsOther()
     {    
         // Arrange
-        var point    = RayTuple.Create(3, -2, 5, 1);
-        var vector   = RayTuple.Create(-2, 3, 1, 1);
-        var expected = RayTuple.Create(1, 1, 6, 2);
+        var point    = Fewple.Create(3, -2, 5, 1);
+        var vector   = Fewple.Create(-2, 3, 1, 1);
+        var expected = Fewple.Create(1, 1, 6, 2);
     
         // Act
         var actual = point + vector;
@@ -107,9 +108,9 @@ public class RayTupleTests
     public void SubtractingPointsReturnsVector()
     {
         // Arrange
-        var p1       = RayTuple.NewPoint(3, 2, 1);
-        var p2       = RayTuple.NewPoint(5, 6, 7);
-        var expected = RayTuple.NewVector(-2, -4, -6);
+        var p1       = Fewple.NewPoint(3, 2, 1);
+        var p2       = Fewple.NewPoint(5, 6, 7);
+        var expected = Fewple.NewVector(-2, -4, -6);
 
         // Act
         var actual = p1 - p2;
@@ -122,9 +123,9 @@ public class RayTupleTests
     public void SubtractingVectorFromPointReturnsPoint()
     {
         // Arrange
-        var p1       = RayTuple.NewPoint(3, 2, 1);
-        var p2       = RayTuple.NewVector(5, 6, 7);
-        var expected = RayTuple.NewPoint(-2, -4, -6);
+        var p1       = Fewple.NewPoint(3, 2, 1);
+        var p2       = Fewple.NewVector(5, 6, 7);
+        var expected = Fewple.NewPoint(-2, -4, -6);
 
         // Act
         var actual = p1 - p2;
@@ -137,9 +138,9 @@ public class RayTupleTests
     public void SubtractingVectorsReturnsVector()
     {
         // Arrange
-        var p1       = RayTuple.NewVector(3, 2, 1);
-        var p2       = RayTuple.NewVector(5, 6, 7);
-        var expected = RayTuple.NewVector(-2, -4, -6);
+        var p1       = Fewple.NewVector(3, 2, 1);
+        var p2       = Fewple.NewVector(5, 6, 7);
+        var expected = Fewple.NewVector(-2, -4, -6);
 
         // Act
         var actual = p1 - p2;
@@ -152,8 +153,8 @@ public class RayTupleTests
     public void SubtractingZeroVectorReturnsNegated()
     {
         // Arrange
-        var vector   = RayTuple.NewVector(1, -2, 3);
-        var expected = RayTuple.NewVector(-1, 2, -3);
+        var vector   = Fewple.NewVector(1, -2, 3);
+        var expected = Fewple.NewVector(-1, 2, -3);
 
         // Act
         var actual = -vector;
@@ -166,9 +167,9 @@ public class RayTupleTests
     public void MultiplyByNumberReturnsScaledUp()
     {
         // Arrange
-        var tuple    = RayTuple.Create(1, -2, 3, -4);
+        var tuple    = Fewple.Create(1, -2, 3, -4);
         var scaler   = 3.5f;
-        var expected = RayTuple.Create(3.5f, -7, 10.5f, -14);
+        var expected = Fewple.Create(3.5f, -7, 10.5f, -14);
         
         // Act
         var actual = tuple * scaler;
@@ -181,9 +182,9 @@ public class RayTupleTests
     public void MultiplyByFractionReturnsScaledDown()
     {
         // Arrange
-        var tuple    = RayTuple.Create(1, -2, 3, -4);
+        var tuple    = Fewple.Create(1, -2, 3, -4);
         var scaler   = 0.5f;
-        var expected = RayTuple.Create(0.5f, -1, 1.5f, -2);
+        var expected = Fewple.Create(0.5f, -1, 1.5f, -2);
 
         // Act
         var actual = tuple * scaler;
@@ -196,9 +197,9 @@ public class RayTupleTests
     public void DivideByNumberReturnsScaledDown()
     {
         // Arrange
-        var tuple    = RayTuple.Create(1, -2, 3, -4);
+        var tuple    = Fewple.Create(1, -2, 3, -4);
         var scaler   = 2;
-        var expected = RayTuple.Create(0.5f, -1, 1.5f, -2);
+        var expected = Fewple.Create(0.5f, -1, 1.5f, -2);
         
         // Act
         var actual = tuple / scaler;
@@ -209,16 +210,16 @@ public class RayTupleTests
 
     public static IEnumerable<object[]> MagnitudeTheories =>
         new List<object[]>
-        { new object[] { RayTuple.NewVector(1, 0, 0)    , 1f             }
-        , new object[] { RayTuple.NewVector(0, 1, 0)    , 1f             }
-        , new object[] { RayTuple.NewVector(0, 0, 1)    , 1f             }
-        , new object[] { RayTuple.NewVector(1, 2, 3)    , MathF.Sqrt(14) }
-        , new object[] { RayTuple.NewVector(-1, -2, -3) , MathF.Sqrt(14) }
+        { new object[] { Fewple.NewVector(1, 0, 0)    , 1f             }
+        , new object[] { Fewple.NewVector(0, 1, 0)    , 1f             }
+        , new object[] { Fewple.NewVector(0, 0, 1)    , 1f             }
+        , new object[] { Fewple.NewVector(1, 2, 3)    , MathF.Sqrt(14) }
+        , new object[] { Fewple.NewVector(-1, -2, -3) , MathF.Sqrt(14) }
         };
     
     [Theory]
     [MemberData(nameof(MagnitudeTheories))]
-    public void ComputeMagnitudesReturnsFloat(RayTuple vector, float expected)
+    public void ComputeMagnitudesReturnsFloat(Fewple vector, float expected)
     {
         // Arrange
         
@@ -231,8 +232,8 @@ public class RayTupleTests
 
     public static IEnumerable<object[]> NormalizeTheories =>
         new List<object[]>
-        { new object[] { RayTuple.NewVector(4, 0, 0) , RayTuple.NewVector(1,0,0) }
-        , new object[] { RayTuple.NewVector(1, 2, 3) , RayTuple.NewVector(
+        { new object[] { Fewple.NewVector(4, 0, 0) , Fewple.NewVector(1,0,0) }
+        , new object[] { Fewple.NewVector(1, 2, 3) , Fewple.NewVector(
                                                            1/MathF.Sqrt(14)
                                                          , 2/MathF.Sqrt(14)
                                                          , 3/MathF.Sqrt(14)
@@ -241,7 +242,7 @@ public class RayTupleTests
     
     [Theory]
     [MemberData(nameof(NormalizeTheories))]
-    public void ComputeNormalForVectorReturnsVector(RayTuple vector, RayTuple expected)
+    public void ComputeNormalForVectorReturnsVector(Fewple vector, Fewple expected)
     {
         // Arrange
         
@@ -256,8 +257,8 @@ public class RayTupleTests
     public void ComputeDotProductReturnsFloat()
     {
         // Arrange
-        var a        = RayTuple.NewVector(1, 2, 3);
-        var b        = RayTuple.NewVector(2, 3, 4);
+        var a        = Fewple.NewVector(1, 2, 3);
+        var b        = Fewple.NewVector(2, 3, 4);
         var expected = 20;
 
         // Act
@@ -269,13 +270,13 @@ public class RayTupleTests
 
     public static IEnumerable<object[]> CrossProductTheories =>
         new List<object[]>
-        { new object[] { RayTuple.NewVector(1, 2, 3), RayTuple.NewVector(2, 3, 4), RayTuple.NewVector(-1, 2, -1) }
-        , new object[] { RayTuple.NewVector(2, 3, 4), RayTuple.NewVector(1, 2, 3), RayTuple.NewVector(1, -2, 1)  }
+        { new object[] { Fewple.NewVector(1, 2, 3), Fewple.NewVector(2, 3, 4), Fewple.NewVector(-1, 2, -1) }
+        , new object[] { Fewple.NewVector(2, 3, 4), Fewple.NewVector(1, 2, 3), Fewple.NewVector(1, -2, 1)  }
         };
 
     [Theory]
     [MemberData(nameof(CrossProductTheories))]
-    public void ComputeCrossProductReturnsVector(RayTuple first, RayTuple second, RayTuple expected)
+    public void ComputeCrossProductReturnsVector(Fewple first, Fewple second, Fewple expected)
     {
         // Arrange
 
@@ -290,9 +291,9 @@ public class RayTupleTests
     public void ReflectionInvertsYComponent()
     {
         // Arrange
-        var vec = RayTuple.NewVector(1, -1, 0);
-        var normal = RayTuple.NewVector(0, 1, 0);
-        var expected = RayTuple.NewVector(1, 1, 0);
+        var vec      = Fewple.NewVector(1, -1, 0);
+        var normal   = Fewple.NewVector(0, 1, 0);
+        var expected = Fewple.NewVector(1, 1, 0);
 
         // Act
         var actual = vec.Reflect(normal);
@@ -305,9 +306,9 @@ public class RayTupleTests
     public void CanReflectOffSlantedSurface()
     {
         // Arrange
-        var vec = RayTuple.NewVector(0, -1, 0);
-        var normal = RayTuple.NewVector(MathF.Sqrt(2) / 2, MathF.Sqrt(2) / 2, 0);
-        var expected = RayTuple.NewVector(1, 0, 0);
+        var vec      = Fewple.NewVector(0, -1, 0);
+        var normal   = Fewple.NewVector(MathF.Sqrt(2) / 2, MathF.Sqrt(2) / 2, 0);
+        var expected = Fewple.NewVector(1, 0, 0);
 
         // Act
         var actual = vec.Reflect(normal);

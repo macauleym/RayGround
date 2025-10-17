@@ -2,6 +2,7 @@ using FluentAssertions;
 using FluentAssertions.Equivalency;
 using RayGround.Core;
 using RayGround.Core.Extensions;
+using RayGround.Core.Models;
 using RayGround.Core.Operations;
 
 namespace RayGround.Tests;
@@ -18,31 +19,31 @@ public class WorldTests
 
         // Assert
         actual.Lights.Should().BeEmpty();
-        actual.Shapes.Should().BeEmpty();
+        actual.Entities.Should().BeEmpty();
     }
 
     [Fact]
     public void StarterWorldContainsTwoSpheresAndOneLight()
     {
         // Arrange
-        var light   = Light.Create(RayTuple.NewPoint(-10, 10, -10), RayColor.Create(1, 1, 1));
-        var sphere1 = Sphere.Create()
+        var light   = Light.Create(Fewple.NewPoint(-10, 10, -10), RayColor.Create(1, 1, 1));
+        var sphere1 = Sphere.Unit()
             .Paint(Material.Create(
               diffuse: 0.7f
             , specular: 0.2f
             , color: RayColor.Create(0.8f, 1f, 0.6f)
             ));
-        var sphere2 = Sphere.Create()
+        var sphere2 = Sphere.Unit()
             .Morph(Transform.Scaling(0.5f, 0.5f, 0.5f));
 
         // Act
         var actual = World.Default();
        
         // Assert
-        Func<EquivalencyOptions<Sphere>,EquivalencyOptions<Sphere>> excludeIdOption = o => o.Excluding(s => s.Id);
+        Func<EquivalencyOptions<Entity>,EquivalencyOptions<Entity>> excludeIdOption = o => o.Excluding(s => s.Id);
         actual.Lights.Should().ContainEquivalentOf(light);
-        actual.Shapes.Should().ContainEquivalentOf(sphere1, excludeIdOption);
-        actual.Shapes.Should().ContainEquivalentOf(sphere2, excludeIdOption);
+        actual.Entities.Should().ContainEquivalentOf(sphere1, excludeIdOption);
+        actual.Entities.Should().ContainEquivalentOf(sphere2, excludeIdOption);
     }
 
     [Fact]
@@ -50,7 +51,7 @@ public class WorldTests
     {
         // Arrange
         var world    = World.Default();
-        var ray      = Ray.Create(RayTuple.NewPoint(0, 0, -5), RayTuple.NewVector(0, 0, 1));
+        var ray      = Ray.Create(Fewple.NewPoint(0, 0, -5), Fewple.NewVector(0, 0, 1));
         var expected = 4;
 
         // Act
@@ -69,8 +70,8 @@ public class WorldTests
     {
         // Arrange
         var world        = World.Default();
-        var ray          = Ray.Create(RayTuple.NewPoint(0, 0, -5), RayTuple.NewVector(0, 0, 1));
-        var shape        = world.Shapes.First();
+        var ray          = Ray.Create(Fewple.NewPoint(0, 0, -5), Fewple.NewVector(0, 0, 1));
+        var shape        = world.Entities.First();
         var intersection = Intersection.Create(4f, shape);
         var comps        = intersection.Precompute(ray);
         var expected     = RayColor.Create(0.38066f, 0.47583f, 0.2855f);
@@ -87,11 +88,11 @@ public class WorldTests
     {
         // Arrange
         var world       = World.Default();
-        var light       = Light.Create(RayTuple.NewPoint(0, 0.25f, 0), RayColor.Create(1f, 1f, 1f));
+        var light       = Light.Create(Fewple.NewPoint(0, 0.25f, 0), RayColor.Create(1f, 1f, 1f));
         world.Lights[0] = light;
         
-        var ray          = Ray.Create(RayTuple.NewPoint(0, 0, 0), RayTuple.NewVector(0, 0, 1));
-        var shape        = world.Shapes[1];
+        var ray          = Ray.Create(Fewple.NewPoint(0, 0, 0), Fewple.NewVector(0, 0, 1));
+        var shape        = world.Entities[1];
         var intersection = Intersection.Create(0.5f, shape);
         var comps        = intersection.Precompute(ray);
         
@@ -109,7 +110,7 @@ public class WorldTests
     {
         // Arrange
         var world    = World.Default();
-        var ray      = Ray.Create(RayTuple.NewPoint(0, 0, -5), RayTuple.NewVector(0, 1, 0));
+        var ray      = Ray.Create(Fewple.NewPoint(0, 0, -5), Fewple.NewVector(0, 1, 0));
         var expected = RayColor.Create(0, 0, 0);
 
         // Act
@@ -124,7 +125,7 @@ public class WorldTests
     {
         // Arrange
         var world    = World.Default();
-        var ray      = Ray.Create(RayTuple.NewPoint(0, 0, -5), RayTuple.NewVector(0, 0, 1));
+        var ray      = Ray.Create(Fewple.NewPoint(0, 0, -5), Fewple.NewVector(0, 0, 1));
         var expected = RayColor.Create(0.38066f, 0.47583f, 0.2855f);
 
         // Act
@@ -139,12 +140,12 @@ public class WorldTests
     {
         // Arrange
         var world       = World.Default();
-        var outer       = world.Shapes[0];
-        world.Shapes[0] = outer.Paint(Material.Create(ambient: 1f));
-        var inner       = world.Shapes[1];
-        world.Shapes[1] = inner.Paint(Material.Create(ambient: 1f));
+        var outer       = world.Entities[0];
+        world.Entities[0] = outer.Paint(Material.Create(ambient: 1f));
+        var inner       = world.Entities[1];
+        world.Entities[1] = inner.Paint(Material.Create(ambient: 1f));
         
-        var ray = Ray.Create(RayTuple.NewPoint(0, 0, 0.75f), RayTuple.NewVector(0, 0, -1));
+        var ray = Ray.Create(Fewple.NewPoint(0, 0, 0.75f), Fewple.NewVector(0, 0, -1));
         
         var expected = inner.Material.Color;
 
@@ -160,10 +161,10 @@ public class WorldTests
     {
         // Arrange
         var world = World.Default();
-        var point = RayTuple.NewPoint(0, 10, 0);
+        var point = Fewple.NewPoint(0, 10, 0);
 
         // Act
-        var actual = Illuminate.IsShadowed(world.Lights.First(), point, world.Shapes);
+        var actual = Illuminate.IsShadowed(world.Lights.First(), point, world.Entities);
 
         // Assert
         actual.Should().BeFalse();
@@ -174,10 +175,10 @@ public class WorldTests
     {
         // Arrange
         var world = World.Default();
-        var point = RayTuple.NewPoint(10, -10, 10);
+        var point = Fewple.NewPoint(10, -10, 10);
         
         // Act
-        var actual = Illuminate.IsShadowed(world.Lights.First(), point, world.Shapes);
+        var actual = Illuminate.IsShadowed(world.Lights.First(), point, world.Entities);
         
         // Assert
         actual.Should().BeTrue();
@@ -188,10 +189,10 @@ public class WorldTests
     {
         // Arrange
         var world = World.Default();
-        var point = RayTuple.NewPoint(-20, 20, -20);
+        var point = Fewple.NewPoint(-20, 20, -20);
 
         // Act
-        var actual = Illuminate.IsShadowed(world.Lights.First(), point, world.Shapes);
+        var actual = Illuminate.IsShadowed(world.Lights.First(), point, world.Entities);
 
         // Assert
         actual.Should().BeFalse();
@@ -202,10 +203,10 @@ public class WorldTests
     {
         // Arrange
         var world = World.Default();
-        var point = RayTuple.NewPoint(-2, 2, -2);
+        var point = Fewple.NewPoint(-2, 2, -2);
 
         // Act
-        var actual = Illuminate.IsShadowed(world.Lights.First(), point, world.Shapes);
+        var actual = Illuminate.IsShadowed(world.Lights.First(), point, world.Entities);
 
         // Assert
         actual.Should().BeFalse();
@@ -215,12 +216,12 @@ public class WorldTests
     public void ShadeHitHasIntersectionInShadow()
     {
         // Arrange
-        var light   = Light.Create(RayTuple.NewPoint(0, 0, -10), RayColor.Create(1, 1, 1));
-        var sphere1 = Sphere.Create();
-        var sphere2 = sphere1.Morph(Transform.Translation(0, 0, 10));
+        var light   = Light.Create(Fewple.NewPoint(0, 0, -10), RayColor.Create(1, 1, 1));
+        var sphere1 = Sphere.Unit();
+        var sphere2 = Sphere.Unit().Morph(Transform.Translation(0, 0, 10));
         var world   = World.Create([light], [sphere1, sphere2]);
         
-        var ray          = Ray.Create(RayTuple.NewPoint(0, 0, 5), RayTuple.NewVector(0, 0, 1));
+        var ray          = Ray.Create(Fewple.NewPoint(0, 0, 5), Fewple.NewVector(0, 0, 1));
         var intersection = Intersection.Create(4, sphere2);
         var comps        = intersection.Precompute(ray);
 

@@ -1,3 +1,5 @@
+using RayGround.Core.Models;
+
 namespace RayGround.Core;
 
 public class RayCanvas
@@ -13,6 +15,6 @@ public class RayCanvas
         Height = height;
         for (var i = 0; i <= Width; i++) // Rows
         for (var j = 0; j <= Height; j++)  // Columns
-            Pixels.Add(new RayPixel(RayTuple.NewPoint(i, j, 0), defaultColor));
+            Pixels.Add(new RayPixel(Fewple.NewPoint(i, j, 0), defaultColor));
     }
 }

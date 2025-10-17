@@ -1,11 +1,12 @@
 using RayGround.Core.Calculators;
+using RayGround.Core.Models;
 using RayGround.Core.Operations;
 
 namespace RayGround.Core.Extensions;
 
 public static class RayMatrixExtensions
 {
-    public static T TraverseI<T>(this RayMatrix source, T seed, Func<T, (int, int), float, T> traverserI)
+    public static T TraverseI<T>(this Matrix source, T seed, Func<T, (int, int), float, T> traverserI)
     {
         var acc = seed;
         for (var r = 0; r < source.Rows; r++)
@@ -15,7 +16,7 @@ public static class RayMatrixExtensions
         return acc;
     }
     
-    public static T Traverse<T>(this RayMatrix source, T seed, Func<T, float, T> traverser)
+    public static T Traverse<T>(this Matrix source, T seed, Func<T, float, T> traverser)
     {
         var acc = seed;
         for (var r = 0; r < source.Rows; r++)
@@ -25,36 +26,36 @@ public static class RayMatrixExtensions
         return acc;
     }
 
-    public static bool Any(this RayMatrix source, Predicate<float> check) =>
+    public static bool Any(this Matrix source, Predicate<float> check) =>
         Traverse(source, false, (acc, current) => acc || check(current));
 
-    public static bool All(this RayMatrix source, Predicate<float> check) =>
+    public static bool All(this Matrix source, Predicate<float> check) =>
         Traverse(source, true, (acc, current) => acc && check(current));
 
-    public static RayMatrix Transpose(this RayMatrix of) =>
+    public static Matrix Transpose(this Matrix of) =>
         MatrixCalculator.Transpose(of);
 
-    public static float Determinant(this RayMatrix of) =>
+    public static float Determinant(this Matrix of) =>
         MatrixCalculator.Determinant(of);
 
-    public static RayMatrix Submatrix(this RayMatrix of, int targetRow, int targetColumn) =>
+    public static Matrix Submatrix(this Matrix of, int targetRow, int targetColumn) =>
         MatrixCalculator.Submatrix(of, targetRow, targetColumn);
 
-    public static float Minor(this RayMatrix of, int targetRow, int targetColumn) =>
+    public static float Minor(this Matrix of, int targetRow, int targetColumn) =>
         of.Submatrix(targetRow, targetColumn)
           .Determinant();
 
-    public static float Cofactor(this RayMatrix of, int targetRow, int targetColumn) =>
+    public static float Cofactor(this Matrix of, int targetRow, int targetColumn) =>
         MatrixCalculator.Cofactor(of, targetRow, targetColumn);
 
-    public static bool IsInvertible(this RayMatrix of) =>
+    public static bool IsInvertible(this Matrix of) =>
         MatrixCalculator.IsInvertible(of);
 
-    public static RayMatrix Inverse(this RayMatrix of) =>
+    public static Matrix Inverse(this Matrix of) =>
         MatrixCalculator.Inverse(of);
     
-    public static RayTuple ToTuple(this RayMatrix source) =>
-        RayTuple.Create(
+    public static Fewple ToTuple(this Matrix source) =>
+        Fewple.Create(
           source[0, 0]
         , source[1, 0]
         , source[2, 0]

@@ -1,8 +1,10 @@
+using RayGround.Core.Models;
+
 namespace RayGround.Core.Extensions;
 
-public static class RayTupleExtensions
+public static class FewpleExtensions
 {
-    public static float Magnitude(this RayTuple source) =>
+    public static float Magnitude(this Fewple source) =>
         MathF.Sqrt(
               MathF.Pow(source.X, 2)
             + MathF.Pow(source.Y, 2)
@@ -10,11 +12,11 @@ public static class RayTupleExtensions
             + MathF.Pow(source.W, 2)
             );
 
-    public static RayTuple Normalize(this RayTuple source)
+    public static Fewple Normalize(this Fewple source)
     {
         var magnitude = Magnitude(source);
         
-        return RayTuple.Create(
+        return Fewple.Create(
               source.X / magnitude
             , source.Y / magnitude
             , source.Z / magnitude
@@ -22,23 +24,23 @@ public static class RayTupleExtensions
             );
     }
 
-    public static float Dot(this RayTuple left, RayTuple right) =>
+    public static float Dot(this Fewple left, Fewple right) =>
           left.X * right.X
         + left.Y * right.Y
         + left.Z * right.Z
         + left.W * right.W;
 
-    public static RayTuple Cross(this RayTuple left, RayTuple right) =>
-        RayTuple.NewVector(
+    public static Fewple Cross(this Fewple left, Fewple right) =>
+        Fewple.NewVector(
               left.Y * right.Z - left.Z * right.Y
             , left.Z * right.X - left.X * right.Z
             , left.X * right.Y - left.Y * right.X
             );
 
-    public static RayTuple Reflect(this RayTuple source, RayTuple normal) =>
+    public static Fewple Reflect(this Fewple source, Fewple normal) =>
         source - normal * 2 * source.Dot(normal);
     
-    public static RayMatrix ToMatrix(this RayTuple source) =>
+    public static Matrix ToMatrix(this Fewple source) =>
         new(4, 1)
         { [0, 0] = source.X
         , [1, 0] = source.Y

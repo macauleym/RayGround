@@ -2,9 +2,9 @@ namespace RayGround.Core.Calculators;
 
 public static class MatrixCalculator
 {
-    public static RayMatrix Transpose(RayMatrix of)
+    public static Matrix Transpose(Matrix of)
     {
-        var result = new RayMatrix(of.Rows, of.Columns);
+        var result = new Matrix(of.Rows, of.Columns);
         for (var r = 0; r < of.Rows; r++)
         for (var c = 0; c < of.Columns; c++)
             result[c, r] = of[r, c];
@@ -12,7 +12,7 @@ public static class MatrixCalculator
         return result;
     }
 
-    public static float Determinant(RayMatrix of)
+    public static float Determinant(Matrix of)
     {
         if (of.Columns == 2)
             return of[0, 0] * of[1, 1]
@@ -25,9 +25,9 @@ public static class MatrixCalculator
         return accumulator;
     }
 
-    public static RayMatrix Submatrix(RayMatrix of, int targetRow, int targetColumn)
+    public static Matrix Submatrix(Matrix of, int targetRow, int targetColumn)
     {
-        var result = new RayMatrix(of.Rows - 1, of.Columns - 1);
+        var result = new Matrix(of.Rows - 1, of.Columns - 1);
         for (var r = 0; r < result.Rows; r++)
         for (var c = 0; c < result.Columns; c++)
         {
@@ -40,11 +40,11 @@ public static class MatrixCalculator
         return result;
     }
 
-    public static float Minor(RayMatrix of, int targetRow, int targetColumn) =>
+    public static float Minor(Matrix of, int targetRow, int targetColumn) =>
         Determinant(
             Submatrix(of, targetRow, targetColumn));
 
-    public static float Cofactor(RayMatrix of, int targetRow, int targetColumn)
+    public static float Cofactor(Matrix of, int targetRow, int targetColumn)
     {
         float result = 0;
         var columnSum = targetRow + targetColumn;
@@ -56,15 +56,15 @@ public static class MatrixCalculator
         return result;
     }
     
-    public static bool IsInvertible(RayMatrix of) =>
+    public static bool IsInvertible(Matrix of) =>
         Determinant(of) != 0;
 
-    public static RayMatrix Inverse(RayMatrix of)
+    public static Matrix Inverse(Matrix of)
     {
         if (!IsInvertible(of))
             return of;
 
-        var result      = new RayMatrix(of.Rows, of.Columns);
+        var result      = new Matrix(of.Rows, of.Columns);
         var determinant = Determinant(of);
         for (var r = 0; r < result.Rows; r++)
         for (var c = 0; c < result.Columns; c++)

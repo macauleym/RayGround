@@ -1,13 +1,14 @@
 using System.Text;
 using RayGround.Core.Extensions;
+using RayGround.Core.Models;
 
 namespace RayGround.Core;
 
-public class RayMatrix(int rows, int columns) : ICloneable, IEquatable<RayMatrix>
+public class Matrix(int rows, int columns) : ICloneable, IEquatable<Matrix>
 {
     public const float EPSILON                = 0.00001f;
     public const short SIGNIFICANT_DIGITS     = 5;
-    public static readonly RayMatrix Identity = new(4,4)
+    public static readonly Matrix Identity = new(4,4)
     { [0] = [ 1, 0, 0 ,0 ]
     , [1] = [ 0, 1, 0, 0 ]
     , [2] = [ 0, 0, 1, 0 ]
@@ -45,7 +46,7 @@ public class RayMatrix(int rows, int columns) : ICloneable, IEquatable<RayMatrix
     #endregion Indexers
 
     #region Custom Methods
-    bool ValueEquals(RayMatrix? other)
+    bool ValueEquals(Matrix? other)
     {
         if (other is null)
             return false;
@@ -62,7 +63,7 @@ public class RayMatrix(int rows, int columns) : ICloneable, IEquatable<RayMatrix
     #region Implementations
     public object Clone()
     {
-        var clone = new RayMatrix(Rows, Columns);
+        var clone = new Matrix(Rows, Columns);
         for (var r = 0; r < Rows; r++)
         for (var c = 0; c < Columns; c++)
             clone[r, c] = matrix[r, c];
@@ -70,10 +71,10 @@ public class RayMatrix(int rows, int columns) : ICloneable, IEquatable<RayMatrix
         return clone;
     }
 
-    public RayMatrix CloneMatrix() =>
-        (RayMatrix)Clone();
+    public Matrix CloneMatrix() =>
+        (Matrix)Clone();
     
-    public bool Equals(RayMatrix? other)
+    public bool Equals(Matrix? other)
     {
         if (other is null) 
             return false;
@@ -90,7 +91,7 @@ public class RayMatrix(int rows, int columns) : ICloneable, IEquatable<RayMatrix
         {
             case null:
                 return false;
-            case RayTuple tuple:
+            case Fewple tuple:
                 obj = tuple.ToMatrix();
                 break;
         }
@@ -99,7 +100,7 @@ public class RayMatrix(int rows, int columns) : ICloneable, IEquatable<RayMatrix
             return false;
         
         return ReferenceEquals(this, obj)
-               || Equals((RayMatrix)obj);
+               || Equals((Matrix)obj);
     }
 
     public override int GetHashCode() =>
@@ -124,25 +125,25 @@ public class RayMatrix(int rows, int columns) : ICloneable, IEquatable<RayMatrix
     #endregion Overrides
     
     #region Operators
-    public static bool operator ==(RayMatrix left, RayMatrix right) =>
+    public static bool operator ==(Matrix left, Matrix right) =>
         left.Equals(right);
 
-    public static bool operator ==(RayMatrix left, RayTuple right) =>
+    public static bool operator ==(Matrix left, Fewple right) =>
         // ReSharper disable once SuspiciousTypeConversion.Global
         // There is type checking within the Equals method for the RayTuple type.
         left.Equals(right);
 
-    public static bool operator !=(RayMatrix left, RayMatrix right) =>
+    public static bool operator !=(Matrix left, Matrix right) =>
         !left.Equals(right);
 
-    public static bool operator !=(RayMatrix left, RayTuple right) =>
+    public static bool operator !=(Matrix left, Fewple right) =>
         // ReSharper disable once SuspiciousTypeConversion.Global
         // There is type checking within the Equals method for the RayTuple type.
         !left.Equals(right);
 
-    public static RayMatrix operator +(RayMatrix left, RayMatrix right)
+    public static Matrix operator +(Matrix left, Matrix right)
     {
-        var result = new RayMatrix(left.Rows, right.Columns);
+        var result = new Matrix(left.Rows, right.Columns);
         for (var r = 0; r < left.Rows; r++)
         for (var c = 0; c < right.Columns; c++)
             result[r, c] = left[r, c] + right[r, c];
@@ -150,9 +151,9 @@ public class RayMatrix(int rows, int columns) : ICloneable, IEquatable<RayMatrix
         return result;
     }
     
-    public static RayMatrix operator -(RayMatrix left, RayMatrix right)
+    public static Matrix operator -(Matrix left, Matrix right)
     {
-        var result = new RayMatrix(left.Rows, right.Columns);
+        var result = new Matrix(left.Rows, right.Columns);
         for (var r = 0; r < left.Rows; r++)
         for (var c = 0; c < right.Columns; c++)
             result[r, c] = left[r, c] - right[r, c];
@@ -160,9 +161,9 @@ public class RayMatrix(int rows, int columns) : ICloneable, IEquatable<RayMatrix
         return result;
     }
     
-    public static RayMatrix operator *(RayMatrix left, RayMatrix right)
+    public static Matrix operator *(Matrix left, Matrix right)
     {
-        var result = new RayMatrix(left.Rows, right.Columns);
+        var result = new Matrix(left.Rows, right.Columns);
         for (var r = 0; r < left.Rows; r++)
         for (var c = 0; c < right.Columns; c++)
             result[r, c] =
@@ -174,9 +175,9 @@ public class RayMatrix(int rows, int columns) : ICloneable, IEquatable<RayMatrix
         return result;
     }
 
-    public static RayMatrix operator *(RayMatrix left, float scaler)
+    public static Matrix operator *(Matrix left, float scaler)
     {
-        var result = new RayMatrix(left.Rows, left.Columns);
+        var result = new Matrix(left.Rows, left.Columns);
         for (var r = 0; r < left.Rows; r++)
         for (var c = 0; c < left.Columns; c++)
             result[r, c] = left[r, c] *= scaler;

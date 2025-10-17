@@ -1,5 +1,6 @@
 using FluentAssertions;
 using RayGround.Core;
+using RayGround.Core.Models;
 
 namespace RayGround.Tests;
 
@@ -9,7 +10,7 @@ public class LightingTests
     public void APointLightHasPositionAndIntensity()
     {
         // Arrange
-        var position  = RayTuple.NewPoint(0, 0, 0);
+        var position  = Fewple.NewPoint(0, 0, 0);
         var intensity = RayColor.Create(1, 1, 1);
         
         // Act

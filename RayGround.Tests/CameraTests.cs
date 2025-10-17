@@ -23,7 +23,7 @@ public class CameraTests
         actual.HorizontalSize.Should().Be(hSize);
         actual.VerticalSize.Should().Be(vSize);
         actual.FieldOfView.Should().Be(fov);
-        actual.Transform.Should().BeEquivalentTo(RayMatrix.Identity);
+        actual.Transform.Should().BeEquivalentTo(Matrix.Identity);
     }
 
     [Fact]
@@ -58,8 +58,8 @@ public class CameraTests
         // Arrange
         var cam      = Camera.Create(201, 101, float.Pi / 2);
         var expected = Ray.Create(
-          RayTuple.NewPoint(0, 0, 0)
-        , RayTuple.NewVector(0, 0, -1)
+          Fewple.NewPoint(0, 0, 0)
+        , Fewple.NewVector(0, 0, -1)
         );
 
         // Act
@@ -74,7 +74,7 @@ public class CameraTests
     {
         // Arrange
         var cam      = Camera.Create(201, 101, float.Pi / 2);
-        var expected = Ray.Create(RayTuple.NewPoint(0, 0, 0), RayTuple.NewVector(0.66519f, 0.33259f, -0.66851f));
+        var expected = Ray.Create(Fewple.NewPoint(0, 0, 0), Fewple.NewVector(0.66519f, 0.33259f, -0.66851f));
 
         // Act
         var actual = cam.RayForPixel(0, 0);
@@ -91,8 +91,8 @@ public class CameraTests
             .Create(201, 101, float.Pi / 2)
             .Morph(Transform.RotationY(float.Pi / 4) * Transform.Translation(0, -2, 5));
         var expected = Ray.Create(
-          RayTuple.NewPoint(0, 2, -5)
-        , RayTuple.NewVector(float.Sqrt(2)/2f, 0f, -float.Sqrt(2)/2f)
+          Fewple.NewPoint(0, 2, -5)
+        , Fewple.NewVector(float.Sqrt(2)/2f, 0f, -float.Sqrt(2)/2f)
         );
 
         // Act
@@ -107,9 +107,9 @@ public class CameraTests
     {
         // Arrange
         var world  = World.Default();
-        var from   = RayTuple.NewPoint(0, 0, -5);
-        var to     = RayTuple.NewPoint(0, 0, 0);
-        var up     = RayTuple.NewVector(0, 1, 0);
+        var from   = Fewple.NewPoint(0, 0, -5);
+        var to     = Fewple.NewPoint(0, 0, 0);
+        var up     = Fewple.NewVector(0, 1, 0);
         var camera = Camera.Create(11, 11, float.Pi / 2)
             .Morph(View.Transform(from, to, up));
         var expected = RayColor.Create(0.38066f, 0.47583f, 0.2855f);

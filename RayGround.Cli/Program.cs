@@ -26,16 +26,19 @@ var stopwatch = Stopwatch.StartNew();
 //var shadedSphereCanvas = await ShadedSphereAsync();
 //await ExportCanvasAsync(shadedSphereCanvas, "shaded-sphere.ppm");
 
-var cameraViewCanvas = await RenderCameraSceneAsync();
+//var cameraViewCanvas = await RenderCameraSceneAsync();
 //await ExportCanvasAsync(cameraViewCanvas, "camera-view.ppm");
-await ExportCanvasAsync(cameraViewCanvas, "camera-view-shadows.ppm");
+//await ExportCanvasAsync(cameraViewCanvas, "camera-view-shadows.ppm");
+
+var planeSceneCanvas = await NeatlyOnThePlaneAsync();
+await ExportCanvasAsync(planeSceneCanvas, "plane-scene.ppm");
 
 stopwatch.Stop();
 Console.WriteLine($"Processing finished!\n\t{stopwatch.ElapsedMilliseconds}ms.\n\t{GC.GetTotalMemory(forceFullCollection:true)}mb.");
 
 return;
 
-void Draw(RayCanvas canvas, RayTuple position, RayColor? color)
+void Draw(RayCanvas canvas, Fewple position, RayColor? color)
 {
     var x = position.X;
     if (x > canvas.Width)
@@ -65,13 +68,13 @@ async Task ExportCanvasAsync(RayCanvas canvas, string fileName)
 async Task<RayCanvas> LaunchProjectileAsync()
 {
     Console.WriteLine("Prep the projectile...");
-    var start      = RayTuple.NewPoint(0, 1, 0);
-    var velocity   = RayTuple.NewVector(1, 1.8f, 0).Normalize() * 11.25f;
+    var start      = Fewple.NewPoint(0, 1, 0);
+    var velocity   = Fewple.NewVector(1, 1.8f, 0).Normalize() * 11.25f;
     var projectile = new Projectile(start, velocity);
 
     Console.WriteLine("Get the environment...");
-    var gravity     = RayTuple.NewVector(0, -0.1f, 0);
-    var wind        = RayTuple.NewVector(-0.01f, 0, 0);
+    var gravity     = Fewple.NewVector(0, -0.1f, 0);
+    var wind        = Fewple.NewVector(-0.01f, 0, 0);
     var environment = new RayEnvironment(gravity, wind);
     var calculator  = new EnvironmentCalculator();
 
@@ -102,11 +105,11 @@ async Task MatrixManipulationAsync()
     Console.WriteLine(SEPARATOR);
     
     Console.WriteLine("Taking the inverse of the identity matrix.");
-    Console.WriteLine(RayMatrix.Identity.Inverse());
+    Console.WriteLine(Matrix.Identity.Inverse());
     Console.WriteLine(SEPARATOR);
     
     Console.WriteLine("Multiply matrix by its own inverse.");
-    var m1 = new RayMatrix(4, 4)
+    var m1 = new Matrix(4, 4)
     { [0] = [ 2 , 5 ,  7 , -4 ]
     , [1] = [ 9 , 6 , -8 ,  4 ]
     , [2] = [-2 , 1 ,  1 ,  3 ]
@@ -124,14 +127,14 @@ async Task MatrixManipulationAsync()
     Console.WriteLine(SEPARATOR);
     
     Console.WriteLine("Showing identity with tuple, but with single identity value changed.");
-    var tup = RayTuple.Create(4, 2, 1, 3);
-    var strangeIdentity = new RayMatrix(4, 4)
+    var tup = Fewple.Create(4, 2, 1, 3);
+    var strangeIdentity = new Matrix(4, 4)
     { [0] = [ 1 , 0 , 0 , 0 ]
     , [1] = [ 0 , 9 , 0 , 0 ]
     , [2] = [ 0 , 0 , 1 , 0 ]
     , [3] = [ 0 , 0 , 0 , 1 ]
     };
-    Console.WriteLine(RayMatrix.Identity * tup);
+    Console.WriteLine(Matrix.Identity * tup);
     Console.WriteLine(strangeIdentity * tup);
     Console.WriteLine(SEPARATOR);
 }
@@ -143,7 +146,7 @@ async Task<RayCanvas> HoursOnAClockAsync()
     
     // Create the 12 points that we'll ultimately need to plot.
     var points = Enumerable.Range(0, 12)
-        .Select(_ => RayTuple.NewPoint(0, 1, 0))
+        .Select(_ => Fewple.NewPoint(0, 1, 0))
         .ToArray();
     
     // Translation basis, setting the points around the center of the canvas.
@@ -193,9 +196,9 @@ async Task<RayCanvas> RaysAtASphereAsync()
     // Need to look into better memory efficiency.
     var canvasSize = 500;
     var canvas     = new RayCanvas(canvasSize, canvasSize);
-    var rayOrigin  = RayTuple.NewPoint(0, 0, -5);
+    var rayOrigin  = Fewple.NewPoint(0, 0, -5);
     
-    var sphere = Sphere.Create();
+    var sphere = Sphere.Unit();
     
     // Transforming the sphere.
     var scaleY        = Transform.Scaling(1, .5f, 1);
@@ -230,7 +233,7 @@ async Task<RayCanvas> RaysAtASphereAsync()
     {
         var worldY        = halfWall - pixelSize * y;
         var worldX        = -halfWall + pixelSize * x;
-        var worldPosition = RayTuple.NewPoint(worldX, worldY, wallZ);
+        var worldPosition = Fewple.NewPoint(worldX, worldY, wallZ);
 
         var normalDir     = worldPosition - rayOrigin;
         var ray           = Ray.Create(rayOrigin, normalDir); 
@@ -251,9 +254,9 @@ async Task<RayCanvas> ShadedSphereAsync()
     // Need to look into better memory efficiency.
     var canvasSize = 500;
     var canvas     = new RayCanvas(canvasSize, canvasSize);
-    var rayOrigin  = RayTuple.NewPoint(0, 0, -5);
+    var rayOrigin  = Fewple.NewPoint(0, 0, -5);
 
-    var sphere = Sphere.Create()
+    var sphere = Sphere.Unit()
         .Paint(Material.Create(
               ambient: 0.2f
             , diffuse: 0.5f
@@ -263,7 +266,7 @@ async Task<RayCanvas> ShadedSphereAsync()
             ));
 
     var light = Light.Create(
-          RayTuple.NewPoint(10, 5, -10)
+          Fewple.NewPoint(10, 5, -10)
         , RayColor.Create(0.1f, 1, 0.1f)
         );
 
@@ -306,7 +309,7 @@ async Task<RayCanvas> ShadedSphereAsync()
     {
         var worldY        = halfWall - pixelSize * y;
         var worldX        = -halfWall + pixelSize * x;
-        var worldPosition = RayTuple.NewPoint(worldX, worldY, wallZ);
+        var worldPosition = Fewple.NewPoint(worldX, worldY, wallZ);
 
         var normalDir     = worldPosition - rayOrigin;
         var ray           = Ray.Create(rayOrigin, normalDir.Normalize()); 
@@ -333,14 +336,14 @@ async Task<RayCanvas> ShadedSphereAsync()
 async Task<RayCanvas> RenderCameraSceneAsync()
 {
     // Spheres that will make up the scene.
-    var baseSphere = Sphere.Create(); 
+    var baseSphere = Sphere.Unit(); 
     
     var floor = baseSphere
         .Morph(Transform.Scaling(10 ,0.01f, 10))
         .Paint(Material.Create(
-          color: RayColor.Create(1,0.9f,0.9f)
-        , specular: 0f)
-        );
+              color: RayColor.Create(1,0.9f,0.9f)
+            , specular: 0f)
+            );
     var leftWall = floor
         .Morph(Transform.Translation(0, 0, 5)
                * Transform.RotationY(-float.Pi / 4)
@@ -351,9 +354,9 @@ async Task<RayCanvas> RenderCameraSceneAsync()
                * Transform.RotationX(float.Pi / 2));
 
     var baseSphereMat = Material.Create(
-      diffuse: 0.7f
-    , specular: 0.3f
-    );
+          diffuse: 0.7f
+        , specular: 0.3f
+        );
     var centerSphere = baseSphere
         .Morph(Transform.Translation(-0.5f, 1, 0.5f))
         .Paint(baseSphereMat.Recolor(RayColor.Create(0.1f, 1, 0.5f)));
@@ -367,8 +370,8 @@ async Task<RayCanvas> RenderCameraSceneAsync()
 
     // The world to put things in. 
     var world = World.Empty();
-    world.Lights.Add(Light.Create(RayTuple.NewPoint(-10, 10, -10), RayColor.Create(1, 1, 1)));
-    world.Shapes.AddRange([
+    world.Lights.Add(Light.Create(Fewple.NewPoint(-10, 10, -10), RayColor.Create(1, 1, 1)));
+    world.Entities.AddRange([
           floor
         , leftWall
         , rightWall
@@ -382,9 +385,9 @@ async Task<RayCanvas> RenderCameraSceneAsync()
         .Create(800, 400, float.Pi / 3)
         //.Create(600, 200, float.Pi / 3)
         .Morph(View.Transform(
-          RayTuple.NewPoint( 0, 1.5f, -5)
-        , RayTuple.NewPoint( 0,    1,  0)
-        , RayTuple.NewVector(0,    1,  0))
+          Fewple.NewPoint( 0, 1.5f, -5)
+        , Fewple.NewPoint( 0,    1,  0)
+        , Fewple.NewVector(0,    1,  0))
         );
 
     return camera.Render(world);
@@ -393,14 +396,14 @@ async Task<RayCanvas> RenderCameraSceneAsync()
 async Task<RayCanvas> SimpleShadowTest()
 {
     // Spheres that will make up the scene.
-    var baseSphere = Sphere.Create(); 
+    var baseSphere = Sphere.Unit(); 
     
     var floor = baseSphere
         .Morph(Transform.Scaling(10 ,0.01f, 10))
         .Paint(Material.Create(
-            color: RayColor.Create(1,0.9f,0.9f)
+              color: RayColor.Create(1,0.9f,0.9f)
             , specular: 0f)
-        );
+            );
     var leftWall = floor
         .Morph(Transform.Translation(0, 0, 5)
                * Transform.RotationY(-float.Pi / 4)
@@ -413,29 +416,75 @@ async Task<RayCanvas> SimpleShadowTest()
     var baseSphereMat = Material.Create(
           diffuse: 0.7f
         , specular: 0.3f
-    );
+        );
     var centerSphere = baseSphere
         .Morph(Transform.Translation(-0.5f, 1, 0.5f))
         .Paint(baseSphereMat.Recolor(RayColor.Create(0.1f, 1, 0.5f)));
 
     // The world to put things in. 
     var world = World.Empty();
-    world.Lights.Add(Light.Create(RayTuple.NewPoint(-10, 10, -10), RayColor.Create(1, 1, 1)));
-    world.Shapes.AddRange([
+    world.Lights.Add(Light.Create(Fewple.NewPoint(-10, 10, -10), RayColor.Create(1, 1, 1)));
+    world.Entities.AddRange([
           floor
         , leftWall
         , rightWall
         , centerSphere
-    ]);
+        ]);
 
     // The camera that will render the scene viewport.
     var camera = Camera
         .Create(80, 25, float.Pi / 6)
         .Morph(View.Transform(
-            RayTuple.NewPoint( 0, 1.5f, -5)
-            , RayTuple.NewPoint( 0,    1,  0)
-            , RayTuple.NewVector(0,    1,  0))
+              Fewple.NewPoint( 0, 1.5f, -5)
+            , Fewple.NewPoint( 0,    1,  0)
+            , Fewple.NewVector(0,    1,  0))
+            );
+
+    return camera.Render(world);
+}
+
+async Task<RayCanvas> NeatlyOnThePlaneAsync()
+{
+    var floor = Plane.Default()
+        .Paint(Material.Create(
+              color: RayColor.Create(1,0.9f,0.9f)
+            , specular: 0f
+            ));
+
+    // Spheres that will make up the scene.
+    var sphereMat = Material.Create(
+          diffuse: 0.7f
+        , specular: 0.3f
         );
+    var centerSphere = Sphere.Unit()
+        .Morph(Transform.Translation(-0.5f, 1, 0.5f))
+        .Paint(sphereMat.Recolor(RayColor.Create(0.1f, 1, 0.5f)));
+    var rightSphere = Sphere.Unit()
+        .Morph(Transform.Translation(1.5f, 0.5f, 0.5f)
+               * Transform.Scaling(0.5f, 0.5f, 0.5f))
+        .Paint(sphereMat.Recolor(RayColor.Create(0.5f, 1, 0.1f)));
+    var leftSphere = Sphere.Unit()
+        .Morph(Transform.Translation(-1.5f, 0.33f, -0.75f) * Transform.Scaling(0.33f, 0.33f, 0.33f))
+        .Paint(sphereMat.Recolor(RayColor.Create(1, 0.8f, 0.1f)));
+
+    // The world to put things in. 
+    var world = World.Empty();
+    world.Lights.Add(Light.Create(Fewple.NewPoint(-10, 10, -10), RayColor.Create(1, 1, 1)));
+    world.Entities.AddRange([
+          floor
+        , leftSphere
+        , centerSphere
+        , rightSphere
+        ]);
+
+    // The camera that will render the scene viewport.
+    var camera = Camera
+        .Create(800, 400, float.Pi / 3)
+        .Morph(View.Transform(
+              Fewple.NewPoint( 0, 1.5f, -5)
+            , Fewple.NewPoint( 0,    1,  0)
+            , Fewple.NewVector(0,    1,  0))
+            );
 
     return camera.Render(world);
 }

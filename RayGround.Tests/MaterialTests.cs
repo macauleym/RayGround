@@ -1,6 +1,7 @@
 using FluentAssertions;
 using RayGround.Core;
 using RayGround.Core.Extensions;
+using RayGround.Core.Models;
 using RayGround.Core.Operations;
 
 namespace RayGround.Tests;
@@ -27,10 +28,10 @@ public class MaterialTests
     {
         // Arrange
         var material  = Material.Create();
-        var position  = RayTuple.NewPoint(0, 0, 0);
-        var eyeVec    = RayTuple.NewVector(0, 0, -1);
-        var normalVec = RayTuple.NewVector(0, 0, -1);
-        var light     = Light.Create(RayTuple.NewPoint(0, 0, -10), RayColor.Create(1, 1, 1));
+        var position  = Fewple.NewPoint(0, 0, 0);
+        var eyeVec    = Fewple.NewVector(0, 0, -1);
+        var normalVec = Fewple.NewVector(0, 0, -1);
+        var light     = Light.Create(Fewple.NewPoint(0, 0, -10), RayColor.Create(1, 1, 1));
         var expected  = RayColor.Create(1.9f, 1.9f, 1.9f);
 
         // Act
@@ -45,10 +46,10 @@ public class MaterialTests
     {
         // Arrange
         var material  = Material.Create();
-        var position  = RayTuple.NewPoint(0, 0, 0);
-        var eyeVec    = RayTuple.NewVector(0, MathF.Sqrt(2)/2, -MathF.Sqrt(2)/2);
-        var normalVec = RayTuple.NewVector(0, 0, -1);
-        var light     = Light.Create(RayTuple.NewPoint(0, 0, -10), RayColor.Create(1, 1, 1));
+        var position  = Fewple.NewPoint(0, 0, 0);
+        var eyeVec    = Fewple.NewVector(0, MathF.Sqrt(2)/2, -MathF.Sqrt(2)/2);
+        var normalVec = Fewple.NewVector(0, 0, -1);
+        var light     = Light.Create(Fewple.NewPoint(0, 0, -10), RayColor.Create(1, 1, 1));
         var expected  = RayColor.Create(1.0f, 1.0f, 1.0f);
 
         // Act
@@ -63,10 +64,10 @@ public class MaterialTests
     {
         // Arrange
         var material  = Material.Create();
-        var position  = RayTuple.NewPoint(0, 0, 0);
-        var eyeVec    = RayTuple.NewVector(0, 0, -1);
-        var normalVec = RayTuple.NewVector(0, 0, -1);
-        var light     = Light.Create(RayTuple.NewPoint(0, 10, -10), RayColor.Create(1, 1, 1));
+        var position  = Fewple.NewPoint(0, 0, 0);
+        var eyeVec    = Fewple.NewVector(0, 0, -1);
+        var normalVec = Fewple.NewVector(0, 0, -1);
+        var light     = Light.Create(Fewple.NewPoint(0, 10, -10), RayColor.Create(1, 1, 1));
         var expected  = RayColor.Create(0.7364f, 0.7364f, 0.7364f);
 
         // Act
@@ -81,10 +82,10 @@ public class MaterialTests
     {
         // Arrange
         var material  = Material.Create();
-        var position  = RayTuple.NewPoint(0, 0, 0);
-        var eyeVec    = RayTuple.NewVector(0, -MathF.Sqrt(2)/2, -MathF.Sqrt(2)/2);
-        var normalVec = RayTuple.NewVector(0, 0, -1);
-        var light     = Light.Create(RayTuple.NewPoint(0, 10, -10), RayColor.Create(1, 1, 1));
+        var position  = Fewple.NewPoint(0, 0, 0);
+        var eyeVec    = Fewple.NewVector(0, -MathF.Sqrt(2)/2, -MathF.Sqrt(2)/2);
+        var normalVec = Fewple.NewVector(0, 0, -1);
+        var light     = Light.Create(Fewple.NewPoint(0, 10, -10), RayColor.Create(1, 1, 1));
         var expected  = RayColor.Create(1.6363853f, 1.6363853f, 1.6363853f);
 
         // Act
@@ -99,10 +100,10 @@ public class MaterialTests
     {
         // Arrange
         var material  = Material.Create();
-        var position  = RayTuple.NewPoint(0, 0, 0);
-        var eyeVec    = RayTuple.NewVector(0, 0, -1);
-        var normalVec = RayTuple.NewVector(0, 0, -1);
-        var light     = Light.Create(RayTuple.NewPoint(0, 0, 10), RayColor.Create(1, 1, 1));
+        var position  = Fewple.NewPoint(0, 0, 0);
+        var eyeVec    = Fewple.NewVector(0, 0, -1);
+        var normalVec = Fewple.NewVector(0, 0, -1);
+        var light     = Light.Create(Fewple.NewPoint(0, 0, 10), RayColor.Create(1, 1, 1));
         var expected  = RayColor.Create(0.1f, 0.1f, 0.1f);
 
         // Act
@@ -117,10 +118,10 @@ public class MaterialTests
     {
         // Arrange
         var material = Material.Create();
-        var position = RayTuple.NewPoint(0, 0, 0);
-        var eye      = RayTuple.NewVector(0, 0, -1);
-        var normal   = RayTuple.NewVector(0, 0, -1);
-        var light    = Light.Create(RayTuple.NewPoint(0, 0, -10), RayColor.Create(1, 1, 1));
+        var position = Fewple.NewPoint(0, 0, 0);
+        var eye      = Fewple.NewVector(0, 0, -1);
+        var normal   = Fewple.NewVector(0, 0, -1);
+        var light    = Light.Create(Fewple.NewPoint(0, 0, -10), RayColor.Create(1, 1, 1));
         var inShadow = true;
         var expected = RayColor.Create(0.1f, 0.1f, 0.1f);
 

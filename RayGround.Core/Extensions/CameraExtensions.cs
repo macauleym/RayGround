@@ -5,7 +5,7 @@ namespace RayGround.Core.Extensions;
 
 public static class CameraExtensions
 {
-    public static Camera Morph(this Camera source, RayMatrix transform) =>
+    public static Camera Morph(this Camera source, Matrix transform) =>
         CameraCalculator.Morph(source, transform);
 
     public static Ray RayForPixel(this Camera source, float pixelX, float pixelY) =>

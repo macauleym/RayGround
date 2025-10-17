@@ -1,7 +1,9 @@
+using RayGround.Core.Models;
+
 namespace RayGround.Core;
 
-public class Environment(RayTuple gravity, RayTuple wind)
+public class Environment(Fewple gravity, Fewple wind)
 {
-    public readonly RayTuple Gravity = gravity;
-    public readonly RayTuple Wind    = wind;
+    public readonly Fewple Gravity = gravity;
+    public readonly Fewple Wind    = wind;
 }

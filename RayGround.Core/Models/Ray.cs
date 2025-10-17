@@ -1,16 +1,18 @@
+using RayGround.Core.Models;
+
 namespace RayGround.Core;
 
 public class Ray
 {
-    public readonly RayTuple Origin;
-    public readonly RayTuple Direction;
+    public readonly Fewple Origin;
+    public readonly Fewple Direction;
 
-    Ray(RayTuple origin, RayTuple direction)
+    Ray(Fewple origin, Fewple direction)
     {
         Origin    = origin;
         Direction = direction;
     }
 
-    public static Ray Create(RayTuple origin, RayTuple direction) =>
+    public static Ray Create(Fewple origin, Fewple direction) =>
         new (origin, direction);
 }

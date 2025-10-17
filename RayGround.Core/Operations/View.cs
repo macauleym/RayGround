@@ -1,17 +1,18 @@
 using RayGround.Core.Extensions;
+using RayGround.Core.Models;
 
 namespace RayGround.Core.Operations;
 
 public class View
 {
-    public static RayMatrix Transform(RayTuple from, RayTuple to, RayTuple up)
+    public static Matrix Transform(Fewple from, Fewple to, Fewple up)
     {
         var forward = (to - from).Normalize();
         var upNormal = up.Normalize();
         var left = forward.Cross(upNormal);
         var trueUp = left.Cross(forward);
 
-        var orientation = new RayMatrix(4, 4)
+        var orientation = new Matrix(4, 4)
         {
             [0] = [ left.X     , left.Y     , left.Z     , 0 ],
             [1] = [ trueUp.X   , trueUp.Y   , trueUp.Z   , 0 ],

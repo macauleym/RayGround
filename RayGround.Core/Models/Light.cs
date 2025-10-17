@@ -1,16 +1,18 @@
+using RayGround.Core.Models;
+
 namespace RayGround.Core;
 
 public class Light
 {
-    public readonly RayTuple Position;
+    public readonly Fewple Position;
     public readonly RayColor Intensity;
 
-    Light(RayTuple position, RayColor intensity)
+    Light(Fewple position, RayColor intensity)
     {
         Position  = position;
         Intensity = intensity;
     }
 
-    public static Light Create(RayTuple position, RayColor intensity) =>
+    public static Light Create(Fewple position, RayColor intensity) =>
         new(position, intensity);
 }

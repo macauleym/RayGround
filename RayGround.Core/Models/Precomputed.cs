@@ -1,22 +1,24 @@
+using RayGround.Core.Models;
+
 namespace RayGround.Core;
 
 public class Precomputed
 {
     public readonly float RayPoint;
-    public readonly Sphere Collided;
-    public readonly RayTuple Point;
-    public readonly RayTuple OverPoint;
-    public readonly RayTuple EyeVector;
-    public readonly RayTuple NormalVector;
+    public readonly Entity Collided;
+    public readonly Fewple Point;
+    public readonly Fewple OverPoint;
+    public readonly Fewple EyeVector;
+    public readonly Fewple NormalVector;
     public readonly bool IsInside;
     
     Precomputed(
       float rayPoint
-    , Sphere collided
-    , RayTuple point
-    , RayTuple overPoint
-    , RayTuple eyeVector
-    , RayTuple normalVector
+    , Entity collided
+    , Fewple point
+    , Fewple overPoint
+    , Fewple eyeVector
+    , Fewple normalVector
     , bool isInside
     ) {
         RayPoint     = rayPoint;
@@ -30,11 +32,11 @@ public class Precomputed
     
     public static Precomputed Create(
       float rayPoint
-    , Sphere collided
-    , RayTuple point
-    , RayTuple overPoint
-    , RayTuple eyeVector
-    , RayTuple normalVector
+    , Entity collided
+    , Fewple point
+    , Fewple overPoint
+    , Fewple eyeVector
+    , Fewple normalVector
     , bool isInside
     ) => new(rayPoint, collided, point, overPoint, eyeVector, normalVector, isInside);
 }

@@ -1,6 +1,7 @@
 using FluentAssertions;
 using RayGround.Core;
 using RayGround.Core.Extensions;
+using RayGround.Core.Models;
 using RayGround.Core.Operations;
 
 namespace RayGround.Tests;
@@ -11,8 +12,8 @@ public class RayTests
     public void CanCreateAndQueryARay()
     {
         // Arrange
-        var origin    = RayTuple.NewPoint(1, 2, 3);
-        var direction = RayTuple.NewVector(4, 5, 6);
+        var origin    = Fewple.NewPoint(1, 2, 3);
+        var direction = Fewple.NewVector(4, 5, 6);
 
         // Act
         var actual = Ray.Create(origin, direction);
@@ -24,19 +25,19 @@ public class RayTests
 
     public static IEnumerable<object[]> PositionTheories =>
         new List<object[]>
-        { new object[] {   0 , RayTuple.NewPoint(2, 3, 4)    }
-        , new object[] {   1 , RayTuple.NewPoint(3, 3, 4)    }
-        , new object[] {  -1 , RayTuple.NewPoint(1, 3, 4)    }
-        , new object[] { 2.5 , RayTuple.NewPoint(4.5f, 3, 4) }
+        { new object[] {   0 , Fewple.NewPoint(2, 3, 4)    }
+        , new object[] {   1 , Fewple.NewPoint(3, 3, 4)    }
+        , new object[] {  -1 , Fewple.NewPoint(1, 3, 4)    }
+        , new object[] { 2.5 , Fewple.NewPoint(4.5f, 3, 4) }
         };
     
     [Theory]
     [MemberData(nameof(PositionTheories))]
-    public void CanComputePointFromDistance(float t, RayTuple expected)
+    public void CanComputePointFromDistance(float t, Fewple expected)
     {
         // Arrange
-        var origin    = RayTuple.NewPoint(2, 3, 4);
-        var direction = RayTuple.NewVector(1, 0, 0);
+        var origin    = Fewple.NewPoint(2, 3, 4);
+        var direction = Fewple.NewVector(1, 0, 0);
         var ray       = Ray.Create(origin, direction);
 
         // Act
@@ -50,8 +51,8 @@ public class RayTests
     public void RayIntersectsSphereAtTwoPoints()
     {
         // Arrange
-        var ray      = Ray.Create(RayTuple.NewPoint(0, 0, -5), RayTuple.NewVector(0, 0, 1));
-        var sphere   = Sphere.Create();
+        var ray      = Ray.Create(Fewple.NewPoint(0, 0, -5), Fewple.NewVector(0, 0, 1));
+        var sphere   = Sphere.Unit();
         var expected = new[] { Intersection.Create(4.0f, sphere), Intersection.Create(6.0f, sphere) };
 
         // Act
@@ -66,8 +67,8 @@ public class RayTests
     public void RayIntersectsSphereAtTangent()
     {
         // Arrange
-        var ray      = Ray.Create(RayTuple.NewPoint(0, 1, -5), RayTuple.NewVector(0, 0, 1));
-        var sphere   = Sphere.Create();
+        var ray      = Ray.Create(Fewple.NewPoint(0, 1, -5), Fewple.NewVector(0, 0, 1));
+        var sphere   = Sphere.Unit();
         var expected = new[] { Intersection.Create(5, sphere), Intersection.Create(5, sphere) };
 
         // Act
@@ -82,8 +83,8 @@ public class RayTests
     public void RayMissesSphere()
     {
         // Arrange
-        var ray      = Ray.Create(RayTuple.NewPoint(0, 2, -5), RayTuple.NewVector(0, 0, 1));
-        var sphere   = Sphere.Create();
+        var ray      = Ray.Create(Fewple.NewPoint(0, 2, -5), Fewple.NewVector(0, 0, 1));
+        var sphere   = Sphere.Unit();
         var expected = Array.Empty<Intersection>();
 
         // Act
@@ -98,8 +99,8 @@ public class RayTests
     public void RayIntersectsSphereFromWithin()
     {
         // Arrange
-        var ray      = Ray.Create(RayTuple.NewPoint(0, 0, 0), RayTuple.NewVector(0, 0, 1));
-        var sphere   = Sphere.Create();
+        var ray      = Ray.Create(Fewple.NewPoint(0, 0, 0), Fewple.NewVector(0, 0, 1));
+        var sphere   = Sphere.Unit();
         var expected = new[] { Intersection.Create(-1.0f, sphere), Intersection.Create(1.0f, sphere) };
 
         // Act
@@ -114,8 +115,8 @@ public class RayTests
     public void RayIntersectsSphereFromBehind()
     {
         // Arrange
-        var ray      = Ray.Create(RayTuple.NewPoint(0, 0, 5), RayTuple.NewVector(0, 0, 1));
-        var sphere   = Sphere.Create();
+        var ray      = Ray.Create(Fewple.NewPoint(0, 0, 5), Fewple.NewVector(0, 0, 1));
+        var sphere   = Sphere.Unit();
         var expected = new[] { Intersection.Create(-6.0f, sphere), Intersection.Create(-4.0f, sphere) };
 
         // Act
@@ -130,8 +131,8 @@ public class RayTests
     public void RayIntersectionContainsCorrectObject()
     {
         // Arrange
-        var ray      = Ray.Create(RayTuple.NewPoint(0, 0, -5), RayTuple.NewVector(0, 0, 1));
-        var sphere   = Sphere.Create();
+        var ray      = Ray.Create(Fewple.NewPoint(0, 0, -5), Fewple.NewVector(0, 0, 1));
+        var sphere   = Sphere.Unit();
 
         // Act
         var actual = ray.Intersect(sphere);
@@ -146,9 +147,9 @@ public class RayTests
     public void CanTranslateRay()
     {
         // Arrange
-        var ray       = Ray.Create(RayTuple.NewPoint(1, 2, 3), RayTuple.NewVector(0, 1, 0));
+        var ray       = Ray.Create(Fewple.NewPoint(1, 2, 3), Fewple.NewVector(0, 1, 0));
         var translate = Transform.Translation(3, 4, 5);
-        var expected  = Ray.Create(RayTuple.NewPoint(4, 6, 8), RayTuple.NewVector(0, 1, 0));
+        var expected  = Ray.Create(Fewple.NewPoint(4, 6, 8), Fewple.NewVector(0, 1, 0));
 
         // Act
         var actual = ray.Morph(translate);
@@ -162,9 +163,9 @@ public class RayTests
     public void CanScaleRay()
     {
         // Arrange
-        var ray      = Ray.Create(RayTuple.NewPoint(1, 2, 3), RayTuple.NewVector(0, 1, 0));
+        var ray      = Ray.Create(Fewple.NewPoint(1, 2, 3), Fewple.NewVector(0, 1, 0));
         var scale    = Transform.Scaling(2, 3, 4);
-        var expected = Ray.Create(RayTuple.NewPoint(2, 6, 12), RayTuple.NewVector(0, 3, 0));
+        var expected = Ray.Create(Fewple.NewPoint(2, 6, 12), Fewple.NewVector(0, 3, 0));
 
         // Act
         var actual = ray.Morph(scale);

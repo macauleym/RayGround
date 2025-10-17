@@ -6,7 +6,7 @@ namespace RayGround.Core.Calculators;
 
 public class CameraCalculator
 {
-    public static Camera Morph(Camera source, RayMatrix transform) => 
+    public static Camera Morph(Camera source, Matrix transform) => 
         Camera.Create(source.HorizontalSize, source.VerticalSize, source.FieldOfView, transform);
 
     public static Ray RayForPixel(Camera source, float pixelX, float pixelY)
@@ -22,8 +22,8 @@ public class CameraCalculator
         // Transform the canvas point and origin using the camera's
         // transform matrix, then get the ray's direction.
         var inverseCamera = source.Transform.Inverse();
-        var pixel = inverseCamera * RayTuple.NewPoint(worldX, worldY, -1);
-        var origin = inverseCamera * RayTuple.NewPoint(0, 0, 0);
+        var pixel = inverseCamera * Fewple.NewPoint(worldX, worldY, -1);
+        var origin = inverseCamera * Fewple.NewPoint(0, 0, 0);
         var direction = (pixel - origin).Normalize();
         
         return Ray.Create(origin, direction);
@@ -37,7 +37,7 @@ public class CameraCalculator
         {
             var ray   = cam.RayForPixel(x, y);
             var color = world.ColorAt(ray);
-            chunkPixels.Add(new RayPixel(RayTuple.NewPoint(x, y, 0), color));
+            chunkPixels.Add(new RayPixel(Fewple.NewPoint(x, y, 0), color));
         }
 
         return chunkPixels;

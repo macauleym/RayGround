@@ -21,14 +21,14 @@ public static class IntersectionCalculator
     public static Precomputed Precompute(Intersection intersection, Ray with)
     {
         var rayTime  = intersection.RayTime;
-        var collided = (Sphere)intersection.Collided;
+        var collided = intersection.Collided;
         var point    = with.Position(rayTime);
         var eye      = -with.Direction;
-        var normal   = ((Sphere)intersection.Collided).NormalAt(point);
+        var normal   = intersection.Collided.NormalAt(point);
 
         var normalEyeDot = normal.Dot(eye);
         var trueNormal   = normalEyeDot < 0 ? -normal : normal;
-        var overPoint    = point + trueNormal * FloatingPoint.Epsilon;
+        var overPoint    = point + trueNormal * FloatingPoint.ShadowEpsilon;
         
         return Precomputed.Create(
               rayTime

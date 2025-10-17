@@ -1,10 +1,11 @@
 using FluentAssertions;
 using RayGround.Core;
 using RayGround.Core.Extensions;
+using RayGround.Core.Models;
 
 namespace RayGround.Tests;
 
-public class RayMatrixTests
+public class MatrixTests
 {
     [Fact]
     public void ConstructAndInspect()
@@ -19,7 +20,7 @@ public class RayMatrixTests
         var expected32 = 15.5f;
 
         // Act
-        var actual = new RayMatrix(4, 4)
+        var actual = new Matrix(4, 4)
         { [0] = [ 1f    , 2f    , 3f    , 4f    ]
         , [1] = [ 5.5f  , 6.5f  , 7.5f  , 8.5f  ]
         , [2] = [ 9f    , 10f   , 11f   , 12f   ]
@@ -46,7 +47,7 @@ public class RayMatrixTests
         var expected11 = -2;
         
         // Act
-        var actual = new RayMatrix(2, 2)
+        var actual = new Matrix(2, 2)
         { [0] = [ -3 ,  5 ]
         , [1] = [  1 , -2 ]
         };
@@ -67,7 +68,7 @@ public class RayMatrixTests
         var expected22 = 1f;
         
         // Act
-        var actual = new RayMatrix(3, 3)
+        var actual = new Matrix(3, 3)
         { [0] = [ -3 ,  5 ,  0 ]
         , [1] = [  1 , -2 , -7 ]
         , [2] = [  0 ,  1 ,  1 ]
@@ -83,7 +84,7 @@ public class RayMatrixTests
     public void IdenticalInstanceMatricesAreEqual()
     {
         // Arrange
-        var m1 = new RayMatrix(4, 4)
+        var m1 = new Matrix(4, 4)
         { [0] = [ 1 , 2 , 3 , 4 ]
         , [1] = [ 5 , 6 , 7 , 8 ]
         , [2] = [ 9 , 8 , 7 , 6 ]
@@ -102,13 +103,13 @@ public class RayMatrixTests
     public void EqualValueMatricesAreEqual()
     {
         // Arrange
-        var m1 = new RayMatrix(4, 4)
+        var m1 = new Matrix(4, 4)
         { [0] = [ 1 , 2 , 3 , 4 ]
             , [1] = [ 5 , 6 , 7 , 8 ]
             , [2] = [ 9 , 8 , 7 , 6 ]
             , [3] = [ 5 , 4 , 3 , 2 ]
         };
-        var m2 = new RayMatrix(4, 4)
+        var m2 = new Matrix(4, 4)
         { [0] = [ 1 , 2 , 3 , 4 ]
             , [1] = [ 5 , 6 , 7 , 8 ]
             , [2] = [ 9 , 8 , 7 , 6 ]
@@ -126,13 +127,13 @@ public class RayMatrixTests
     public void UnequalValueMatricesAreNotEqual()
     {
         // Arrange
-        var m1 = new RayMatrix(4, 4)
+        var m1 = new Matrix(4, 4)
         { [0] = [ 1 , 2 , 3 , 4 ]
         , [1] = [ 5 , 6 , 7 , 8 ]
         , [2] = [ 9 , 8 , 7 , 6 ]
         , [3] = [ 5 , 4 , 3 , 2 ]
         };
-        var m2 = new RayMatrix(4, 4)
+        var m2 = new Matrix(4, 4)
         { [0] = [ 2 , 3 , 4 , 5 ]
         , [1] = [ 6 , 7 , 8 , 9 ]
         , [2] = [ 8 , 7 , 6 , 5 ]
@@ -150,19 +151,19 @@ public class RayMatrixTests
     public void MultiplyingByMatricesReturnsMatrixResult()
     {
         // Arrange
-        var m1 = new RayMatrix(4, 4)
+        var m1 = new Matrix(4, 4)
         { [0] = [ 1 , 2 , 3 , 4 ]
         , [1] = [ 5 , 6 , 7 , 8 ]
         , [2] = [ 9 , 8 , 7 , 6 ]
         , [3] = [ 5 , 4 , 3 , 2 ]
         };
-        var m2 = new RayMatrix(4, 4)
+        var m2 = new Matrix(4, 4)
         { [0] = [ -2 , 1 , 2 ,  3 ]
         , [1] = [  3 , 2 , 1 , -1 ]
         , [2] = [  4 , 3 , 6 ,  5 ]
         , [3] = [  1 , 2 , 7 ,  8 ]
         };
-        var expected = new RayMatrix(4, 4)
+        var expected = new Matrix(4, 4)
         { [0] = [ 20 , 22 , 50  , 48  ]
         , [1] = [ 44 , 54 , 114 , 108 ]
         , [2] = [ 40 , 58 , 110 , 102 ]
@@ -180,14 +181,14 @@ public class RayMatrixTests
     public void MultiplyingByTupleReturnsOneColumnMatrix()
     {
         // Arrange
-        var m1 = new RayMatrix(4, 4)
+        var m1 = new Matrix(4, 4)
         { [0] = [ 1 , 2 , 3 , 4 ]
         , [1] = [ 2 , 4 , 4 , 2 ]
         , [2] = [ 8 , 6 , 4 , 1 ]
         , [3] = [ 0 , 0 , 0 , 1 ]
         };
-        var t1 = RayTuple.Create(1, 2, 3, 1);
-        var expected = RayTuple.Create(18, 24, 33, 1);
+        var t1 = Fewple.Create(1, 2, 3, 1);
+        var expected = Fewple.Create(18, 24, 33, 1);
 
         // Act
         var actual = m1 * t1;
@@ -200,13 +201,13 @@ public class RayMatrixTests
     public void MultiplyingByIdentityReturnsInputMatrix()
     {
         // Arrange
-        var m1 = new RayMatrix(4, 4)
+        var m1 = new Matrix(4, 4)
         { [0] = [ 0 , 1 ,  2 ,  4 ]
         , [1] = [ 1 , 2 ,  4 ,  8 ]
         , [2] = [ 2 , 4 ,  8 , 16 ]
         , [3] = [ 4 , 8 , 16 , 32 ]
         };
-        var m2 = RayMatrix.Identity;
+        var m2 = Matrix.Identity;
         var expected = m1;
 
         // Act
@@ -220,13 +221,13 @@ public class RayMatrixTests
     public void TransposeMatrixRotatesAboutDiagonal()
     {
         // Arrange
-        var m1 = new RayMatrix(4, 4)
+        var m1 = new Matrix(4, 4)
         { [0] = [ 0 , 9 , 3 , 0 ]
         , [1] = [ 9 , 8 , 0 , 8 ]
         , [2] = [ 1 , 8 , 5 , 3 ]
         , [3] = [ 0 , 0 , 5 , 8 ]
         };
-        var expected = new RayMatrix(4, 4)
+        var expected = new Matrix(4, 4)
         { [0] = [ 0 , 9 , 1 , 0 ]
         , [1] = [ 9 , 8 , 8 , 0 ]
         , [2] = [ 3 , 0 , 5 , 5 ]
@@ -246,17 +247,17 @@ public class RayMatrixTests
         // Arrange
         
         // Act
-        var actual = RayMatrix.Identity.Transpose();
+        var actual = Matrix.Identity.Transpose();
         
         // Act
-        actual.Should().BeEquivalentTo(RayMatrix.Identity);
+        actual.Should().BeEquivalentTo(Matrix.Identity);
     }
 
     [Fact]
     public void DeterminantOfTwoByTwoReturnsValue()
     {
         // Arrange
-        var m = new RayMatrix(2, 2)
+        var m = new Matrix(2, 2)
         { [0] = [  1 , 5 ]
         , [1] = [ -3 , 2 ]
         };
@@ -273,25 +274,25 @@ public class RayMatrixTests
         new List<object[]>
         { new object[] { 
                 0, 2,
-                new RayMatrix(3, 3)
+                new Matrix(3, 3)
                 { [0] = [  1 , 5 ,  0 ]
                 , [1] = [ -3 , 2 ,  7 ]
                 , [2] = [  0 , 6 , -3 ]
                 }
-                , new RayMatrix(2, 2)
+                , new Matrix(2, 2)
                 { [0] = [ -3 , 2 ]
                 , [1] = [  0 , 6 ]
                 }
             }
         , new object[] {
                 2, 1, 
-                new RayMatrix(4, 4)
+                new Matrix(4, 4)
                 { [0] = [ -6 , 1 ,  1 , 6 ]
                 , [1] = [ -8 , 5 ,  8 , 6 ]
                 , [2] = [ -1 , 0 ,  8 , 2 ]
                 , [3] = [ -7 , 1 , -1 , 1 ]
                 }
-                , new RayMatrix(3,3)
+                , new Matrix(3,3)
                 { [0] = [ -6 ,  1 , 6 ]
                 , [1] = [ -8 ,  8 , 6 ]
                 , [2] = [ -7 , -1 , 1 ]
@@ -301,7 +302,7 @@ public class RayMatrixTests
     
     [Theory]
     [MemberData(nameof(SubmatrixTheories))]
-    public void CreatesSubmatrixWithoutGivenRowAndColumn(int row, int column, RayMatrix m, RayMatrix expected)
+    public void CreatesSubmatrixWithoutGivenRowAndColumn(int row, int column, Matrix m, Matrix expected)
     {
         // Arrange
         
@@ -331,7 +332,7 @@ public class RayMatrixTests
     public void CalculatesMinorOfMatrixAtElement(int row, int column, int expected)
     {
         // Arrange
-        var m = new RayMatrix(3, 3)
+        var m = new Matrix(3, 3)
         { [0] = [ 3 ,  5 ,  0 ]
         , [1] = [ 2 , -1 , -7 ]
         , [2] = [ 6 , -1 ,  5 ]
@@ -366,7 +367,7 @@ public class RayMatrixTests
     public void CalculatesCofactorOfMatrixAtElement(int row, int column, int expected)
     {
         // Arrange
-        var m = new RayMatrix(3, 3)
+        var m = new Matrix(3, 3)
         { [0] = [ 3 ,  5 ,  0 ]
         , [1] = [ 2 , -1 , -7 ]
         , [2] = [ 6 , -1 ,  5 ]
@@ -383,7 +384,7 @@ public class RayMatrixTests
     public void CalculatesCofactorOfLargerThreeByThreeMatrix()
     {
         // Arrange
-        var m = new RayMatrix(3, 3)
+        var m = new Matrix(3, 3)
         { [0] = [ 1  ,  2 ,  6 ]
         , [1] = [ -5 ,  8 , -4 ]
         , [2] = [  2 ,  6 ,  4 ]
@@ -410,7 +411,7 @@ public class RayMatrixTests
     public void CalculatesCofactorOfLargerFourByFour()
     {
         // Arrange
-        var m = new RayMatrix(4, 4)
+        var m = new Matrix(4, 4)
         { [0] = [ -2 , -8 ,  3 ,  5 ]
         , [1] = [ -3 ,  1 ,  7 ,  3 ]
         , [2] = [  1 ,  2 , -9 ,  6 ]
@@ -441,7 +442,7 @@ public class RayMatrixTests
     public void ValidateMatrixIsInvertible()
     {
         // Arrange
-        var m = new RayMatrix(4, 4)
+        var m = new Matrix(4, 4)
         { [0] = [ 6 ,  4 , 4 ,  4 ]
         , [1] = [ 5 ,  5 , 7 ,  6 ]
         , [2] = [ 4 , -9 , 3 , -7 ] 
@@ -463,7 +464,7 @@ public class RayMatrixTests
     public void ValidateMatrixIsNoninvertible()
     {
         // Arrange
-        var m = new RayMatrix(4, 4)
+        var m = new Matrix(4, 4)
         { [0] = [ -4 ,  2 , -2 , -3 ]
         , [1] = [  9 ,  6 ,  2 ,  6 ]
         , [2] = [  0 , -5 ,  1 , -5 ] 
@@ -482,13 +483,13 @@ public class RayMatrixTests
     public static IEnumerable<object[]> InverseTheories =>
         new List<object[]>
         { new object[] { 
-                new RayMatrix(4, 4)
+                new Matrix(4, 4)
                 { [0] = [ -5 ,  2 ,  6 , -8 ]
                 , [1] = [  1 , -5 ,  1 ,  8 ]
                 , [2] = [  7 ,  7 , -6 , -7 ] 
                 , [3] = [  1 , -3 ,  7 ,  4 ]
                 }
-                , new RayMatrix(4, 4)
+                , new Matrix(4, 4)
                 { [0] = [  0.21805f ,  0.45113f ,  0.24060f , -0.04511f ]
                 , [1] = [ -0.80827f , -1.45677f , -0.44361f ,  0.52068f ]
                 , [2] = [ -0.07895f , -0.22368f , -0.05263f ,  0.19737f ]
@@ -496,13 +497,13 @@ public class RayMatrixTests
                 }
             }
         , new object[] { 
-                new RayMatrix(4, 4)
+                new Matrix(4, 4)
                 { [0] = [  8 , -5 ,  9 ,  2 ]
                 , [1] = [  7 ,  5 ,  6 ,  1 ]
                 , [2] = [ -6 ,  0 ,  9 ,  6 ] 
                 , [3] = [ -3 ,  0 , -9 , -4 ]
                 }
-                , new RayMatrix(4, 4)
+                , new Matrix(4, 4)
                 { [0] = [ -0.15385f , -0.15385f , -0.28205f , -0.53846f ]
                 , [1] = [ -0.07692f ,  0.12308f ,  0.02564f ,  0.03077f ]
                 , [2] = [  0.35897f ,  0.35897f ,  0.43590f ,  0.92308f ]
@@ -510,13 +511,13 @@ public class RayMatrixTests
                 }
             }
         , new object[] { 
-                new RayMatrix(4, 4)
+                new Matrix(4, 4)
                 { [0] = [  9 ,  3 ,  0 ,  9 ]
                 , [1] = [ -5 , -2 , -6 , -3 ]
                 , [2] = [ -4 ,  9 ,  6 ,  4 ] 
                 , [3] = [ -7 ,  6 ,  6 ,  2 ]
                 }
-                , new RayMatrix(4, 4)
+                , new Matrix(4, 4)
                 { [0] = [ -0.04074f , -0.07778f ,  0.14444f , -0.22222f ]
                 , [1] = [ -0.07778f ,  0.03333f ,  0.36667f , -0.33333f ]
                 , [2] = [ -0.02901f , -0.14630f , -0.10926f ,  0.12963f ]
@@ -527,7 +528,7 @@ public class RayMatrixTests
     
     [Theory]
     [MemberData(nameof(InverseTheories))]
-    public void CalculateTheInverseOfAMatrix(RayMatrix matrix, RayMatrix expected)
+    public void CalculateTheInverseOfAMatrix(Matrix matrix, Matrix expected)
     {
         // Arrange
 
@@ -547,13 +548,13 @@ public class RayMatrixTests
     public void UndoMultiplyThroughInverseProduct()
     {
         // Arrange
-        var m1 = new RayMatrix(4, 4)
+        var m1 = new Matrix(4, 4)
         { [0] = [  3 , -9 ,  7 ,  3 ]
         , [1] = [  3 , -8 ,  2 , -9 ]
         , [2] = [ -4 ,  4 ,  4 ,  1 ]
         , [3] = [ -6 ,  5 , -1 ,  1 ]
         };
-        var m2 = new RayMatrix(4, 4)
+        var m2 = new Matrix(4, 4)
         { [0] = [  8 ,  2 ,  2 ,  2 ]
         , [1] = [  3 , -1 ,  7 ,  0 ]
         , [2] = [  7 ,  0 ,  5 ,  4 ]

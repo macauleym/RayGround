@@ -14,7 +14,7 @@ public static class WorldCalculator
             , computations.Point
             , computations.EyeVector
             , computations.NormalVector
-            , Illuminate.IsShadowed(light, computations.OverPoint, world.Shapes)
+            , Illuminate.IsShadowed(light, computations.OverPoint, world.Entities)
             ));
 
     public static RayColor ColorAt(World world, Ray ray)

@@ -2,6 +2,7 @@ using FluentAssertions;
 using RayGround.Core;
 using RayGround.Core.Exporters;
 using RayGround.Core.Extensions;
+using RayGround.Core.Models;
 
 namespace RayGround.Tests;
 
@@ -32,7 +33,7 @@ public class RayCanvasTests
         var color    = RayColor.Create(1, 0, 0);
         var x        = 2;
         var y        = 3;
-        var expected = new RayPixel(RayTuple.NewPoint(x, y, 0), color);
+        var expected = new RayPixel(Fewple.NewPoint(x, y, 0), color);
         var target   = new RayCanvas(10, 20);
         
         // Act

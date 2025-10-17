@@ -3,6 +3,7 @@ using Microsoft.VisualBasic;
 using RayGround.Core;
 using RayGround.Core.Constants;
 using RayGround.Core.Extensions;
+using RayGround.Core.Models;
 using RayGround.Core.Operations;
 
 namespace RayGround.Tests;
@@ -13,7 +14,7 @@ public class IntersectionTests
     public void IntersectionContainsTAndObject()
     {
         // Arrange
-        var sphere = Sphere.Create();
+        var sphere = Sphere.Unit();
         var t      = 3.5f;
 
         // Act
@@ -28,7 +29,7 @@ public class IntersectionTests
     public void CanAggregateIntersectionsIntoArray()
     {
         // Arrange
-        var sphere = Sphere.Create();
+        var sphere = Sphere.Unit();
         var first  = Intersection.Create(1, sphere);
         var second = Intersection.Create(2, sphere);
         
@@ -45,7 +46,7 @@ public class IntersectionTests
     public void HitIsLowestPositiveWhenAllIntersectionsPositive()
     {
         // Arrange
-        var sphere = Sphere.Create();
+        var sphere = Sphere.Unit();
         var first  = Intersection.Create(1, sphere);
         var second = Intersection.Create(2, sphere);
         Intersection[] intersections = [first, second];
@@ -61,7 +62,7 @@ public class IntersectionTests
     public void HitIsLowestPositiveWhenSomeIntersectionsNegative()
     {
         // Arrange
-        var sphere = Sphere.Create();
+        var sphere = Sphere.Unit();
         var first  = Intersection.Create(-1, sphere);
         var second = Intersection.Create(1, sphere);
         Intersection[] intersections = [first, second];
@@ -77,7 +78,7 @@ public class IntersectionTests
     public void HitIsNothingWhenAllIntersectionsNegative()
     {
         // Arrange
-        var sphere = Sphere.Create();
+        var sphere = Sphere.Unit();
         var first  = Intersection.Create(-1, sphere);
         var second = Intersection.Create(-2, sphere);
         Intersection[] intersections = [first, second];
@@ -93,7 +94,7 @@ public class IntersectionTests
     public void HitIsAlwaysLowestPositiveNonNegativeIntersection()
     {
         // Arrange
-        var sphere = Sphere.Create();
+        var sphere = Sphere.Unit();
         var first  = Intersection.Create(5, sphere);
         var second = Intersection.Create(7, sphere);
         var third  = Intersection.Create(-3, sphere);
@@ -111,8 +112,8 @@ public class IntersectionTests
     public void IntersectionCanBePrecomputed()
     {
         // Arrange
-        var ray = Ray.Create(RayTuple.NewPoint(0, 0, -5), RayTuple.NewVector(0, 0, 1));
-        var shape = Sphere.Create();
+        var ray = Ray.Create(Fewple.NewPoint(0, 0, -5), Fewple.NewVector(0, 0, 1));
+        var shape = Sphere.Unit();
         var intersection = Intersection.Create(4, shape);
         
         // Act
@@ -121,17 +122,17 @@ public class IntersectionTests
         // Assert
         actual.RayPoint.Should().Be(intersection.RayTime);
         actual.Collided.Should().BeEquivalentTo(intersection.Collided);
-        actual.Point.Should().BeEquivalentTo(RayTuple.NewPoint(0, 0, -1));
-        actual.EyeVector.Should().BeEquivalentTo(RayTuple.NewVector(0, 0, -1));
-        actual.NormalVector.Should().BeEquivalentTo(RayTuple.NewVector(0, 0, -1));
+        actual.Point.Should().BeEquivalentTo(Fewple.NewPoint(0, 0, -1));
+        actual.EyeVector.Should().BeEquivalentTo(Fewple.NewVector(0, 0, -1));
+        actual.NormalVector.Should().BeEquivalentTo(Fewple.NewVector(0, 0, -1));
     }
 
     [Fact]
     public void PrecomputationSetsInsideFalseWhenHitOccursOutside()
     {
         // Arrange
-        var ray          = Ray.Create(RayTuple.NewPoint(0, 0, -5), RayTuple.NewVector(0, 0, 1));
-        var shape        = Sphere.Create();
+        var ray          = Ray.Create(Fewple.NewPoint(0, 0, -5), Fewple.NewVector(0, 0, 1));
+        var shape        = Sphere.Unit();
         var intersection = Intersection.Create(4, shape);
 
         // Act
@@ -145,8 +146,8 @@ public class IntersectionTests
     public void PrecomputationSetsInsideTrueWhenHitOccursInside()
     {
         // Arrange
-        var ray          = Ray.Create(RayTuple.NewPoint(0, 0, 0), RayTuple.NewVector(0, 0, 1));
-        var shape        = Sphere.Create();
+        var ray          = Ray.Create(Fewple.NewPoint(0, 0, 0), Fewple.NewVector(0, 0, 1));
+        var shape        = Sphere.Unit();
         var intersection = Intersection.Create(1, shape);
 
         // Act
@@ -154,18 +155,18 @@ public class IntersectionTests
 
         // Assert
         actual.IsInside.Should().BeTrue();
-        actual.Point.Should().BeEquivalentTo(RayTuple.NewPoint(0, 0, 1));
-        actual.EyeVector.Should().BeEquivalentTo(RayTuple.NewVector(0, 0, -1));
+        actual.Point.Should().BeEquivalentTo(Fewple.NewPoint(0, 0, 1));
+        actual.EyeVector.Should().BeEquivalentTo(Fewple.NewVector(0, 0, -1));
         // Normally would be (0,0,1), but we invert due to being within the shape.
-        actual.NormalVector.Should().BeEquivalentTo(RayTuple.NewVector(0, 0, -1));
+        actual.NormalVector.Should().BeEquivalentTo(Fewple.NewVector(0, 0, -1));
     }
 
     [Fact]
     public void HitShouldOffsetThePoint()
     {
         // Arrange
-        var ray = Ray.Create(RayTuple.NewPoint(0, 0, -5), RayTuple.NewVector(0, 0, 1));
-        var shape = Sphere.Create()
+        var ray = Ray.Create(Fewple.NewPoint(0, 0, -5), Fewple.NewVector(0, 0, 1));
+        var shape = Sphere.Unit()
             .Morph(Transform.Translation(0, 0, 1));
         var intersection = Intersection.Create(5, shape);
 
@@ -173,7 +174,7 @@ public class IntersectionTests
         var actual = intersection.Precompute(ray);
 
         // Assert
-        actual.OverPoint.Z.Should().BeLessThan(FloatingPoint.Epsilon / -2);
+        actual.OverPoint.Z.Should().BeLessThan(FloatingPoint.ShadowEpsilon / -2);
         actual.Point.Z.Should().BeGreaterThan(actual.OverPoint.Z);
     }
 }

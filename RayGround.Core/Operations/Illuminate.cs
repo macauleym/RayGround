@@ -1,4 +1,5 @@
 using RayGround.Core.Extensions;
+using RayGround.Core.Models;
 
 namespace RayGround.Core.Operations;
 
@@ -7,9 +8,9 @@ public static class Illuminate
     public static RayColor Lighting(
           Material material
         , Light light
-        , RayTuple position
-        , RayTuple eyeVector
-        , RayTuple normalVector
+        , Fewple position
+        , Fewple eyeVector
+        , Fewple normalVector
         , bool inShadow
         ) {
         // Combine surface and light color/intensity.
@@ -58,19 +59,18 @@ public static class Illuminate
         return ambient + diffuse + specular;
     }
 
-    public static bool IsShadowed(Light light, RayTuple point, List<Sphere> shapes)
+    public static bool IsShadowed(Light light, Fewple point, List<Entity> entities)
     {
         var vector    = light.Position - point;
         var distance  = vector.Magnitude();
         var direction = vector.Normalize();
 
         var ray           = Ray.Create(point, direction);
-        var intersections = ray.IntersectWorld(shapes);
+        var intersections = ray.IntersectWorld(entities);
 
         var hit = intersections.Hit();
 
         return hit.HasValue
             && hit.Value.RayTime < distance;
-
     }
 }

@@ -1,13 +1,15 @@
+using RayGround.Core.Models;
+
 namespace RayGround.Core.Extensions;
 
 public static class RayCanvasExtensions
 {
     public static void WritePixel(this RayCanvas source, int x, int y, RayColor? color)
     {
-        var toWrite     = new RayPixel(RayTuple.NewPoint(x, y, 0), color);
+        var toWrite     = new RayPixel(Fewple.NewPoint(x, y, 0), color);
         var targetIndex = source.Pixels.FindIndex(p =>
-            MathF.Abs(p.Position.X - x) < RayTuple.EPSILON
-            && MathF.Abs(p.Position.Y - y) < RayTuple.EPSILON
+            MathF.Abs(p.Position.X - x) < Fewple.EPSILON
+            && MathF.Abs(p.Position.Y - y) < Fewple.EPSILON
             );
         try
         {
@@ -24,7 +26,7 @@ public static class RayCanvasExtensions
 
     public static RayPixel? GetPixel(this RayCanvas source, int x, int y) =>
         source.Pixels.Find(p => 
-            MathF.Abs(p.Position.X - x) < RayTuple.EPSILON 
-            && MathF.Abs(p.Position.Y - y) < RayTuple.EPSILON
+            MathF.Abs(p.Position.X - x) < Fewple.EPSILON 
+            && MathF.Abs(p.Position.Y - y) < Fewple.EPSILON
             );
 }
