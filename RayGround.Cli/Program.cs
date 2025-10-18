@@ -447,9 +447,16 @@ async Task<RayCanvas> NeatlyOnThePlaneAsync()
 {
     var floor = Plane.Default()
         .Paint(Material.Create(
-              color: RayColor.Create(1,0.9f,0.9f)
+              color: RayColor.Create(1, 0.9f, 0.9f)
             , specular: 0f
             ));
+
+    var backWall = Plane.Default()
+        .Paint(Material.Create(
+              color: RayColor.Create(0.6f, 0.6f, 1f)
+            , specular: 0f))
+        .Morph(Transform.RotationX(float.Pi / 2))
+        .Morph(Transform.Translation(0f, 0f, 100));
 
     // Spheres that will make up the scene.
     var sphereMat = Material.Create(
@@ -472,6 +479,7 @@ async Task<RayCanvas> NeatlyOnThePlaneAsync()
     world.Lights.Add(Light.Create(Fewple.NewPoint(-10, 10, -10), RayColor.Create(1, 1, 1)));
     world.Entities.AddRange([
           floor
+        , backWall
         , leftSphere
         , centerSphere
         , rightSphere
