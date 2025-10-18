@@ -112,10 +112,10 @@ public class CameraTests
         var up     = Fewple.NewVector(0, 1, 0);
         var camera = Camera.Create(11, 11, float.Pi / 2)
             .Morph(View.Transform(from, to, up));
-        var expected = RayColor.Create(0.38066f, 0.47583f, 0.2855f);
+        var expected = Color.Create(0.38066f, 0.47583f, 0.2855f);
         
         // Act
-        RayCanvas actual = camera.Render(world);
+        Canvas actual = camera.Render(world);
 
         // Assert
         actual.GetPixel(5, 5).Color.Should().BeEquivalentTo(expected);

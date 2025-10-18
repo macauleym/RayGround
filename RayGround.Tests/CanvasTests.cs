@@ -6,7 +6,7 @@ using RayGround.Core.Models;
 
 namespace RayGround.Tests;
 
-public class RayCanvasTests
+public class CanvasTests
 {
     [Fact]
     public void CreateANewCanvas()
@@ -14,10 +14,10 @@ public class RayCanvasTests
         // Arrange
         var width  = 10;
         var height = 20;
-        var black  = RayColor.Create(0,0,0);
+        var black  = Color.Create(0,0,0);
         
         // Act
-        var actual = new RayCanvas(width, height);
+        var actual = new Canvas(width, height);
         
         // Assert
         actual.Width.Should().Be(width);
@@ -30,11 +30,11 @@ public class RayCanvasTests
     public void WritePixelUpdatesExistingColor()
     {
         // Arrange
-        var color    = RayColor.Create(1, 0, 0);
+        var color    = Color.Create(1, 0, 0);
         var x        = 2;
         var y        = 3;
-        var expected = new RayPixel(Fewple.NewPoint(x, y, 0), color);
-        var target   = new RayCanvas(10, 20);
+        var expected = new Pixel(Fewple.NewPoint(x, y, 0), color);
+        var target   = new Canvas(10, 20);
         
         // Act
         target.WritePixel(x, y, color);

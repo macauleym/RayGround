@@ -29,23 +29,23 @@ public class CameraCalculator
         return Ray.Create(origin, direction);
     }
 
-    static Task<List<RayPixel>> RenderPixelsChunkAsync(Camera cam, World world, RenderChunk chunk) => Task.Run(() =>
+    static Task<List<Pixel>> RenderPixelsChunkAsync(Camera cam, World world, RenderChunk chunk) => Task.Run(() =>
     {
-        var chunkPixels = new List<RayPixel>();
+        var chunkPixels = new List<Pixel>();
         for (var y = chunk.VerticalMin; y <= chunk.VerticalMax; y++)
         for (var x = chunk.HorizontalMin; x <= chunk.HorizontalMax; x++)
         {
             var ray   = cam.RayForPixel(x, y);
             var color = world.ColorAt(ray);
-            chunkPixels.Add(new RayPixel(Fewple.NewPoint(x, y, 0), color));
+            chunkPixels.Add(new Pixel(Fewple.NewPoint(x, y, 0), color));
         }
 
         return chunkPixels;
     });
     
-    public static async Task<RayCanvas> RenderAsync(Camera source, World toRender)
+    public static async Task<Canvas> RenderAsync(Camera source, World toRender)
     {
-        var canvas = new RayCanvas(source.HorizontalSize, source.VerticalSize);
+        var canvas = new Canvas(source.HorizontalSize, source.VerticalSize);
         
         var chunkCount    = 4;
         var vertChunkSize = float.Round(source.VerticalSize   / chunkCount, MidpointRounding.ToZero);
@@ -82,10 +82,10 @@ public class CameraCalculator
         return canvas;
     }
 
-    public static RayCanvas Render(Camera source, World toRender)
+    public static Canvas Render(Camera source, World toRender)
     {
         Console.WriteLine("Render - Creating canvas...");
-        var canvas = new RayCanvas(source.HorizontalSize, source.VerticalSize);
+        var canvas = new Canvas(source.HorizontalSize, source.VerticalSize);
 
         Console.WriteLine("Render - Coloring pixels on canvas...");
         for (var y = 0; y <= source.VerticalSize - 1; y++)

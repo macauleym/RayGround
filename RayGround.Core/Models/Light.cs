@@ -5,14 +5,14 @@ namespace RayGround.Core;
 public class Light
 {
     public readonly Fewple Position;
-    public readonly RayColor Intensity;
+    public readonly Color Intensity;
 
-    Light(Fewple position, RayColor intensity)
+    Light(Fewple position, Color intensity)
     {
         Position  = position;
         Intensity = intensity;
     }
 
-    public static Light Create(Fewple position, RayColor intensity) =>
+    public static Light Create(Fewple position, Color intensity) =>
         new(position, intensity);
 }

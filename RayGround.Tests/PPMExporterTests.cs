@@ -13,7 +13,7 @@ public class PPMExporterTests
     public async Task ExportsCorrectHeader()
     {
         // Arrange
-        var canvas   = new RayCanvas(5, 3);
+        var canvas   = new Canvas(5, 3);
         var expected =
 """
 P3
@@ -32,11 +32,11 @@ P3
     public async Task ExportsCorrectPixelData()
     {
         // Arrange
-        var color1 = RayColor.Create(1.5f, 0, 0);
-        var color2 = RayColor.Create(0, 0.5f, 0);
-        var color3 = RayColor.Create(-0.5f, 0, 1);
+        var color1 = Color.Create(1.5f, 0, 0);
+        var color2 = Color.Create(0, 0.5f, 0);
+        var color3 = Color.Create(-0.5f, 0, 1);
         
-        var canvas = new RayCanvas(5, 3);
+        var canvas = new Canvas(5, 3);
         canvas.WritePixel(0, 0, color1);
         canvas.WritePixel(2, 1, color2);
         canvas.WritePixel(4, 2, color3);
@@ -59,7 +59,7 @@ P3
     public async Task ExportsWrappedPixelDataLines()
     {
         // Arrange
-        var canvas   = new RayCanvas(10, 2, RayColor.Create(1f, 0.8f, 0.6f));
+        var canvas   = new Canvas(10, 2, Color.Create(1f, 0.8f, 0.6f));
         var expected = 
 """
 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204
@@ -79,7 +79,7 @@ P3
     public async Task ExportEndsWithNewline()
     {
         // Arrange
-        var canvas   = new RayCanvas(3, 4);
+        var canvas   = new Canvas(3, 4);
         var expected = "\n";
 
         // Act

@@ -11,7 +11,7 @@ public class LightingTests
     {
         // Arrange
         var position  = Fewple.NewPoint(0, 0, 0);
-        var intensity = RayColor.Create(1, 1, 1);
+        var intensity = Color.Create(1, 1, 1);
         
         // Act
         var pointLight = Light.Create(position, intensity);

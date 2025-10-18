@@ -11,6 +11,6 @@ public static class CameraExtensions
     public static Ray RayForPixel(this Camera source, float pixelX, float pixelY) =>
         CameraCalculator.RayForPixel(source, pixelX, pixelY);
 
-    public static RayCanvas Render(this Camera source, World toRender) =>
+    public static Canvas Render(this Camera source, World toRender) =>
         CameraCalculator.Render(source, toRender);
 }

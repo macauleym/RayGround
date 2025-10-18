@@ -4,9 +4,9 @@ namespace RayGround.Core.Extensions;
 
 public static class RayCanvasExtensions
 {
-    public static void WritePixel(this RayCanvas source, int x, int y, RayColor? color)
+    public static void WritePixel(this Canvas source, int x, int y, Color? color)
     {
-        var toWrite     = new RayPixel(Fewple.NewPoint(x, y, 0), color);
+        var toWrite     = new Pixel(Fewple.NewPoint(x, y, 0), color);
         var targetIndex = source.Pixels.FindIndex(p =>
             MathF.Abs(p.Position.X - x) < Fewple.EPSILON
             && MathF.Abs(p.Position.Y - y) < Fewple.EPSILON
@@ -24,7 +24,7 @@ public static class RayCanvasExtensions
         }
     }
 
-    public static RayPixel? GetPixel(this RayCanvas source, int x, int y) =>
+    public static Pixel? GetPixel(this Canvas source, int x, int y) =>
         source.Pixels.Find(p => 
             MathF.Abs(p.Position.X - x) < Fewple.EPSILON 
             && MathF.Abs(p.Position.Y - y) < Fewple.EPSILON

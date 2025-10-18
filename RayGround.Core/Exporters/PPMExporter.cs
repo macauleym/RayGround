@@ -50,7 +50,7 @@ P3
         return newLength;
     });
 
-    static async Task<KeyValuePair<int, StringBuilder>> ProcessDataRowAsync(RayCanvas canvas, int currentRow)
+    static async Task<KeyValuePair<int, StringBuilder>> ProcessDataRowAsync(Canvas canvas, int currentRow)
     {
         var rowLength  = 0;
         var rowBuilder = new StringBuilder();
@@ -84,7 +84,7 @@ P3
         return new KeyValuePair<int, StringBuilder>(currentRow, rowBuilder);
     }
     
-    static async Task<string> PixelDataAsync(RayCanvas canvas)
+    static async Task<string> PixelDataAsync(Canvas canvas)
     {
         var dataBuilder = new StringBuilder();
         var rowTasks    = new List<Task<KeyValuePair<int, StringBuilder>>>();
@@ -101,7 +101,7 @@ P3
         return dataBuilder.ToString();
     }
 
-    public async Task<string> ExportAsync(RayCanvas canvas)
+    public async Task<string> ExportAsync(Canvas canvas)
     {
         var exportTimer = Stopwatch.StartNew();
         var ppmBuilder  = new StringBuilder();

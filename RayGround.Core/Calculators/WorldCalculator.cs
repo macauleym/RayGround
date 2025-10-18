@@ -5,8 +5,8 @@ namespace RayGround.Core.Calculators;
 
 public static class WorldCalculator
 {
-    public static RayColor ShadeHit(World world, Precomputed computations) =>
-        world.Lights.Aggregate(RayColor.Create(0, 0, 0), (color, light) =>
+    public static Color ShadeHit(World world, Precomputed computations) =>
+        world.Lights.Aggregate(Color.Create(0, 0, 0), (color, light) =>
             color +
             Illuminate.Lighting(
               computations.Collided.Material
@@ -17,12 +17,12 @@ public static class WorldCalculator
             , Illuminate.IsShadowed(light, computations.OverPoint, world.Entities)
             ));
 
-    public static RayColor ColorAt(World world, Ray ray)
+    public static Color ColorAt(World world, Ray ray)
     {
         var intersections = ray.IntersectWorld(world);
         var hit           = intersections.Hit();
         if (hit is null)
-            return RayColor.Black;
+            return Color.Black;
 
         var computations = hit.Value.Precompute(ray);
         

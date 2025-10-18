@@ -26,12 +26,12 @@ public class WorldTests
     public void StarterWorldContainsTwoSpheresAndOneLight()
     {
         // Arrange
-        var light   = Light.Create(Fewple.NewPoint(-10, 10, -10), RayColor.Create(1, 1, 1));
+        var light   = Light.Create(Fewple.NewPoint(-10, 10, -10), Color.Create(1, 1, 1));
         var sphere1 = Sphere.Unit()
             .Paint(Material.Create(
               diffuse: 0.7f
             , specular: 0.2f
-            , color: RayColor.Create(0.8f, 1f, 0.6f)
+            , color: Color.Create(0.8f, 1f, 0.6f)
             ));
         var sphere2 = Sphere.Unit()
             .Morph(Transform.Scaling(0.5f, 0.5f, 0.5f));
@@ -74,7 +74,7 @@ public class WorldTests
         var shape        = world.Entities.First();
         var intersection = Intersection.Create(4f, shape);
         var comps        = intersection.Precompute(ray);
-        var expected     = RayColor.Create(0.38066f, 0.47583f, 0.2855f);
+        var expected     = Color.Create(0.38066f, 0.47583f, 0.2855f);
 
         // Act
         var actual = world.ShadeHit(comps);
@@ -88,7 +88,7 @@ public class WorldTests
     {
         // Arrange
         var world       = World.Default();
-        var light       = Light.Create(Fewple.NewPoint(0, 0.25f, 0), RayColor.Create(1f, 1f, 1f));
+        var light       = Light.Create(Fewple.NewPoint(0, 0.25f, 0), Color.Create(1f, 1f, 1f));
         world.Lights[0] = light;
         
         var ray          = Ray.Create(Fewple.NewPoint(0, 0, 0), Fewple.NewVector(0, 0, 1));
@@ -96,7 +96,7 @@ public class WorldTests
         var intersection = Intersection.Create(0.5f, shape);
         var comps        = intersection.Precompute(ray);
         
-        var expected = RayColor.Create(0.90498f, 0.90498f, 0.90498f);
+        var expected = Color.Create(0.90498f, 0.90498f, 0.90498f);
 
         // Act
         var actual = world.ShadeHit(comps);
@@ -111,7 +111,7 @@ public class WorldTests
         // Arrange
         var world    = World.Default();
         var ray      = Ray.Create(Fewple.NewPoint(0, 0, -5), Fewple.NewVector(0, 1, 0));
-        var expected = RayColor.Create(0, 0, 0);
+        var expected = Color.Create(0, 0, 0);
 
         // Act
         var actual = world.ColorAt(ray);
@@ -126,7 +126,7 @@ public class WorldTests
         // Arrange
         var world    = World.Default();
         var ray      = Ray.Create(Fewple.NewPoint(0, 0, -5), Fewple.NewVector(0, 0, 1));
-        var expected = RayColor.Create(0.38066f, 0.47583f, 0.2855f);
+        var expected = Color.Create(0.38066f, 0.47583f, 0.2855f);
 
         // Act
         var actual = world.ColorAt(ray);
@@ -216,7 +216,7 @@ public class WorldTests
     public void ShadeHitHasIntersectionInShadow()
     {
         // Arrange
-        var light   = Light.Create(Fewple.NewPoint(0, 0, -10), RayColor.Create(1, 1, 1));
+        var light   = Light.Create(Fewple.NewPoint(0, 0, -10), Color.Create(1, 1, 1));
         var sphere1 = Sphere.Unit();
         var sphere2 = Sphere.Unit().Morph(Transform.Translation(0, 0, 10));
         var world   = World.Create([light], [sphere1, sphere2]);
@@ -225,7 +225,7 @@ public class WorldTests
         var intersection = Intersection.Create(4, sphere2);
         var comps        = intersection.Precompute(ray);
 
-        var expected = RayColor.Uniform(sphere2.Material.Ambient);
+        var expected = Color.Uniform(sphere2.Material.Ambient);
 
         // Act
         var actual = world.ShadeHit(comps);

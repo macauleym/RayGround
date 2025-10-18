@@ -31,8 +31,8 @@ public class MaterialTests
         var position  = Fewple.NewPoint(0, 0, 0);
         var eyeVec    = Fewple.NewVector(0, 0, -1);
         var normalVec = Fewple.NewVector(0, 0, -1);
-        var light     = Light.Create(Fewple.NewPoint(0, 0, -10), RayColor.Create(1, 1, 1));
-        var expected  = RayColor.Create(1.9f, 1.9f, 1.9f);
+        var light     = Light.Create(Fewple.NewPoint(0, 0, -10), Color.Create(1, 1, 1));
+        var expected  = Color.Create(1.9f, 1.9f, 1.9f);
 
         // Act
         var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec, false);
@@ -49,8 +49,8 @@ public class MaterialTests
         var position  = Fewple.NewPoint(0, 0, 0);
         var eyeVec    = Fewple.NewVector(0, MathF.Sqrt(2)/2, -MathF.Sqrt(2)/2);
         var normalVec = Fewple.NewVector(0, 0, -1);
-        var light     = Light.Create(Fewple.NewPoint(0, 0, -10), RayColor.Create(1, 1, 1));
-        var expected  = RayColor.Create(1.0f, 1.0f, 1.0f);
+        var light     = Light.Create(Fewple.NewPoint(0, 0, -10), Color.Create(1, 1, 1));
+        var expected  = Color.Create(1.0f, 1.0f, 1.0f);
 
         // Act
         var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec, false);
@@ -67,8 +67,8 @@ public class MaterialTests
         var position  = Fewple.NewPoint(0, 0, 0);
         var eyeVec    = Fewple.NewVector(0, 0, -1);
         var normalVec = Fewple.NewVector(0, 0, -1);
-        var light     = Light.Create(Fewple.NewPoint(0, 10, -10), RayColor.Create(1, 1, 1));
-        var expected  = RayColor.Create(0.7364f, 0.7364f, 0.7364f);
+        var light     = Light.Create(Fewple.NewPoint(0, 10, -10), Color.Create(1, 1, 1));
+        var expected  = Color.Create(0.7364f, 0.7364f, 0.7364f);
 
         // Act
         var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec, false);
@@ -85,8 +85,8 @@ public class MaterialTests
         var position  = Fewple.NewPoint(0, 0, 0);
         var eyeVec    = Fewple.NewVector(0, -MathF.Sqrt(2)/2, -MathF.Sqrt(2)/2);
         var normalVec = Fewple.NewVector(0, 0, -1);
-        var light     = Light.Create(Fewple.NewPoint(0, 10, -10), RayColor.Create(1, 1, 1));
-        var expected  = RayColor.Create(1.6363853f, 1.6363853f, 1.6363853f);
+        var light     = Light.Create(Fewple.NewPoint(0, 10, -10), Color.Create(1, 1, 1));
+        var expected  = Color.Create(1.6363853f, 1.6363853f, 1.6363853f);
 
         // Act
         var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec, false);
@@ -103,8 +103,8 @@ public class MaterialTests
         var position  = Fewple.NewPoint(0, 0, 0);
         var eyeVec    = Fewple.NewVector(0, 0, -1);
         var normalVec = Fewple.NewVector(0, 0, -1);
-        var light     = Light.Create(Fewple.NewPoint(0, 0, 10), RayColor.Create(1, 1, 1));
-        var expected  = RayColor.Create(0.1f, 0.1f, 0.1f);
+        var light     = Light.Create(Fewple.NewPoint(0, 0, 10), Color.Create(1, 1, 1));
+        var expected  = Color.Create(0.1f, 0.1f, 0.1f);
 
         // Act
         var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec, false);
@@ -121,9 +121,9 @@ public class MaterialTests
         var position = Fewple.NewPoint(0, 0, 0);
         var eye      = Fewple.NewVector(0, 0, -1);
         var normal   = Fewple.NewVector(0, 0, -1);
-        var light    = Light.Create(Fewple.NewPoint(0, 0, -10), RayColor.Create(1, 1, 1));
+        var light    = Light.Create(Fewple.NewPoint(0, 0, -10), Color.Create(1, 1, 1));
         var inShadow = true;
-        var expected = RayColor.Create(0.1f, 0.1f, 0.1f);
+        var expected = Color.Create(0.1f, 0.1f, 0.1f);
 
         // Act
         var actual = Illuminate.Lighting(material, light, position, eye, normal, inShadow);

@@ -5,7 +5,7 @@ namespace RayGround.Core.Operations;
 
 public static class Illuminate
 {
-    public static RayColor Lighting(
+    public static Color Lighting(
           Material material
         , Light light
         , Fewple position
@@ -30,13 +30,13 @@ public static class Illuminate
         // A negative number means the light is on the opposite
         // side of the surface, and gradually approach 1 when
         // they start to meet.
-        RayColor diffuse;
-        RayColor specular;
+        Color diffuse;
+        Color specular;
         var lightDotNormal = lightVec.Dot(normalVector);
         if (lightDotNormal < 0)
         {
-            diffuse  = RayColor.Black;
-            specular = RayColor.Black;
+            diffuse  = Color.Black;
+            specular = Color.Black;
         }
         else
         {
@@ -48,7 +48,7 @@ public static class Illuminate
             var reflectVec    = (-lightVec).Reflect(normalVector);
             var reflectDotEye = reflectVec.Dot(eyeVector);
             if (reflectDotEye <= 0)
-                specular = RayColor.Create(0, 0, 0);
+                specular = Color.Create(0, 0, 0);
             else
             {
                 var factor = MathF.Pow(reflectDotEye, material.Shininess);

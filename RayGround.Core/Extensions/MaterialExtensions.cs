@@ -2,7 +2,7 @@ namespace RayGround.Core.Extensions;
 
 public static class MaterialExtensions
 {
-    public static Material Recolor(this Material source, RayColor with) =>
+    public static Material Recolor(this Material source, Color with) =>
         Material.Create(
           source.Ambient
         , source.Diffuse

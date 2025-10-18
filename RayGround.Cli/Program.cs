@@ -38,7 +38,7 @@ Console.WriteLine($"Processing finished!\n\t{stopwatch.ElapsedMilliseconds}ms.\n
 
 return;
 
-void Draw(RayCanvas canvas, Fewple position, RayColor? color)
+void Draw(Canvas canvas, Fewple position, Color? color)
 {
     var x = position.X;
     if (x > canvas.Width)
@@ -55,7 +55,7 @@ void Draw(RayCanvas canvas, Fewple position, RayColor? color)
     canvas.WritePixel((int)x, (int)canvas.Height - (int)y, color);
 }
 
-async Task ExportCanvasAsync(RayCanvas canvas, string fileName)
+async Task ExportCanvasAsync(Canvas canvas, string fileName)
 {
     var ppm = new PPMExporter();
     Console.WriteLine("Exporting canvas to file...");
@@ -65,7 +65,7 @@ async Task ExportCanvasAsync(RayCanvas canvas, string fileName)
     Console.WriteLine(SEPARATOR);
 }
 
-async Task<RayCanvas> LaunchProjectileAsync()
+async Task<Canvas> LaunchProjectileAsync()
 {
     Console.WriteLine("Prep the projectile...");
     var start      = Fewple.NewPoint(0, 1, 0);
@@ -79,8 +79,8 @@ async Task<RayCanvas> LaunchProjectileAsync()
     var calculator  = new EnvironmentCalculator();
 
     Console.WriteLine("Build the canvas...");
-    var canvas          = new RayCanvas(900, 550);
-    var projectileColor = RayColor.Create(0.8f, 0.8f, 0.8f);
+    var canvas          = new Canvas(900, 550);
+    var projectileColor = Color.Create(0.8f, 0.8f, 0.8f);
 
     Console.WriteLine($"Projectile starting at {projectile.Position}.");
     Draw(canvas, projectile.Position, projectileColor);
@@ -139,10 +139,10 @@ async Task MatrixManipulationAsync()
     Console.WriteLine(SEPARATOR);
 }
 
-async Task<RayCanvas> HoursOnAClockAsync()
+async Task<Canvas> HoursOnAClockAsync()
 {
     // First create the canvas that we'll be working with.
-    var clock = new RayCanvas(100, 100);
+    var clock = new Canvas(100, 100);
     
     // Create the 12 points that we'll ultimately need to plot.
     var points = Enumerable.Range(0, 12)
@@ -180,7 +180,7 @@ async Task<RayCanvas> HoursOnAClockAsync()
     
     // Paint the pixels onto the canvas.
     foreach (var point in points)
-        Draw(clock, point, RayColor.Create(225, 225, 0));
+        Draw(clock, point, Color.Create(225, 225, 0));
     
     Console.WriteLine(SEPARATOR);
     
@@ -188,14 +188,14 @@ async Task<RayCanvas> HoursOnAClockAsync()
     return clock;
 }
 
-async Task<RayCanvas> RaysAtASphereAsync()
+async Task<Canvas> RaysAtASphereAsync()
 {
     // Book recommends 100, but I want to flex.
     // Setting this to 500 took a bit over a minute (~72 seconds)
     // but like 30TB of total memory.
     // Need to look into better memory efficiency.
     var canvasSize = 500;
-    var canvas     = new RayCanvas(canvasSize, canvasSize);
+    var canvas     = new Canvas(canvasSize, canvasSize);
     var rayOrigin  = Fewple.NewPoint(0, 0, -5);
     
     var sphere = Sphere.Unit();
@@ -240,20 +240,20 @@ async Task<RayCanvas> RaysAtASphereAsync()
         var intersections = ray.Intersect(sphere);
         
         if (intersections.Hit().HasValue)
-            canvas.WritePixel(x, y, RayColor.Create(255, 0, 0));
+            canvas.WritePixel(x, y, Color.Create(255, 0, 0));
     }
 
     return canvas;
 }
 
-async Task<RayCanvas> ShadedSphereAsync()
+async Task<Canvas> ShadedSphereAsync()
 {
     // Book recommends 100, but I want to flex.
     // Setting this to 500 took a bit over a minute (~72 seconds)
     // but like 30TB of total memory.
     // Need to look into better memory efficiency.
     var canvasSize = 500;
-    var canvas     = new RayCanvas(canvasSize, canvasSize);
+    var canvas     = new Canvas(canvasSize, canvasSize);
     var rayOrigin  = Fewple.NewPoint(0, 0, -5);
 
     var sphere = Sphere.Unit()
@@ -262,12 +262,12 @@ async Task<RayCanvas> ShadedSphereAsync()
             , diffuse: 0.5f
             , specular: 0.1f
             , shininess: 300.0f
-            , color: RayColor.Create(0.1f, 1f, 0.1f)
+            , color: Color.Create(0.1f, 1f, 0.1f)
             ));
 
     var light = Light.Create(
           Fewple.NewPoint(10, 5, -10)
-        , RayColor.Create(0.1f, 1, 0.1f)
+        , Color.Create(0.1f, 1, 0.1f)
         );
 
     // Transforming the sphere.
@@ -333,7 +333,7 @@ async Task<RayCanvas> ShadedSphereAsync()
     return canvas;
 }
 
-async Task<RayCanvas> RenderCameraSceneAsync()
+async Task<Canvas> RenderCameraSceneAsync()
 {
     // Spheres that will make up the scene.
     var baseSphere = Sphere.Unit(); 
@@ -341,7 +341,7 @@ async Task<RayCanvas> RenderCameraSceneAsync()
     var floor = baseSphere
         .Morph(Transform.Scaling(10 ,0.01f, 10))
         .Paint(Material.Create(
-              color: RayColor.Create(1,0.9f,0.9f)
+              color: Color.Create(1,0.9f,0.9f)
             , specular: 0f)
             );
     var leftWall = floor
@@ -359,18 +359,18 @@ async Task<RayCanvas> RenderCameraSceneAsync()
         );
     var centerSphere = baseSphere
         .Morph(Transform.Translation(-0.5f, 1, 0.5f))
-        .Paint(baseSphereMat.Recolor(RayColor.Create(0.1f, 1, 0.5f)));
+        .Paint(baseSphereMat.Recolor(Color.Create(0.1f, 1, 0.5f)));
     var rightSphere = baseSphere
         .Morph(Transform.Translation(1.5f, 0.5f, 0.5f)
                * Transform.Scaling(0.5f, 0.5f, 0.5f))
-        .Paint(baseSphereMat.Recolor(RayColor.Create(0.5f, 1, 0.1f)));
+        .Paint(baseSphereMat.Recolor(Color.Create(0.5f, 1, 0.1f)));
     var leftSphere = baseSphere
         .Morph(Transform.Translation(-1.5f, 0.33f, -0.75f) * Transform.Scaling(0.33f, 0.33f, 0.33f))
-        .Paint(baseSphereMat.Recolor(RayColor.Create(1, 0.8f, 0.1f)));
+        .Paint(baseSphereMat.Recolor(Color.Create(1, 0.8f, 0.1f)));
 
     // The world to put things in. 
     var world = World.Empty();
-    world.Lights.Add(Light.Create(Fewple.NewPoint(-10, 10, -10), RayColor.Create(1, 1, 1)));
+    world.Lights.Add(Light.Create(Fewple.NewPoint(-10, 10, -10), Color.Create(1, 1, 1)));
     world.Entities.AddRange([
           floor
         , leftWall
@@ -393,7 +393,7 @@ async Task<RayCanvas> RenderCameraSceneAsync()
     return camera.Render(world);
 }
 
-async Task<RayCanvas> SimpleShadowTest()
+async Task<Canvas> SimpleShadowTest()
 {
     // Spheres that will make up the scene.
     var baseSphere = Sphere.Unit(); 
@@ -401,7 +401,7 @@ async Task<RayCanvas> SimpleShadowTest()
     var floor = baseSphere
         .Morph(Transform.Scaling(10 ,0.01f, 10))
         .Paint(Material.Create(
-              color: RayColor.Create(1,0.9f,0.9f)
+              color: Color.Create(1,0.9f,0.9f)
             , specular: 0f)
             );
     var leftWall = floor
@@ -419,11 +419,11 @@ async Task<RayCanvas> SimpleShadowTest()
         );
     var centerSphere = baseSphere
         .Morph(Transform.Translation(-0.5f, 1, 0.5f))
-        .Paint(baseSphereMat.Recolor(RayColor.Create(0.1f, 1, 0.5f)));
+        .Paint(baseSphereMat.Recolor(Color.Create(0.1f, 1, 0.5f)));
 
     // The world to put things in. 
     var world = World.Empty();
-    world.Lights.Add(Light.Create(Fewple.NewPoint(-10, 10, -10), RayColor.Create(1, 1, 1)));
+    world.Lights.Add(Light.Create(Fewple.NewPoint(-10, 10, -10), Color.Create(1, 1, 1)));
     world.Entities.AddRange([
           floor
         , leftWall
@@ -443,17 +443,17 @@ async Task<RayCanvas> SimpleShadowTest()
     return camera.Render(world);
 }
 
-async Task<RayCanvas> NeatlyOnThePlaneAsync()
+async Task<Canvas> NeatlyOnThePlaneAsync()
 {
     var floor = Plane.Default()
         .Paint(Material.Create(
-              color: RayColor.Create(1, 0.9f, 0.9f)
+              color: Color.Create(1, 0.9f, 0.9f)
             , specular: 0f
             ));
 
     var backWall = Plane.Default()
         .Paint(Material.Create(
-              color: RayColor.Create(0.6f, 0.6f, 1f)
+              color: Color.Create(0.6f, 0.6f, 1f)
             , specular: 0f))
         .Morph(Transform.RotationX(float.Pi / 2))
         .Morph(Transform.Translation(0f, 0f, 100));
@@ -465,18 +465,18 @@ async Task<RayCanvas> NeatlyOnThePlaneAsync()
         );
     var centerSphere = Sphere.Unit()
         .Morph(Transform.Translation(-0.5f, 1, 0.5f))
-        .Paint(sphereMat.Recolor(RayColor.Create(0.1f, 1, 0.5f)));
+        .Paint(sphereMat.Recolor(Color.Create(0.1f, 1, 0.5f)));
     var rightSphere = Sphere.Unit()
         .Morph(Transform.Translation(1.5f, 0.5f, 0.5f)
                * Transform.Scaling(0.5f, 0.5f, 0.5f))
-        .Paint(sphereMat.Recolor(RayColor.Create(0.5f, 1, 0.1f)));
+        .Paint(sphereMat.Recolor(Color.Create(0.5f, 1, 0.1f)));
     var leftSphere = Sphere.Unit()
         .Morph(Transform.Translation(-1.5f, 0.33f, -0.75f) * Transform.Scaling(0.33f, 0.33f, 0.33f))
-        .Paint(sphereMat.Recolor(RayColor.Create(1, 0.8f, 0.1f)));
+        .Paint(sphereMat.Recolor(Color.Create(1, 0.8f, 0.1f)));
 
     // The world to put things in. 
     var world = World.Empty();
-    world.Lights.Add(Light.Create(Fewple.NewPoint(-10, 10, -10), RayColor.Create(1, 1, 1)));
+    world.Lights.Add(Light.Create(Fewple.NewPoint(-10, 10, -10), Color.Create(1, 1, 1)));
     world.Entities.AddRange([
           floor
         , backWall
