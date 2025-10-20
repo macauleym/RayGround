@@ -1,11 +1,14 @@
+using RayGround.Core.Interfaces;
 using RayGround.Core.Interfaces.Entities;
 using RayGround.Core.Models;
+using RayGround.Core.Models.Patterns;
 
 namespace RayGround.Core;
 
 public abstract class Entity
-: IMorphable
-, IPaintable
+: IMorphable<Entity>
+, IPaintable<Entity>
+, IEtchable<Entity>
 , IIntersectable
 , INormalable
 {
@@ -32,6 +35,13 @@ public abstract class Entity
     public Entity Paint(Material target)
     {
         Material = target;
+
+        return this;
+    }
+
+    public Entity Etch(Pattern with)
+    {
+        Material = Material.Etch(with);
 
         return this;
     }

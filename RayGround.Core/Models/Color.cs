@@ -1,11 +1,12 @@
+using RayGround.Core.Constants;
+
 namespace RayGround.Core;
 
 public class Color
 {
-    public const float EPSILON = 0.00001f;
-
     public static readonly Color Black = new (0, 0, 0);
-
+    public static readonly Color White = new (1, 1, 1);
+    
     public readonly float Red;
     public readonly float Green;
     public readonly float Blue;
@@ -25,9 +26,9 @@ public class Color
     
     public override bool Equals(object? obj) =>
         obj is Color other
-        && MathF.Abs(Red   - other.Red) < EPSILON
-        && MathF.Abs(Green - other.Green) < EPSILON
-        && MathF.Abs(Blue  - other.Blue) < EPSILON;
+        && MathF.Abs(Red   - other.Red)   < Floating.Epsilon
+        && MathF.Abs(Green - other.Green) < Floating.Epsilon
+        && MathF.Abs(Blue  - other.Blue)  < Floating.Epsilon;
 
     public static bool operator ==(Color left, Color right) =>
         left.Equals(right);

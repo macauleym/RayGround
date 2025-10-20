@@ -6,15 +6,20 @@ namespace RayGround.Core.Operations;
 public static class Illuminate
 {
     public static Color Lighting(
-          Material material
-        , Light light
-        , Fewple position
-        , Fewple eyeVector
-        , Fewple normalVector
-        , bool inShadow
-        ) {
+      Material material
+    , Entity entity
+    , Light light
+    , Fewple position
+    , Fewple eyeVector
+    , Fewple normalVector
+    , bool inShadow
+    ) {
+        var chosenColor = material.Pattern is not null
+            ? material.Pattern.GetLocalizedColor(entity.Transform, position)
+            : material.Color;
+        
         // Combine surface and light color/intensity.
-        var effectiveColor = material.Color * light.Intensity;
+        var effectiveColor = chosenColor * light.Intensity;
         
         // Find direction to light source.
         var lightVec = (light.Position - position).Normalize();

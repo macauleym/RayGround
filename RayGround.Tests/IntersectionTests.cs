@@ -174,7 +174,7 @@ public class IntersectionTests
         var actual = intersection.Precompute(ray);
 
         // Assert
-        actual.OverPoint.Z.Should().BeLessThan(FloatingPoint.ShadowEpsilon / -2);
+        actual.OverPoint.Z.Should().BeLessThan(Floating.ShadowEpsilon / -2);
         actual.Point.Z.Should().BeGreaterThan(actual.OverPoint.Z);
     }
 }

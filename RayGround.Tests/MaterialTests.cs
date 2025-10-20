@@ -2,12 +2,15 @@ using FluentAssertions;
 using RayGround.Core;
 using RayGround.Core.Extensions;
 using RayGround.Core.Models;
+using RayGround.Core.Models.Patterns;
 using RayGround.Core.Operations;
 
 namespace RayGround.Tests;
 
 public class MaterialTests
 {
+    Sphere dummyEntity = Sphere.Unit();
+    
     [Fact]
     public void MaterialHasSaneDefaultValues()
     {
@@ -35,7 +38,7 @@ public class MaterialTests
         var expected  = Color.Create(1.9f, 1.9f, 1.9f);
 
         // Act
-        var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec, false);
+        var actual = Illuminate.Lighting(material, dummyEntity, light, position, eyeVec, normalVec, false);
 
         // Assert
         actual.Should().BeEquivalentTo(expected);
@@ -53,7 +56,7 @@ public class MaterialTests
         var expected  = Color.Create(1.0f, 1.0f, 1.0f);
 
         // Act
-        var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec, false);
+        var actual = Illuminate.Lighting(material, dummyEntity, light, position, eyeVec, normalVec, false);
 
         // Assert
         actual.Should().BeEquivalentTo(expected);
@@ -71,7 +74,7 @@ public class MaterialTests
         var expected  = Color.Create(0.7364f, 0.7364f, 0.7364f);
 
         // Act
-        var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec, false);
+        var actual = Illuminate.Lighting(material, dummyEntity, light, position, eyeVec, normalVec, false);
 
         // Assert
         actual.Should().BeEquivalentTo(expected);
@@ -89,7 +92,7 @@ public class MaterialTests
         var expected  = Color.Create(1.6363853f, 1.6363853f, 1.6363853f);
 
         // Act
-        var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec, false);
+        var actual = Illuminate.Lighting(material, dummyEntity, light, position, eyeVec, normalVec, false);
 
         // Assert
         actual.Should().BeEquivalentTo(expected);
@@ -107,7 +110,7 @@ public class MaterialTests
         var expected  = Color.Create(0.1f, 0.1f, 0.1f);
 
         // Act
-        var actual = Illuminate.Lighting(material, light, position, eyeVec, normalVec, false);
+        var actual = Illuminate.Lighting(material, dummyEntity, light, position, eyeVec, normalVec, false);
 
         // Assert
         actual.Should().BeEquivalentTo(expected);
@@ -126,9 +129,35 @@ public class MaterialTests
         var expected = Color.Create(0.1f, 0.1f, 0.1f);
 
         // Act
-        var actual = Illuminate.Lighting(material, light, position, eye, normal, inShadow);
+        var actual = Illuminate.Lighting(material, dummyEntity, light, position, eye, normal, inShadow);
 
         // Assert
         actual.Should().Be(expected);
+    }
+
+    [Fact]
+    public void MaterialCanHavePatternApplied()
+    {
+        // Arrange
+        var stripe   = Stripe.Create(Color.White, Color.Black);
+        var material = Material.Create(
+              ambient: 1
+            , diffuse: 0
+            , specular: 0
+            , pattern: stripe
+            );
+        
+        var eye    = Fewple.NewVector(0, 0, -1);
+        var normal = Fewple.NewVector(0, 0, -1);
+        var light  = Light.Create(Fewple.NewPoint(0, 0, -10), Color.White);
+        
+        // Act
+        var actual = new[] { 0.9f, 1.1f }
+            .Select(f => Illuminate.Lighting(material, dummyEntity, light, Fewple.NewPoint(f, 0, 0), eye, normal, false))
+            .ToArray();
+        
+        // Assert
+        actual[0].Should().BeEquivalentTo(Color.White);
+        actual[1].Should().BeEquivalentTo(Color.Black);
     }
 }

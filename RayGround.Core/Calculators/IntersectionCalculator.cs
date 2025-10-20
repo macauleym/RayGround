@@ -28,7 +28,7 @@ public static class IntersectionCalculator
 
         var normalEyeDot = normal.Dot(eye);
         var trueNormal   = normalEyeDot < 0 ? -normal : normal;
-        var overPoint    = point + trueNormal * FloatingPoint.ShadowEpsilon;
+        var overPoint    = point + trueNormal * Floating.ShadowEpsilon;
         
         return Precomputed.Create(
               rayTime

@@ -35,7 +35,7 @@ public static class Transform
 
     public static Matrix RotationY(float radians)
     {
-        var rotateYMatrix = Matrix.Identity.CloneMatrix();
+        var rotateYMatrix   = Matrix.Identity.CloneMatrix();
         rotateYMatrix[0, 0] = float.Cos(radians);
         rotateYMatrix[0, 2] = float.Sin(radians);
         rotateYMatrix[2, 0] = float.Sin(radians) * -1;
@@ -46,7 +46,7 @@ public static class Transform
 
     public static Matrix RotationZ(float radians)
     {
-        var rotateYMatrix = Matrix.Identity.CloneMatrix();
+        var rotateYMatrix   = Matrix.Identity.CloneMatrix();
         rotateYMatrix[0, 0] = float.Cos(radians);
         rotateYMatrix[0, 1] = float.Sin(radians) * -1;
         rotateYMatrix[1, 0] = float.Sin(radians);
@@ -56,14 +56,13 @@ public static class Transform
     }
 
     public static Matrix Shearing(
-          float xy
-        , float xz
-        , float yx
-        , float yz
-        , float zx
-        , float zy
-    )
-    {
+      float xy
+    , float xz
+    , float yx
+    , float yz
+    , float zx
+    , float zy
+    ) {
         var shearMatrix = Matrix.Identity.CloneMatrix();
         shearMatrix[0, 1] = xy;
         shearMatrix[0, 2] = xz;

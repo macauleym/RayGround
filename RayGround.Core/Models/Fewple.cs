@@ -1,9 +1,9 @@
-﻿namespace RayGround.Core.Models;
+﻿using RayGround.Core.Constants;
+
+namespace RayGround.Core.Models;
 
 public class Fewple
 {
-    public const float EPSILON = 0.00001f;
-    
     public readonly float X;
     public readonly float Y;
     public readonly float Z;
@@ -28,10 +28,10 @@ public class Fewple
 
     public override bool Equals(object? obj) =>
         obj is Fewple other
-        && MathF.Abs(X - other.X) < EPSILON
-        && MathF.Abs(Y - other.Y) < EPSILON
-        && MathF.Abs(Z - other.Z) < EPSILON
-        && MathF.Abs(W - other.W) < EPSILON;
+        && MathF.Abs(X - other.X) < Floating.Epsilon
+        && MathF.Abs(Y - other.Y) < Floating.Epsilon
+        && MathF.Abs(Z - other.Z) < Floating.Epsilon
+        && MathF.Abs(W - other.W) < Floating.Epsilon;
 
     public static bool operator ==(Fewple left, Fewple right)=>
         left.Equals(right);

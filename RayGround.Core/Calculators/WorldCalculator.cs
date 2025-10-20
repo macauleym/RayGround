@@ -10,6 +10,7 @@ public static class WorldCalculator
             color +
             Illuminate.Lighting(
               computations.Collided.Material
+            , computations.Collided
             , light
             , computations.Point
             , computations.EyeVector

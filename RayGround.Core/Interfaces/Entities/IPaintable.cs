@@ -1,6 +1,6 @@
 namespace RayGround.Core.Interfaces.Entities;
 
-public interface IPaintable
+public interface IPaintable<out T>
 {
-    Entity Paint(Material with);
+    T Paint(Material with);
 }

@@ -1,3 +1,4 @@
+using RayGround.Core.Constants;
 using RayGround.Core.Models;
 
 namespace RayGround.Core;
@@ -21,7 +22,7 @@ public class Plane : Entity
     
     public override float[] Intersections(Ray traced)
     {
-        if (MathF.Abs(traced.Direction.Y) < Fewple.EPSILON)
+        if (MathF.Abs(traced.Direction.Y) < Floating.Epsilon)
             return [];
 
         return [ -traced.Origin.Y / traced.Direction.Y ];
