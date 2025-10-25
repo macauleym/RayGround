@@ -194,12 +194,12 @@ public class IntersectionTests
     }
 
     [Theory]
-    [InlineData("Air to A", 0, 1   , 1.5f)]
-    [InlineData("A to B"  , 1, 1.5f, 2   )]
-    [InlineData("B to C"  , 2, 2   , 2.5f)]
-    [InlineData("C to B"  , 3, 2.5f, 2.5f)]
-    [InlineData("C to A"  , 4, 2.5f, 1.5f)]
-    [InlineData("A to Air", 5, 1.5f, 1   )]
+    [InlineData("Air to A" , 0 , 1.000293f , 1.5f      )]
+    [InlineData("A to B"   , 1 , 1.5f      , 2         )]
+    [InlineData("B to C"   , 2 , 2         , 2.5f      )]
+    [InlineData("C to B"   , 3 , 2.5f      , 2.5f      )]
+    [InlineData("C to A"   , 4 , 2.5f      , 1.5f      )]
+    [InlineData("A to Air" , 5 , 1.5f      , 1.000293f )]
     public void CorrectRefractionPointsFoundAtIntersections(string name
     , int index
     , float n1
