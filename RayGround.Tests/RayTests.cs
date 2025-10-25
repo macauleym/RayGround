@@ -52,7 +52,7 @@ public class RayTests
     {
         // Arrange
         var ray      = Ray.Create(Fewple.NewPoint(0, 0, -5), Fewple.NewVector(0, 0, 1));
-        var sphere   = Sphere.Unit();
+        var sphere   = Sphere.Create();
         var expected = new[] { Intersection.Create(4.0f, sphere), Intersection.Create(6.0f, sphere) };
 
         // Act
@@ -68,7 +68,7 @@ public class RayTests
     {
         // Arrange
         var ray      = Ray.Create(Fewple.NewPoint(0, 1, -5), Fewple.NewVector(0, 0, 1));
-        var sphere   = Sphere.Unit();
+        var sphere   = Sphere.Create();
         var expected = new[] { Intersection.Create(5, sphere), Intersection.Create(5, sphere) };
 
         // Act
@@ -84,7 +84,7 @@ public class RayTests
     {
         // Arrange
         var ray      = Ray.Create(Fewple.NewPoint(0, 2, -5), Fewple.NewVector(0, 0, 1));
-        var sphere   = Sphere.Unit();
+        var sphere   = Sphere.Create();
         var expected = Array.Empty<Intersection>();
 
         // Act
@@ -100,7 +100,7 @@ public class RayTests
     {
         // Arrange
         var ray      = Ray.Create(Fewple.NewPoint(0, 0, 0), Fewple.NewVector(0, 0, 1));
-        var sphere   = Sphere.Unit();
+        var sphere   = Sphere.Create();
         var expected = new[] { Intersection.Create(-1.0f, sphere), Intersection.Create(1.0f, sphere) };
 
         // Act
@@ -116,7 +116,7 @@ public class RayTests
     {
         // Arrange
         var ray      = Ray.Create(Fewple.NewPoint(0, 0, 5), Fewple.NewVector(0, 0, 1));
-        var sphere   = Sphere.Unit();
+        var sphere   = Sphere.Create();
         var expected = new[] { Intersection.Create(-6.0f, sphere), Intersection.Create(-4.0f, sphere) };
 
         // Act
@@ -132,7 +132,7 @@ public class RayTests
     {
         // Arrange
         var ray      = Ray.Create(Fewple.NewPoint(0, 0, -5), Fewple.NewVector(0, 0, 1));
-        var sphere   = Sphere.Unit();
+        var sphere   = Sphere.Create();
 
         // Act
         var actual = ray.Intersect(sphere);

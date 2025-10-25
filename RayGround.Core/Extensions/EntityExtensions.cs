@@ -1,4 +1,5 @@
 using RayGround.Core.Models;
+using RayGround.Core.Models.Entities;
 
 namespace RayGround.Core.Extensions;
 

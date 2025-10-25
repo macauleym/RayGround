@@ -5,15 +5,13 @@ namespace RayGround.Core.Models.Patterns;
 
 public class Checker : Pattern
 {
-    protected Checker(Color primary, Color secondary, Matrix? transform) 
-    : base(primary, secondary, transform)
-    { }
+    protected Checker(Color primary, Color secondary) : base(primary, secondary) { }
 
-    public static Checker Create(Color primary, Color secondary, Matrix? transform = null) =>
-        new (primary, secondary, transform);
+    public static Checker Create(Color primary, Color secondary) =>
+        new (primary, secondary);
 
     public static Checker Default() =>
-        Create(Color.White, Color.Black, Matrix.Identity);
+        Create(Color.White, Color.Black);
 
     public override Color GetColor(Fewple at) => 
         (( MathF.Floor(at.X + Floating.Epsilon) 

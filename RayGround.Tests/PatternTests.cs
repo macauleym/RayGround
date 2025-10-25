@@ -9,19 +9,6 @@ namespace RayGround.Tests;
 
 public class PatternTests
 {
-    class TestPattern : Pattern
-    {
-        public TestPattern(Color primary, Color secondary, Matrix? transform) 
-        : base(primary, secondary, transform)
-        { }
-
-        public static TestPattern Create() =>
-            new(Color.White, Color.Black, Matrix.Identity);
-
-        public override Color GetColor(Fewple at) =>
-            Color.Create(at.X, at.Y, at.Z);
-    }
-    
     [Fact]
     public void CanCreateStripePattern()
     {
@@ -93,7 +80,7 @@ public class PatternTests
     {
         // Arrange
         var entity = Sphere
-            .Unit()
+            .Create()
             .Morph(Transform.Scaling(2,2,2));
         var pattern = Stripe.Default();
         var worldPoint = Fewple.NewPoint(1.5f, 0, 0);
@@ -136,7 +123,7 @@ public class PatternTests
     {
         // Arrange
         var entity = Sphere
-            .Unit()
+            .Create()
             .Morph(Transform.Scaling(2, 2, 2));
         var pattern = TestPattern.Create();
 
@@ -152,7 +139,7 @@ public class PatternTests
     {
         // Arrange
         var entity = Sphere
-            .Unit();
+            .Create();
         var pattern = TestPattern
             .Create()
             .Morph(Transform.Scaling(2, 2, 2));
@@ -169,7 +156,7 @@ public class PatternTests
     {
         // Arrange
         var entity = Sphere
-            .Unit()
+            .Create()
             .Morph(Transform.Scaling(2, 2, 2));
         var pattern = TestPattern
             .Create()

@@ -11,7 +11,7 @@ public class PlaneTests
     public void PlaneNormalIsConstantEverywhere()
     {
         // Arrange
-        var plane = Plane.Default();
+        var plane = Plane.Create();
 
         // Act
         var actual = new List<Fewple>
@@ -28,7 +28,7 @@ public class PlaneTests
     public void NoIntersectionsWhenRayIsParallel()
     {
         // Arrange
-        var plane = Plane.Default();
+        var plane = Plane.Create();
         var ray   = Ray.Create(Fewple.NewPoint(0, 10, 0), Fewple.NewVector(0, 0, 1));
 
         // Act
@@ -42,7 +42,7 @@ public class PlaneTests
     public void NoIntersectionsWhenRayIsCoplanar()
     {
         // Arrange
-        var plane = Plane.Default();
+        var plane = Plane.Create();
         var ray   = Ray.Create(Fewple.NewPoint(0, 0, 0), Fewple.NewVector(0, 0, 1));
 
         // Act
@@ -56,7 +56,7 @@ public class PlaneTests
     public void RayCanIntersectFromAbove()
     {
         // Arrange
-        var plane = Plane.Default();
+        var plane = Plane.Create();
         var ray   = Ray.Create(Fewple.NewPoint(0, 1, 0), Fewple.NewVector(0, -1, 0));
 
         // Act
@@ -71,7 +71,7 @@ public class PlaneTests
     public void RayCanIntersectFromBelow()
     {
         // Arrange
-        var plane = Plane.Default();
+        var plane = Plane.Create();
         var ray   = Ray.Create(Fewple.NewPoint(0, -1, 0), Fewple.NewVector(0, 1, 0));
 
         // Act

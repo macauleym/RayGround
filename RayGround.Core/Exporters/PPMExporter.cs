@@ -11,6 +11,8 @@ public class PPMExporter : IExportCanvas
     const short MAX_LINE_LENGTH = 70;
     const short SPACE_LENGTH    = 1;
 
+    public string Extension => "ppm";
+
     static string Header(float width, float height) =>
 $"""
 P3
@@ -101,7 +103,7 @@ P3
         return dataBuilder.ToString();
     }
 
-    public async Task<string> ExportAsync(Canvas canvas)
+    public async Task<string> EncodeString(Canvas canvas)
     {
         var exportTimer = Stopwatch.StartNew();
         var ppmBuilder  = new StringBuilder();

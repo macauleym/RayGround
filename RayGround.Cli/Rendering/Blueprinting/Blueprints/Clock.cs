@@ -1,17 +1,17 @@
 using RayGround.Cli.Logging;
 using RayGround.Core;
-using RayGround.Core.Interfaces;
+using RayGround.Core.Extensions;
 using RayGround.Core.Models;
 using RayGround.Core.Operations;
 
-namespace RayGround.Cli.Rendering;
+namespace RayGround.Cli.Rendering.Blueprinting.Blueprints;
 
-public class ClockRenderer(IStrokable brush, IExportCanvas exporter, ILogable logger) : Renderer(exporter, logger)
+public class Clock(ILogable logger) : IConstructable
 {
-    async Task<Canvas> HoursOnAClockAsync()
-    {
-        // First create the canvas that we'll be working with.
-        var clock = new Canvas(100, 100);
+    public Task<Blueprint> ConstructAsync(World into)
+    {        
+        var width  = 100f;
+        var height = 100f;
     
         // Create the 12 points that we'll ultimately need to plot.
         var points = Enumerable.Range(0, 12)
@@ -20,7 +20,7 @@ public class ClockRenderer(IStrokable brush, IExportCanvas exporter, ILogable lo
     
         // Translation basis, setting the points around the center of the canvas.
         var centerBasis = Transform.Translation(40, 40, 0);
-        var clockOffset = Transform.Scaling(clock.Width/3, clock.Height/3, 0);
+        var clockOffset = Transform.Scaling(width / 3, height / 3, 0);
     
         // For the rotation, we need to rotate around the _Z_ axis.
         // Since we're looking at the x/y plane (down the Z axis)
@@ -35,7 +35,7 @@ public class ClockRenderer(IStrokable brush, IExportCanvas exporter, ILogable lo
         for (var p = 1; p < points.Length; p++)
         {
             points[p] = rotate30r * points[p - 1];
-            Logger.Log($"Setting rotation point: {points[p]}");
+            logger.Log($"Setting rotation point: {points[p]}");
         }
     
         // Then we scale and shift them to the "center" of the canvas.
@@ -44,22 +44,26 @@ public class ClockRenderer(IStrokable brush, IExportCanvas exporter, ILogable lo
             points[p] = clockOffset * points[p];
             points[p] = centerBasis * points[p];
         
-            Logger.Log($"Setting position: {points[p]}");
+            logger.Log($"Setting position: {points[p]}");
         }
     
         // Paint the pixels onto the canvas.
-        foreach (var point in points)
-            brush.Stroke(clock, point, Color.Create(225, 225, 0));
+        var spheres = points.Select(p => Sphere
+            .Create()
+            .Morph(Transform.Translation(p.X, p.Y, p.Z))
+            .Morph(Transform.Scaling(0.1f, 0.1f, 0.1f))
+            .Paint(Material
+                .Create()
+                .Bucket(Color.Create(225, 225, 0))));
+        into.Lights.Add(Light.Create(Fewple.NewPoint(0,0,-10), Color.White));
+        into.Entities.AddRange(spheres);
     
-        Logger.LogSeparator();
+        logger.LogSeparator();
     
         // Return the canvas so we can export it, and see the pretty picture!
-        return clock;
-    }
-    
-    public override async Task RenderAsync()
-    {
-        var clockCanvas = await HoursOnAClockAsync();
-        await ExportCanvasAsync(clockCanvas, "clock.ppm");
+        return Task.FromResult(Blueprint.Create(
+              "clock"
+            , into
+            ));
     }
 }

@@ -1,6 +1,5 @@
 using FluentAssertions;
 using RayGround.Core;
-using RayGround.Core.Extensions;
 using RayGround.Core.Models;
 using RayGround.Core.Models.Patterns;
 using RayGround.Core.Operations;
@@ -9,7 +8,7 @@ namespace RayGround.Tests;
 
 public class MaterialTests
 {
-    Sphere dummyEntity = Sphere.Unit();
+    readonly Sphere dummyEntity = Sphere.Create();
     
     [Fact]
     public void MaterialHasSaneDefaultValues()
@@ -140,12 +139,12 @@ public class MaterialTests
     {
         // Arrange
         var stripe   = Stripe.Create(Color.White, Color.Black);
-        var material = Material.Create(
+        var material = Material
+            .Create(
               ambient: 1
             , diffuse: 0
-            , specular: 0
-            , pattern: stripe
-            );
+            , specular: 0)
+            .Etch(stripe);
         
         var eye    = Fewple.NewVector(0, 0, -1);
         var normal = Fewple.NewVector(0, 0, -1);
@@ -159,5 +158,30 @@ public class MaterialTests
         // Assert
         actual[0].Should().BeEquivalentTo(Color.White);
         actual[1].Should().BeEquivalentTo(Color.Black);
+    }
+
+    [Fact]
+    public void MaterialAllowsReflection()
+    {
+        // Arrange
+        
+        // Act
+        var actual = Material.Create();
+
+        // Assert
+        actual.Reflective.Should().Be(0.0f);
+    }
+
+    [Fact]
+    public void MaterialHasDefaultTransparencyAndRefraction()
+    {
+        // Arrange
+        
+        // Act
+        var actual = Material.Create();
+
+        // Assert
+        actual.Transparency.Should().Be(0f);
+        actual.RefractionIndex.Should().Be(1f);
     }
 }

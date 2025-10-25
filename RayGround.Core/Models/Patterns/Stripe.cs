@@ -2,12 +2,10 @@ namespace RayGround.Core.Models.Patterns;
 
 public class Stripe : Pattern
 {
-    protected Stripe(Color primary, Color secondary, Matrix? transform)
-    : base(primary, secondary, transform)
-    { }
+    protected Stripe(Color primary, Color secondary) : base(primary, secondary) { }
 
-    public static Stripe Create(Color primary, Color secondary, Matrix? transform = null) =>
-        new(primary, secondary, transform);
+    public static Stripe Create(Color primary, Color secondary) =>
+        new(primary, secondary);
 
     public static Stripe Default() => 
         Create(Color.White, Color.Black);

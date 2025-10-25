@@ -1,8 +1,8 @@
-using System.ComponentModel.DataAnnotations;
 using FluentAssertions;
 using RayGround.Core;
 using RayGround.Core.Extensions;
 using RayGround.Core.Models;
+using RayGround.Core.Models.Entities;
 using RayGround.Core.Operations;
 
 namespace RayGround.Tests;
@@ -13,9 +13,7 @@ public class EntityTests
     {
         public Ray SavedRay { get; private set; }
         
-        public TestEntity(Fewple origin, Matrix transform, Material material, Guid id) 
-        : base(origin, transform, material, id)
-        { }
+        public TestEntity(bool castShadows = true) : base(castShadows) { }
 
         public override float[] Intersections(Ray traced)
         {
@@ -28,12 +26,7 @@ public class EntityTests
             Fewple.NewVector(at.X, at.Y, at.Z);
     }
 
-    static TestEntity CreateTestEntity() =>
-        new ( Fewple.NewPoint(0, 0, 0)
-            , Matrix.Identity
-            , Material.Create()
-            , Guid.NewGuid()
-            );
+    static TestEntity CreateTestEntity() => new ();
     
     [Fact]
     public void DefaultTransformIsIdentity()

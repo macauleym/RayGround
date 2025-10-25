@@ -1,16 +1,15 @@
-using RayGround.Cli.Logging;
+using RayGround.Cli.Rendering.Capturing;
 using RayGround.Core;
 using RayGround.Core.Extensions;
-using RayGround.Core.Interfaces;
 using RayGround.Core.Models;
 using RayGround.Core.Operations;
 
-namespace RayGround.Cli.Rendering;
+namespace RayGround.Cli.Rendering.Layering;
 
-public class ShadedRenderer(IExportCanvas exporter, ILogable logger) : Renderer(exporter, logger)
+public class ScratchSphere : Layer
 {
-    async Task<Canvas> ShadedSphereAsync()
-    {
+    public override Task<Capture> ApplyAsync(Capture source)
+    {        
         // Book recommends 100, but I want to flex.
         // Setting this to 500 took a bit over a minute (~72 seconds)
         // but like 30TB of total memory.
@@ -18,21 +17,9 @@ public class ShadedRenderer(IExportCanvas exporter, ILogable logger) : Renderer(
         var canvasSize = 500;
         var canvas     = new Canvas(canvasSize, canvasSize);
         var rayOrigin  = Fewple.NewPoint(0, 0, -5);
-
-        var sphere = Sphere.Unit()
-            .Paint(Material.Create(
-                  ambient: 0.2f
-                , diffuse: 0.5f
-                , specular: 0.1f
-                , shininess: 300.0f
-                , color: Color.Create(0.1f, 1f, 0.1f)
-                ));
-
-        var light = Light.Create(
-              Fewple.NewPoint(10, 5, -10)
-            , Color.Create(0.1f, 1, 0.1f)
-            );
-
+        
+        var sphere = Sphere.Create();
+        
         // Transforming the sphere.
         var scaleY        = Transform.Scaling(1, .5f, 1);
         var sphereShrinkY = sphere.Morph(scaleY);
@@ -45,12 +32,7 @@ public class ShadedRenderer(IExportCanvas exporter, ILogable logger) : Renderer(
         
         var shrinkAndSkew       = Transform.Shearing(1, 0, 0, 0, 0, 0) * scaleX;
         var sphereShrinkAndSkew = sphere.Morph(shrinkAndSkew);
-
-        var shrinkShearRotate = Transform.RotationZ(float.Pi / 12)
-                                * Transform.Shearing(1, 0, 0, 0, 0, 0)
-                                * scaleX;
-        // sphere = sphere.UpdateTransform(shrinkShearRotate);
-        
+                        
         /********
          * Since the sphere is a unit sphere at the origin, tangent rays will
          * be approx. 1 unit from the origin. Every 5 units will increase the
@@ -60,13 +42,12 @@ public class ShadedRenderer(IExportCanvas exporter, ILogable logger) : Renderer(
          * whole wall. This must be accounted for if changing the wall's, or
          * ray's position.
          ********/
-        var wallZ    = 10;
-        var wallSize = 7f;
+        var wallZ     = 10;
+        var wallSize  = 7f;
         
         var pixelSize = wallSize / canvasSize; // .07f
         var halfWall  = wallSize / 2;          // 3.5f
 
-        var pixelCount = 0;
         for (var y = 0; y < canvasSize; y++)
         for (var x = 0; x < canvasSize; x++)
         {
@@ -75,31 +56,13 @@ public class ShadedRenderer(IExportCanvas exporter, ILogable logger) : Renderer(
             var worldPosition = Fewple.NewPoint(worldX, worldY, wallZ);
 
             var normalDir     = worldPosition - rayOrigin;
-            var ray           = Ray.Create(rayOrigin, normalDir.Normalize()); 
+            var ray           = Ray.Create(rayOrigin, normalDir); 
             var intersections = ray.Intersect(sphere);
-
-            if (!intersections.Hit().HasValue)
-                continue;
             
-            var hit       = intersections.Hit()!.Value;
-            var point     = ray.Position(hit.RayTime);
-            var hitSphere = (Sphere)hit.Collided;
-            var normal    = hitSphere.NormalAt(point);
-            var eye       = -ray.Direction;
-            var color     = Illuminate.Lighting(hitSphere.Material, hitSphere, light, point, eye, normal, false);
-
-            pixelCount++;
-            Logger.Log($"Drawing pixel #{pixelCount} at ({x}, {y}) with color ({color}).");
-            canvas.WritePixel(x, y, color);
+            if (intersections.Hit()  is not null)
+                canvas.WritePixel(x, y, Color.Create(255, 0, 0));
         }
 
-        return canvas;
-    }
-
-        
-    public override async Task RenderAsync()
-    {
-        var shadedSphereCanvas = await ShadedSphereAsync();
-        await ExportCanvasAsync(shadedSphereCanvas, "shaded-sphere.ppm");
+        return Task.FromResult(Capture.Create(source.Name, canvas));
     }
 }

@@ -2,6 +2,8 @@ namespace RayGround.Core.Constants;
 
 public static class Floating
 {
-    public const float ShadowEpsilon = 0.0015f;
-    public const float Epsilon       = 0.00001f;
+    public const float Epsilon = 0.001f;
+    
+    public static readonly float Root2      = MathF.Sqrt(2);
+    public static readonly float Root2Over2 = Root2 / 2;
 }

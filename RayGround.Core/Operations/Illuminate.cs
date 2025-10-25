@@ -1,5 +1,7 @@
 using RayGround.Core.Extensions;
 using RayGround.Core.Models;
+using RayGround.Core.Models.Entities;
+using RayGround.Core.Models.Patterns;
 
 namespace RayGround.Core.Operations;
 
@@ -14,9 +16,9 @@ public static class Illuminate
     , Fewple normalVector
     , bool inShadow
     ) {
-        var chosenColor = material.Pattern is not null
-            ? material.Pattern.GetLocalizedColor(entity.Transform, position)
-            : material.Color;
+        var chosenColor = material.Pattern is SolidPattern
+            ? material.Pattern.Primary
+            : material.Pattern.GetLocalizedColor(entity.Transform, position);
         
         // Combine surface and light color/intensity.
         var effectiveColor = chosenColor * light.Intensity;
@@ -75,7 +77,8 @@ public static class Illuminate
 
         var hit = intersections.Hit();
 
-        return hit.HasValue
-            && hit.Value.RayTime < distance;
+        return hit is not null
+            && hit.RayTime < distance
+            && hit.Collided.CastShadows;
     }
 }

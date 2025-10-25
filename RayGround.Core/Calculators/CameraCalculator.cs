@@ -1,4 +1,3 @@
-using RayGround.Core.Exporters;
 using RayGround.Core.Extensions;
 using RayGround.Core.Models;
 
@@ -82,7 +81,7 @@ public class CameraCalculator
         return canvas;
     }
 
-    public static Canvas Render(Camera source, World toRender)
+    public static Canvas Render(Camera source, World toRender, int maxDepth)
     {
         Console.WriteLine("Render - Creating canvas...");
         var canvas = new Canvas(source.HorizontalSize, source.VerticalSize);
@@ -92,7 +91,7 @@ public class CameraCalculator
         for (var x = 0; x <= source.HorizontalSize - 1; x++)
         {
             var ray   = source.RayForPixel(x, y);
-            var color = toRender.ColorAt(ray);
+            var color = toRender.ColorAt(ray, maxDepth);
             canvas.WritePixel(x, y, color);        
         }
 

@@ -1,6 +1,5 @@
 using RayGround.Core.Calculators;
 using RayGround.Core.Models;
-using RayGround.Core.Operations;
 
 namespace RayGround.Core.Extensions;
 

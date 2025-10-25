@@ -2,6 +2,7 @@ using FluentAssertions;
 using RayGround.Core;
 using RayGround.Core.Extensions;
 using RayGround.Core.Models;
+using RayGround.Core.Models.Entities;
 using RayGround.Core.Operations;
 
 namespace RayGround.Tests;
@@ -12,7 +13,7 @@ public class SphereTests
     public void DefaultSphereTransformIsIdentity()
     {
         // Arrange
-        var sphere   = Sphere.Unit();
+        var sphere   = Sphere.Create();
         var expected = Matrix.Identity;
 
         // Act
@@ -26,7 +27,7 @@ public class SphereTests
     public void PerformOperationOnSphereTransform()
     {
         // Arrange
-        var sphere    = Sphere.Unit();
+        var sphere    = Sphere.Create();
         var translate = Transform.Translation(2, 3, 4);
         
         // Act
@@ -41,7 +42,7 @@ public class SphereTests
     {
         // Arrange
         var ray    = Ray.Create(Fewple.NewPoint(0, 0, -5), Fewple.NewVector(0, 0, 1));
-        var sphere = Sphere.Unit();
+        var sphere = Sphere.Create();
         var scale  = Transform.Scaling(2, 2, 2);
         sphere     = sphere.Morph(scale).As<Sphere>();
         List<Intersection> expected = [
@@ -61,7 +62,7 @@ public class SphereTests
     {
         var ray    = Ray.Create(Fewple.NewPoint(0, 0, -5), Fewple.NewVector(0, 0, 1));
         var scale  = Transform.Translation(5, 0, 0);
-        var sphere = Sphere.Unit().Morph(scale).As<Sphere>();
+        var sphere = Sphere.Create().Morph(scale).As<Sphere>();
         
         // Act
         var actual = sphere.Intersections(sphere.BindRay(ray));
@@ -74,7 +75,7 @@ public class SphereTests
     public void CorrectNormalOnSphereOnXAxis()
     {
         // Arrange
-        var sphere   = Sphere.Unit();
+        var sphere   = Sphere.Create();
         var expected = Fewple.NewVector(1, 0, 0);
 
         // Act
@@ -88,7 +89,7 @@ public class SphereTests
     public void CorrectNormalOnSphereOnYAxis()
     {
         // Arrange
-        var sphere   = Sphere.Unit();
+        var sphere   = Sphere.Create();
         var expected = Fewple.NewVector(0, 1, 0);
         
         // Act
@@ -102,7 +103,7 @@ public class SphereTests
     public void CorrectNormalOnSphereOnZAxis()
     {
         // Arrange
-        var sphere   = Sphere.Unit();
+        var sphere   = Sphere.Create();
         var expected = Fewple.NewVector(0, 0, 1);
         
         // Act
@@ -116,7 +117,7 @@ public class SphereTests
     public void CorrectNormalOnSphereAtNonAxial()
     {
         // Arrange
-        var sphere   = Sphere.Unit();
+        var sphere   = Sphere.Create();
         var expected = Fewple.NewVector(MathF.Sqrt(3)/3, MathF.Sqrt(3)/3, MathF.Sqrt(3)/3);
         
         // Act
@@ -130,7 +131,7 @@ public class SphereTests
     public void NormalIsANormalizedVector()
     {
         // Arrange
-        var sphere = Sphere.Unit();
+        var sphere = Sphere.Create();
         
         // Act
         var actual = sphere.NormalAt(Fewple.NewVector(MathF.Sqrt(3)/3, MathF.Sqrt(3)/3, MathF.Sqrt(3)/3));
@@ -145,9 +146,23 @@ public class SphereTests
         // Arrange
         
         // Act
-        var actual = Sphere.Unit();
+        var actual = Sphere.Create();
 
         // Assert
         actual.Should().BeAssignableTo<Entity>();
+    }
+
+    [Fact]
+    public void CanCreateDefaultSphereOfGlass()
+    {
+        // Arrange
+        
+        // Act
+        var actual = Sphere.Glass();
+
+        // Assert
+        actual.Transform.Should().BeEquivalentTo(Matrix.Identity);
+        actual.Material.Transparency.Should().Be(1f);
+        actual.Material.RefractionIndex.Should().Be(1.5f);
     }
 }

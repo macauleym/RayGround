@@ -2,5 +2,7 @@ namespace RayGround.Core.Interfaces;
 
 public interface IExportCanvas
 {
-    Task<string> ExportAsync(Canvas canvas);
+    string Extension { get; }
+    
+    Task<string> EncodeString(Canvas canvas);
 }

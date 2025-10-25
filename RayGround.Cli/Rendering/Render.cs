@@ -1,4 +1,4 @@
-namespace RayGround.Cli.Building;
+namespace RayGround.Cli.Rendering;
 
 public enum Render
 { Projectile
@@ -10,4 +10,5 @@ public enum Render
 , Shadows
 , Plane
 , Patterns
+, Reflectfrac
 }

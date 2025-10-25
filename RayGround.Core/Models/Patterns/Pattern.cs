@@ -10,22 +10,15 @@ namespace RayGround.Core.Models.Patterns;
  * 3. Blended patterns.
  * 4. Perturbed patterns.
  */
-public abstract class Pattern
+public abstract class Pattern(Color primary, Color secondary)
 : IMorphable<Pattern>
 , ILocalizable
 {
-    public readonly Color Primary;
-    public readonly Color Secondary;
+    public readonly Color Primary   = primary;
+    public readonly Color Secondary = secondary;
     
-    public Matrix Transform { get; protected set; }
-    
-    protected Pattern(Color primary, Color secondary, Matrix? transform)
-    {
-        Primary   = primary;
-        Secondary = secondary;
-        Transform = transform ?? Matrix.Identity;
-    }
-    
+    public Matrix Transform { get; private set; } = Matrix.Identity;
+
     public abstract Color GetColor(Fewple at);
     
     public Pattern Morph(Matrix with)

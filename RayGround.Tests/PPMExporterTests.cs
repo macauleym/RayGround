@@ -22,7 +22,7 @@ P3
 """;
 
         // Act
-        var actual = await testExporter.ExportAsync(canvas);
+        var actual = await testExporter.EncodeString(canvas);
         
         // Assert
         actual.Should().Contain(expected);
@@ -49,7 +49,7 @@ P3
 """;
 
         // Act
-        var actual = await testExporter.ExportAsync(canvas);
+        var actual = await testExporter.EncodeString(canvas);
         
         // Assert
         actual.Should().Contain(expected);
@@ -69,7 +69,7 @@ P3
 """;
 
         // Act
-        var actual = await testExporter.ExportAsync(canvas);
+        var actual = await testExporter.EncodeString(canvas);
 
         // Assert
         actual.Should().Contain(expected);
@@ -83,7 +83,7 @@ P3
         var expected = "\n";
 
         // Act
-        var actual = await testExporter.ExportAsync(canvas);
+        var actual = await testExporter.EncodeString(canvas);
 
         // Assert
         actual.Should().EndWith(expected);

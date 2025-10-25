@@ -1,19 +1,19 @@
 using RayGround.Core.Extensions;
 using RayGround.Core.Models;
+using RayGround.Core.Models.Entities;
 
 namespace RayGround.Core;
 
 public class Sphere : Entity
 {
-    protected Sphere(Fewple origin, Matrix? transform, Material? material, Guid? id)
-    : base(origin, transform, material, id)
-    { }
+    Sphere(bool castShadows) : base(castShadows) { }
 
-    public static Sphere Create(Fewple origin,Matrix? transform, Material? material, Guid? id = null) =>
-        new(origin, transform, material, id);
+    public static Sphere Create(bool castShadows = true) =>
+        new(castShadows);
 
-    public static Sphere Unit() =>
-        new(Fewple.NewPoint(0, 0, 0), null, null, null);
+    public static Sphere Glass() =>
+        (Sphere)Create()
+        .Paint(Material.Create(transparency: 1f, refractionIndex: 1.5f));
 
     public override float[] Intersections(Ray traced)
     {       
