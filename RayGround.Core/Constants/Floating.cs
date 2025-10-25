@@ -6,4 +6,5 @@ public static class Floating
     
     public static readonly float Root2      = MathF.Sqrt(2);
     public static readonly float Root2Over2 = Root2 / 2;
+    public static readonly float Infinity   = float.MaxValue;
 }

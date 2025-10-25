@@ -18,7 +18,7 @@ var stopwatch = Stopwatch.StartNew();
 
 // Ideally, this would be determined by input.
 // That way, we can simply run whatever render we want from the command line.
-var desiredRender = Render.Reflectfrac;
+var desiredRender = Render.GuysWithCube;
 
 var frustum  = float.Pi / 3;
 var position = View.Transform(

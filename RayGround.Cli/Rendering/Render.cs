@@ -11,4 +11,5 @@ public enum Render
 , Plane
 , Patterns
 , Reflectfrac
+, GuysWithCube
 }

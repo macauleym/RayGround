@@ -213,10 +213,10 @@ public class PatternTests
     }
 
     public static IEnumerable<object[]> CheckerPatternAxisData = new List<object[]>
-    { new object[] { "Repeat x-axis", new[] { Fewple.NewPoint(0, 0, 0), Fewple.NewPoint(0.99f, 0, 0), Fewple.NewPoint(1.01f, 0, 0) }}
-    , new object[] { "Repeat y-axis", new[] { Fewple.NewPoint(0, 0, 0), Fewple.NewPoint(0, 0.99f, 0), Fewple.NewPoint(0, 1.01f, 0) }}
-    , new object[] { "Repeat z-axis", new[] { Fewple.NewPoint(0, 0, 0), Fewple.NewPoint(0, 0, 0.99f), Fewple.NewPoint(0, 0, 1.01f) }}
-    };
+        { new object[] { "Repeat x-axis", new[] { Fewple.NewPoint(0, 0, 0), Fewple.NewPoint(0.99f, 0, 0), Fewple.NewPoint(1.01f, 0, 0) }}
+        , new object[] { "Repeat y-axis", new[] { Fewple.NewPoint(0, 0, 0), Fewple.NewPoint(0, 0.99f, 0), Fewple.NewPoint(0, 1.01f, 0) }}
+        , new object[] { "Repeat z-axis", new[] { Fewple.NewPoint(0, 0, 0), Fewple.NewPoint(0, 0, 0.99f), Fewple.NewPoint(0, 0, 1.01f) }}
+        };
     
     [Theory]
     [MemberData(nameof(CheckerPatternAxisData))]
